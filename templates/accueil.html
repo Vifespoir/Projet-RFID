@@ -1,0 +1,33 @@
+{% extends "web_base.html" %}
+{% block title %}Registre des entrées du SQYLAB{% endblock %}
+
+{% block content %}
+
+<div class="container">
+<h2> Entrée du jour : {{ jour }}</h2>
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Heure</th>
+      <th scope="col">Prénom</th>
+      <th scope="col">Nom</th>
+    </tr>
+  </thead>
+  <tbody>
+	<tr>
+	{% for item in contenu %}
+    <td>{{ item }}</td>
+    {% if loop.index is divisibleby(3) %}
+	</tr>
+	<tr>
+	{% endif %}
+	{% endfor %}
+	</tr>
+  </tbody>
+</table>
+</div>
+
+
+{% endblock %}
+
+

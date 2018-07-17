@@ -1,0 +1,16 @@
+{% extends "web_base.html" %}
+
+{% block content %}
+
+
+<form action="" method="post">>
+  <div class="container">
+  <h2> Entrez le Nom Prénom et numéro de badge à ajouter dans la base de donnée </h2>
+      <input type="text" name="prenom" class="form-control" placeholder="Prénom">
+      <input type="text" name="nom"class="form-control" placeholder="Nom">
+      <input type="text" name="numero"class="form-control" placeholder="Numéro de badge">
+    <button type="submit" class="btn btn-primary">Envoyer</button>
+  </div>
+</form>
+
+{% endblock %}
