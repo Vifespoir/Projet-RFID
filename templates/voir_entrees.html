@@ -4,14 +4,14 @@
 {% block content %}
 
 <div class="container">
-<h2> Entrée du jour : {{ jour }}</h2>
+<h2> Voici l'historique d'entrée de : {{cherche}} </h2>
 <table class="table">
   <thead class="thead-light">
     <tr>
+      <th scope="col">Date</th>
       <th scope="col">Heure</th>
       <th scope="col">Prenom</th>
       <th scope="col">Nom</th>
-      <th scope="col">à jour de cotisation</th>
     </tr>
   </thead>
   <tbody>
@@ -30,5 +30,3 @@
 
 
 {% endblock %}
-
-

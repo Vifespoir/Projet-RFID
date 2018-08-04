@@ -2,7 +2,10 @@
 
 {% block content %}
 <div class="container">
-  <h4>Vous avez ajouté l'adhérent {{prenom}} {{nom}} au numéro {{numero}}</h4>
+	 <h4> ID du dernier badge : {{dernier}} </h4>
+  <h4> {{texte}}</h4>
+
+{% include "admin_boutons.html" %}
 
  </div>
 {% endblock %}
