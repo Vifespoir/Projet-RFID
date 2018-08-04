@@ -13,11 +13,11 @@ import os
 from datetime import date,datetime,timedelta
 
 
-fichier_adherent = '/home/pi/Documents/test.csv'
-fichier_temp= '/home/pi/Documents/fichier_temporaire.csv'
-vrai_fichier_adherent = '/home/pi/Documents/UTF-8.csv'
-sortie = '/home/pi/Documents/sortie.txt'
-dernier_badge = '/home/pi/Documents/non_repertorie.txt'
+fichier_adherent = '/home/michel/Documents/test.csv'
+fichier_temp= '/home/michel/Documents/fichier_temporaire.csv'
+vrai_fichier_adherent = '/home/michel/Documents/UTF-8.csv'
+sortie = '/home/michel/Documents/sortie.txt'
+dernier_badge = '/home/michel/Documents/non_repertorie.txt'
 accueil = "/"
 historique = "/historique"
 admin = "/admin"
@@ -213,7 +213,7 @@ def retourner_admin():
                        
                         texte = "Pas d'adhérent associé à ce ID"
                     
-            os.rename('/home/pi/Documents/fichier_temporaire.csv','/home/pi/Documents/test.csv')
+            os.rename('/home/michel/Documents/fichier_temporaire.csv','/home/michel/Documents/test.csv')
             return render_template('confirmation.html', visiteur = visiteur,dernier = dernier, accueil=accueil,historique=historique,admin=admin,texte=texte,logout = logout)
         
         if request.form['bouton']=="rechercher":
@@ -275,7 +275,7 @@ def ajouter():
                             texte = "Vous avez associé l'adhérent " + line[2] + " " + line[1] + " au numéro " + numero
                     ecrire(chaine)
     
-    os.rename('/home/pi/Documents/fichier_temporaire.csv','/home/pi/Documents/test.csv')
+    os.rename('/home/michel/Documents/fichier_temporaire.csv','/home/michel/Documents/test.csv')
     return redirect(url_for('retourner_admin'))
 
 @app.route('/sans_badge',methods=['GET','POST'])
