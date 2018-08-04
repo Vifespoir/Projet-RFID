@@ -2,7 +2,25 @@
 # -*- coding: utf8 -*-
 # Version modifiee de la librairie https://github.com/mxgxw/MFRC522-python
 
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
+# FOR ORANGEPI ONLY
+from pyA20.gpio import gpio
+from pyA20.gpio import port
+from pyA20.gpio import connector
+
+gpio.init() #Initialize module. Always called first
+
+gpio.setcfg(port.PG9, gpio.OUTPUT)  #Configure LED1 as output
+gpio.setcfg(port.PG9, 1)    #This is the same as above
+
+gpio.setcfg(port.PA11, gpio.INPUT)   #Configure PA11 as input
+gpio.setcfg(port.PA11, 0)   #Same as above
+
+gpio.pullup(port.PA11, 0)   #Clear pullups
+gpio.pullup(port.PA11, gpio.PULLDOWN)    #Enable pull-down
+gpio.pullup(port.PA11, gpio.PULLUP)  #Enable pull-up
+
+
 import MFRC522
 import signal
 import time
@@ -21,7 +39,7 @@ def end_read(signal,frame):
     global continue_reading
     print ("Lecture terminée")
     continue_reading = False
-    GPIO.cleanup()
+    gpio.cleanup()
 
 def faire_string(ligne):
         ligne = line.split(',')
@@ -37,6 +55,7 @@ def faire_string(ligne):
 
     
 
+print("init")
 signal.signal(signal.SIGINT, end_read)
 MIFAREReader = MFRC522.MFRC522()
 
@@ -68,17 +87,17 @@ while continue_reading:
 
         compteur=0
         for line in open (fichier):
-			if code in line:
-				compteur+=1
-				test = open(sortie,'a')
-				entree = faire_string(line)
-				test.write(entree)
-				test.close()
+            if code in line:
+                compteur+=1
+                test = open(sortie,'a')
+                entree = faire_string(line)
+                test.write(entree)
+                test.close()
 
         if compteur ==0:
-			with open(no_adherent,'w') as no_adhe:
-				no_adhe.write(code)
-				print('carte non réportoriée')
+            with open(no_adherent,'w') as no_adhe:
+                no_adhe.write(code)
+                print('carte non réportoriée')
 
 
         if status == MIFAREReader.MI_OK:
