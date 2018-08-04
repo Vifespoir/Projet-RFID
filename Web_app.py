@@ -326,7 +326,7 @@ def pagevisiteur():
                     contenu.append(liigne)
                     
             if compteur==0:
-                texte = "Pas d'adhérent au nom de : " + prenom + ' ' + nom
+                texte = "Pas d'adhérent au nom de : "+ nom
             
             return render_template('voir_liste.html',visiteur=visiteur,dernier = dernier,texte = texte,accueil=accueil,historique=historique,admin=admin,contenu=contenu,logout = logout)
     else : return render_template('visiteur.html',visiteur = visiteur,accueil=accueil,historique=historique,admin=admin,logout=logout)
