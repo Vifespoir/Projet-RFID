@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf8 -*-
+#!/usr/bin/env python3
 # Version modifiee de la librairie https://github.com/mxgxw/MFRC522-python
 
 # import RPi.GPIO as GPIO
@@ -10,17 +9,6 @@ from pyA20.gpio import connector
 
 gpio.init() #Initialize module. Always called first
 
-gpio.setcfg(port.PG9, gpio.OUTPUT)  #Configure LED1 as output
-gpio.setcfg(port.PG9, 1)    #This is the same as above
-
-gpio.setcfg(port.PA11, gpio.INPUT)   #Configure PA11 as input
-gpio.setcfg(port.PA11, 0)   #Same as above
-
-gpio.pullup(port.PA11, 0)   #Clear pullups
-gpio.pullup(port.PA11, gpio.PULLDOWN)    #Enable pull-down
-gpio.pullup(port.PA11, gpio.PULLUP)  #Enable pull-up
-
-
 import MFRC522
 import signal
 import time
@@ -28,9 +16,9 @@ import datetime
 from datetime import date
 from datetime import datetime
 
-fichier = '/home/pi/Documents/test.csv'
-sortie = '/home/pi/Documents/sortie.txt'
-no_adherent = '/home/pi/Documents/non_repertorie.txt'
+fichier = '/home/michel/Documents/test.csv'
+sortie = '/home/michel/Documents/sortie.txt'
+no_adherent = '/home/michel/Documents/non_repertorie.txt'
 
 continue_reading = True
 
@@ -94,10 +82,10 @@ while continue_reading:
                 test.write(entree)
                 test.close()
 
-        if compteur ==0:
+        if compteur == 0:
             with open(no_adherent,'w') as no_adhe:
                 no_adhe.write(code)
-                print('carte non réportoriée')
+                print("carte non repertioriee")
 
 
         if status == MIFAREReader.MI_OK:

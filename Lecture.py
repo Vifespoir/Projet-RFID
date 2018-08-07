@@ -2,9 +2,13 @@
 # -*- coding: utf8 -*-
 # Version modifiee de la librairie https://github.com/mxgxw/MFRC522-python
 
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 import MFRC522
 import signal
+from pyA20.gpio import gpio
+from pyA20.gpio import port
+from pyA20.gpio import connector
+
 
 continue_reading = True
 
@@ -13,7 +17,7 @@ def end_read(signal,frame):
     global continue_reading
     print ("Lecture terminée")
     continue_reading = False
-    GPIO.cleanup()
+    gpio.cleanup()
 
 signal.signal(signal.SIGINT, end_read)
 MIFAREReader = MFRC522.MFRC522()
