@@ -13,7 +13,7 @@ import os
 from datetime import date,datetime,timedelta
 
 
-fichier_adherent = '/home/pi/Documents/test.csv'
+fichier_adherent = '/home/pi/Documents/UTF-8.csv'
 fichier_temp= '/home/pi/Documents/fichier_temporaire.csv'
 vrai_fichier_adherent = '/home/pi/Documents/UTF-8.csv'
 sortie = '/home/pi/Documents/sortie.txt'
