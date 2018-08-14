@@ -1,8 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: utf8 -*-
+#!/usr/bin/env python3
 # Version modifiee de la librairie https://github.com/mxgxw/MFRC522-python
 
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
+# FOR ORANGEPI ONLY
+from pyA20.gpio import gpio
+from pyA20.gpio import port
+from pyA20.gpio import connector
+
+gpio.init() #Initialize module. Always called first
+
 import MFRC522
 import signal
 import time
@@ -10,9 +16,9 @@ import datetime
 from datetime import date
 from datetime import datetime
 
-fichier = '/home/pi/Documents/test.csv'
-sortie = '/home/pi/Documents/sortie.txt'
-no_adherent = '/home/pi/Documents/non_repertorie.txt'
+fichier = '/home/michel/Documents/test.csv'
+sortie = '/home/michel/Documents/sortie.txt'
+no_adherent = '/home/michel/Documents/non_repertorie.txt'
 
 continue_reading = True
 
@@ -21,7 +27,7 @@ def end_read(signal,frame):
     global continue_reading
     print ("Lecture terminée")
     continue_reading = False
-    GPIO.cleanup()
+    gpio.cleanup()
 
 def faire_string(ligne):
         ligne = line.split(',')
@@ -37,6 +43,7 @@ def faire_string(ligne):
 
     
 
+print("init")
 signal.signal(signal.SIGINT, end_read)
 MIFAREReader = MFRC522.MFRC522()
 
@@ -68,17 +75,17 @@ while continue_reading:
 
         compteur=0
         for line in open (fichier):
-			if code in line:
-				compteur+=1
-				test = open(sortie,'a')
-				entree = faire_string(line)
-				test.write(entree)
-				test.close()
+            if code in line:
+                compteur+=1
+                test = open(sortie,'a')
+                entree = faire_string(line)
+                test.write(entree)
+                test.close()
 
-        if compteur ==0:
-			with open(no_adherent,'w') as no_adhe:
-				no_adhe.write(code)
-				print('carte non réportoriée')
+        if compteur == 0:
+            with open(no_adherent,'w') as no_adhe:
+                no_adhe.write(code)
+                print("carte non repertioriee")
 
 
         if status == MIFAREReader.MI_OK:

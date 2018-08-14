@@ -3,8 +3,12 @@
 # Version modifiee de la librairie https://github.com/mxgxw/MFRC522-python
 
 from __future__ import print_function
+<<<<<<< HEAD
+import RPi.GPIO as GPIO
+=======
 # import RPi.GPIO as GPIO
 from pyA20.gpio import gpio as GPIO
+>>>>>>> cce876acfba90b35ebee08fc0d01b9754446c39f
 import spi
 import signal
 import time
@@ -109,12 +113,23 @@ class MFRC522:
   serNum = []
   
   def __init__(self, dev='/dev/spidev0.0', spd=1000000):
+<<<<<<< HEAD
+    spi.openSPI(device=dev,speed=spd)
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(22, GPIO.OUT)
+    GPIO.output(self.NRSTPD, 1)
+    self.MFRC522_Init()
+  
+=======
+    print("MFRC")
     spi.openSPI(device=dev,speed=spd)
     # GPIO.setmode(GPIO.BOARD)
     GPIO.setcfg(22, GPIO.OUTPUT)
     GPIO.output(self.NRSTPD, 1)
     self.MFRC522_Init()
-  
+    print("success")
+
+>>>>>>> cce876acfba90b35ebee08fc0d01b9754446c39f
   def MFRC522_Reset(self):
     self.Write_MFRC522(self.CommandReg, self.PCD_RESETPHASE)
   
