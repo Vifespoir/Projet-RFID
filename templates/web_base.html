@@ -8,10 +8,10 @@
 <div class="container">
 
 <h4>
-<a href="{{ accueil }}">accueil</a>- <a href="{{ historique }}">historique</a> - <a href="{{ admin }}">admin</a> 
+<a href="{{ accueil }}">Accueil</a> - <a href="{{ historique }}">Historique</a> - <a href="{{ visiteur }}">Espace sans badge</a> - <a href="{{ admin }}">Admin</a> 
 
 {% if current_user.is_authenticated %}
-<a href="{{ logout }}"> - se déconnecter</a> 
+<a href="{{ logout }}"> - Se déconnecter</a> 
 {% endif %}
 
 </h4>

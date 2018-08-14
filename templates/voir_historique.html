@@ -1,0 +1,38 @@
+{% extends "web_base.html" %}
+{% block title %}Historique des entrées du SQYLAB{% endblock %}
+
+{% block content %}
+
+<div class="container">
+<h2> Entrée du : {{ date }}</h2>
+<a class="btn btn-primary"  name ="bouton" value = "precedent" href="{{precedent}}" role="button">Jour précedent</a>
+ <a class="btn btn-primary"  name ="bouton" value = "suivant" href="{{suivant}}" role="button">Jour suivant</a>
+ 
+ <br>
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Heure</th>
+      <th scope="col">Nom</th>
+      <th scope="col">Prenom</th>
+    </tr>
+  </thead>
+  <tbody>
+	<tr>
+	{% for item in contenu %}
+    <td>{{ item }}</td>
+    {% if loop.index is divisibleby(4) %}
+	</tr>
+	<tr>
+	{% endif %}
+	{% endfor %}
+	</tr>
+  </tbody>
+</table>
+</div>
+
+
+{% endblock %}
+
+

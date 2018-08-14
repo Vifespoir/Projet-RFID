@@ -9,15 +9,16 @@
   <thead class="thead-light">
     <tr>
       <th scope="col">Heure</th>
-      <th scope="col">Prénom</th>
+      <th scope="col">Prenom</th>
       <th scope="col">Nom</th>
+      <th scope="col">à jour de cotisation</th>
     </tr>
   </thead>
   <tbody>
 	<tr>
 	{% for item in contenu %}
     <td>{{ item }}</td>
-    {% if loop.index is divisibleby(3) %}
+    {% if loop.index is divisibleby(4) %}
 	</tr>
 	<tr>
 	{% endif %}

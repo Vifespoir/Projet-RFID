@@ -1,0 +1,42 @@
+	{% extends "web_base.html" %}
+{% block title %}Registre des entrées du SQYLAB{% endblock %}
+
+{% block content %}
+
+<div class="container">
+<h2> {{texte}}</h2>
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Prenom</th>
+      <th scope="col">Nom</th>
+      <th scope="col">Numero de badge</th>
+      <th scope="col">Bouton</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+	<tr>
+	{% for ligne in contenu %}
+	{% for item in ligne %}
+    
+    {% if loop.index is divisibleby(4) %}
+	<td> <a class="btn btn-primary"  value = "ajouteer" href="{{item}}" role="button">Simuler badge</a> </td>
+	{% else %}
+	<td>{{ item }}</td>
+   	 {% endif %}
+	{% endfor %}
+	</tr>
+	<tr>
+	{% endfor %}
+	</tr>
+  </tbody>
+</table>
+</div>
+<div class="container">
+	
+{% include "boutons-visiteur.html" %}
+
+</div>
+
+{% endblock %}
