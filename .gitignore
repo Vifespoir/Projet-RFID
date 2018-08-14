@@ -2,3 +2,5 @@ virtualenv/
 __pycache__/
 *.pyc
 venv/
+MFR522/
+SPI-Pi/
