@@ -144,7 +144,7 @@ def rechercher_date(jour, heure=False):
     return entreesDuJour
 
 
-def ajouter_entree(nom, prenom):
+def rechercher_date_adhesion(nom, prenom):
     dateAdhesion = None
     with open(FICHIER_ADHERENTS_CHEMIN, "r") as fichierAdherents:
         lignes = fichierAdherents.readlines()
@@ -153,6 +153,10 @@ def ajouter_entree(nom, prenom):
             if nom in ligne and prenom in ligne:
                 dateAdhesion = ligne[4]
 
+    return dateAdhesion
+
+
+def ajouter_entree(nom, prenom, dateAdhesion):
     with open(FICHIER_DES_ENTREES_CHEMIN, 'a') as fichierEntrees:
         entree = formatter_ligne_csv(nom, prenom, dateAdhesion)
         fichierEntrees.write(entree)
@@ -168,3 +172,13 @@ def rechercher_entrees(nom, prenom):
                 entrees.extend(ligne[0:4])
 
     return entrees
+
+
+def rechercher_rfid(numero):
+    with open(FICHIER_ADHERENTS_CHEMIN, "r") as fichierAdherents:
+        adherents = reader(fichierAdherents)
+        for ligne in adherents:
+            if numero in ligne:
+                return ligne[1], ligne[2], ligne[4]  # nom prenom date_adhesion
+        else:
+            return None

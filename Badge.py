@@ -6,8 +6,8 @@ from time import sleep
 import modules.MFRC522 as MFRC522
 from modules.entree_sortie import (FICHIER_ADHERENTS_CHEMIN,
                                    FICHIER_DERNIER_BADGE_SCANNE_CHEMIN,
-                                   FICHIER_DES_ENTREES_CHEMIN,
-                                   formatter_ligne_csv)
+                                   FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
+                                   formatter_ligne_csv, rechercher_rfid)
 from pyA20.gpio import gpio
 
 gpio.init()  # Initialize module. Always called first
@@ -32,36 +32,23 @@ print ("Passer le tag RFID a lire")
 while continue_reading:
     # Detecter les tags
     (status, TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
-
     # Une carte est detectee
     if status == MIFAREReader.MI_OK:
         print ("Carte detectee")
-
     # Recuperation UID
     (status, uid) = MIFAREReader.MFRC522_Anticoll()
     if status == MIFAREReader.MI_OK:
-
         # Clee d authentification par defaut
         key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
-
         # Selection du tag
         MIFAREReader.MFRC522_SelectTag(uid)
-
         # Authentification
         status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
-
         code = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
+        nom, prenom, dateAdhesion = rechercher_rfid(code)
+        ajouter_entree(nom, prenom, dateAdhesion)
 
-        compteur = 0
-        for line in open(FICHIER_ADHERENTS_CHEMIN):
-            if code in line:
-                compteur += 1
-                test = open(FICHIER_DES_ENTREES_CHEMIN, 'a')
-                entree = formatter_ligne_csv(line)
-                test.write(entree)
-                test.close()
-
-        if compteur == 0:
+        if not dateAdhesion:
             with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'w') as no_adhe:
                 no_adhe.write(code)
                 print("carte non repertioriee")
@@ -69,6 +56,6 @@ while continue_reading:
         if status == MIFAREReader.MI_OK:
             MIFAREReader.MFRC522_StopCrypto1()
         else:
-            print ("Erreur d\'Authentification")
+            print ("Erreur d'Authentification")
 
         sleep(.2)

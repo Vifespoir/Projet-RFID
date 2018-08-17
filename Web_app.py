@@ -11,6 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
                                    ajouter_rfid_adherent, lire_dernier,
                                    rechercher_adherent, rechercher_date,
+                                   rechercher_date_adhesion,
                                    rechercher_entrees, supprimer_rfid_adherent)
 
 APP_ACCUEIL = "/"
@@ -218,7 +219,8 @@ def simuler():
         # numero = request.args.get('numero')
         cherche = "{} {}".format(prenom, nom)
 
-        ajouter_entree(nom, prenom)
+        dateAdhesion = rechercher_date_adhesion(nom, prenom)
+        ajouter_entree(nom, prenom, dateAdhesion)
         entrees = rechercher_entrees(nom, prenom)
 
         return render_template('voir_entrees.html',
