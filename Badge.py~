@@ -45,8 +45,8 @@ while continue_reading:
         code = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
         result = rechercher_rfid(code)
         if result:
-            nom, prenom, dateAdhesion = result
-            ajouter_entree(nom, prenom, dateAdhesion)
+            nom, prenom, numero = result
+            ajouter_entree(nom, prenom)
         else:
             with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'w') as no_adhe:
                 no_adhe.write(code)
