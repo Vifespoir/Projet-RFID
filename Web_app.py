@@ -14,6 +14,11 @@ from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
                                    rechercher_date_adhesion,
                                    rechercher_entrees, supprimer_rfid_adherent)
 
+# TODO add the new adherent signup page
+# TODO add a page for subscribing to the newsletter
+# TODO add a page to submit a bug report or a feature request
+# TODO turn entree sortie into a class
+
 APP_ACCUEIL = "/"
 APP_HISTORIQUE = "/historique"
 APP_ADMIN = "/admin"

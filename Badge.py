@@ -8,6 +8,8 @@ from modules.entree_sortie import (FICHIER_DERNIER_BADGE_SCANNE_CHEMIN,
                                    ajouter_entree, rechercher_rfid)
 from pyA20.gpio import gpio
 
+# FIXME add entree only if last badge is not last line of registre_des_entrees
+
 gpio.init()  # Initialize module. Always called first
 
 continue_reading = True
