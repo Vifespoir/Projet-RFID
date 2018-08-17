@@ -4,10 +4,8 @@ import signal
 from time import sleep
 
 import modules.MFRC522 as MFRC522
-from modules.entree_sortie import (FICHIER_ADHERENTS_CHEMIN,
-                                   FICHIER_DERNIER_BADGE_SCANNE_CHEMIN,
-                                   FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
-                                   formatter_ligne_csv, rechercher_rfid)
+from modules.entree_sortie import (FICHIER_DERNIER_BADGE_SCANNE_CHEMIN,
+                                   ajouter_entree, rechercher_rfid)
 from pyA20.gpio import gpio
 
 gpio.init()  # Initialize module. Always called first
