@@ -13,17 +13,16 @@
       <th scope="col">Nom</th>
       <th scope="col">Numero de badge</th>
       <th scope="col">Bouton</th>
-      
     </tr>
   </thead>
   <tbody>
 	<tr>
 	{% for ligne in contenu %}
 	{% for item in ligne %}
-    
+
     {% if loop.index is divisibleby(4) %}
 	<td> <a class="btn btn-primary"  name = "bouton" value = "ajouteer" href="{{item}}" role="button">Associer</a>  <a class="btn btn-success"  name = "bouton" value = "entree" href="{{item}}&action=entree" role="button">Voir les entrées</a></td>
-	
+
 	{% else %}
 	<td>{{ item }}</td>
    	 {% endif %}
@@ -39,7 +38,7 @@
 
 <br>
 
-{% include "admin_boutons.html" %}
+{% include "bits/boutons_admin.html" %}
 
 </div>
 

@@ -5,9 +5,17 @@
 {% block content %}
 
 <div class="container">
-<h1> {{texte}} </h1> <h4> ID du dernier badge : {{dernier}} </h4>
+<h4> ID du dernier badge : {{dernier}} </h4>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert lead alert-primary" role="alert">
+      {{ message }}
+    </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 <br>
-{% include "admin_boutons.html" %}
+{% include "bits/boutons_admin.html" %}
 </div>
 {% endblock %}
-
