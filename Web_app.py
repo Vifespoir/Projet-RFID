@@ -80,6 +80,12 @@ def create_user():
     db.session.commit()
 
 
+# Ensure even the login form receives the APP_PATHS
+@security.context_processor
+def security_context_processor():
+    return APP_PATHS
+
+
 @app.route('/')
 def retourner_accueil():
     """Affiche les entrées du jour sur la page d'accueil."""
@@ -90,6 +96,7 @@ def retourner_accueil():
     return render_template('accueil.html',
                            contenu=entreesDuJour,
                            jour=jour,
+                           active="accueil",
                            **APP_PATHS)
 
 
@@ -104,11 +111,16 @@ def retourner_historique():
         suivant = '/changer?date={}&delta=1'.format(date)
         precedent = '/changer?date={}&delta=-1'.format(date)
         entreesDuJour = rechercher_date(date)
-        print(entreesDuJour)
+        entreesDuJour = rechercher_date(date)
     else:
-        precedent = suivant = date = entreesDuJour = None
+        precedent = suivant = entreesDuJour = None
+        date = str(datetime.today().date())
+
+    suivant = '/changer?date={}&delta=1'.format(date)
+    precedent = '/changer?date={}&delta=-1'.format(date)
 
     return render_template('historique.html',
+                           active="historique",
                            precedent=precedent,
                            suivant=suivant,
                            date=date,
@@ -131,6 +143,7 @@ def changer_date():
     entreesDuJour = rechercher_date(date)
 
     return render_template('historique.html',
+                           active="historique",
                            precedent=precedent,
                            suivant=suivant,
                            date=date,
@@ -148,6 +161,7 @@ def retourner_admin():
         texte = supprimer_rfid_adherent(numero)
         flash(texte)
         return render_template('admin.html',
+                               active="admin",
                                **APP_PATHS)
 
     if request.method == 'POST' and request.form['bouton'] == "rechercher":
@@ -169,6 +183,7 @@ def retourner_admin():
 
     else:
         return render_template('admin.html',
+                               active="admin",
                                **APP_PATHS)
 
 
@@ -202,9 +217,9 @@ def simuler():
         nom = request.args.get('nom')
         # numero = request.args.get('numero')
         cherche = "{} {}".format(prenom, nom)
-        entrees = rechercher_entrees(nom, prenom)
 
         ajouter_entree(nom, prenom)
+        entrees = rechercher_entrees(nom, prenom)
 
         return render_template('voir_entrees.html',
                                contenu=entrees,
@@ -255,4 +270,5 @@ def pagevisiteur():
 
     else:
         return render_template('visiteur.html',
+                               active="visiteur",
                                **APP_PATHS)

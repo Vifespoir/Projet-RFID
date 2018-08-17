@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
 # Version modifiee de la librairie https://github.com/mxgxw/MFRC522-python
 import signal
-from datetime import strftime, strptime
 from time import sleep
 
-import MFRC522
+import modules.MFRC522 as MFRC522
+from modules.entree_sortie import (FICHIER_ADHERENTS_CHEMIN,
+                                   FICHIER_DERNIER_BADGE_SCANNE_CHEMIN,
+                                   FICHIER_DES_ENTREES_CHEMIN,
+                                   formatter_ligne_csv)
 from pyA20.gpio import gpio
 
 gpio.init()  # Initialize module. Always called first
-
-
-fichier = '/home/michel/Documents/test.csv'
-sortie = '/home/michel/Documents/sortie.txt'
-no_adherent = '/home/michel/Documents/non_repertorie.txt'
 
 continue_reading = True
 
@@ -23,20 +21,6 @@ def end_read(signal, frame):
     print ("Lecture terminée")
     continue_reading = False
     gpio.cleanup()
-
-
-def faire_string(ligne):
-    ligne = line.split(',')
-    date_cotisation = strptime(ligne[4], '%d/%m/%Y')
-    date = date_cotisation.date()
-    difference = date.today() - date
-    if difference.days < 365:
-        texte = ' Oui'
-    else:
-        texte = ' Date_de_cotisation_depassee'
-    date = strftime("%A %d %B %Y %H:%M")
-
-    return '\n' + date + ' ' + ligne[2] + ' ' + ligne[1] + texte
 
 
 print("init")
@@ -69,16 +53,16 @@ while continue_reading:
         code = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
 
         compteur = 0
-        for line in open(fichier):
+        for line in open(FICHIER_ADHERENTS_CHEMIN):
             if code in line:
                 compteur += 1
-                test = open(sortie, 'a')
-                entree = faire_string(line)
+                test = open(FICHIER_DES_ENTREES_CHEMIN, 'a')
+                entree = formatter_ligne_csv(line)
                 test.write(entree)
                 test.close()
 
         if compteur == 0:
-            with open(no_adherent, 'w') as no_adhe:
+            with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'w') as no_adhe:
                 no_adhe.write(code)
                 print("carte non repertioriee")
 
@@ -87,4 +71,4 @@ while continue_reading:
         else:
             print ("Erreur d\'Authentification")
 
-        sleep(3)
+        sleep(.2)
