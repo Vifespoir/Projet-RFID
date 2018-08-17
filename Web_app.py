@@ -3,7 +3,7 @@
 import os
 from datetime import date, datetime, timedelta
 
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_bootstrap import Bootstrap
 from flask_security import (RoleMixin, Security, SQLAlchemyUserDatastore,
                             UserMixin, login_required)
@@ -147,9 +147,8 @@ def retourner_admin():
     if request.method == 'POST' and request.form['bouton'] == "supprimer":
         numero = request.form['numero']
         texte = supprimer_rfid_adherent(numero)
-        return render_template('confirmation.html',
-                               dernier=dernier,
-                               texte=texte,
+        flash(texte)
+        return render_template('admin.html',
                                **APP_PATHS)
 
     if request.method == 'POST' and request.form['bouton'] == "rechercher":
@@ -171,29 +170,30 @@ def retourner_admin():
 
     else:
         return render_template('admin.html',
-                               texte=texte,
-                               dernier=dernier,
                                **APP_PATHS)
 
 
 @app.route('/ajouter', methods=['GET', 'POST'])
 @login_required
 def ajouter():
-    if request.method == "GET" and request.args['action'] == "entree":
+    if request.method == "GET":
         prenom = request.args.get('prenom')
         nom = request.args.get('nom')
         numero = request.args.get('numero')
-        cherche = "{} {}".format(prenom, nom)
-        lignes = rechercher_entrees(nom, prenom)
+        if "action" in request.args.keys() and request.args['action'] == "entree":
+            cherche = "{} {}".format(prenom, nom)
+            lignes = rechercher_entrees(nom, prenom)
 
-        return render_template('voir_entrees.html',
-                               contenu=lignes,
-                               cherche=cherche,
-                               **APP_PATHS)
+            return render_template('voir_entrees.html',
+                                   contenu=lignes,
+                                   cherche=cherche,
+                                   **APP_PATHS)
 
-        ajouter_rfid_adherent(nom, prenom, numero)
+        else:
+            ajouter_rfid_adherent(nom, prenom, numero)
+            flash("Association entre rfid '{}' et adhérent '{} {}' réussie.".format(numero, prenom, nom))
 
-    return redirect(url_for('retourner_admin'))
+            return redirect(url_for('retourner_admin'))
 
 
 @app.route('/simuler', methods=['GET', 'POST'])

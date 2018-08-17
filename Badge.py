@@ -5,10 +5,6 @@ from datetime import strftime, strptime
 from time import sleep
 
 import MFRC522
-# import RPi.GPIO as GPIO
-# FOR ORANGEPI ONLY
-# from pyA20.gpio import port
-# from pyA20.gpio import connector
 from pyA20.gpio import gpio
 
 gpio.init()  # Initialize module. Always called first

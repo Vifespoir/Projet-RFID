@@ -12,8 +12,6 @@ if not isdir(CHEMIN_DONNEES):
 
 FICHIER_ADHERENTS = "adherents.csv"
 FICHIER_ADHERENTS_CHEMIN = join(CHEMIN_DONNEES, FICHIER_ADHERENTS)
-FICHIER_TEMPORAIRE = "temporaire.csv"
-FICHIER_TEMPORAIRE_CHEMIN = join(CHEMIN_DONNEES, FICHIER_TEMPORAIRE)
 FICHIER_DES_ENTREES = "registre_des_entrees.txt"
 FICHIER_DES_ENTREES_CHEMIN = join(CHEMIN_DONNEES, FICHIER_DES_ENTREES)
 FICHIER_DERNIER_BADGE_SCANNE = "dernier_badge_scanne.txt"
@@ -22,7 +20,7 @@ FICHIER_DERNIER_BADGE_SCANNE_CHEMIN = join(CHEMIN_DONNEES, FICHIER_DERNIER_BADGE
 
 def ajouter_ligne_csv(ligneCsv):
     """Permet d'écrire dans la base de donnée csv."""
-    with open(FICHIER_TEMPORAIRE_CHEMIN, 'a') as ecriture:
+    with open(FICHIER_ADHERENTS_CHEMIN, 'a') as ecriture:
         scribeCsv = writer(ecriture)
         scribeCsv.writerow(ligneCsv)
 
@@ -48,14 +46,18 @@ def formatter_ligne_csv(nom, prenom, dateAdhesion):
 def supprimer_ligne_du_csv_adherent(ligneCsv):
     """Supprime une ligne donnée du fichier adhérent."""
     contenu = []
-
+    print("deleting")
     with open(FICHIER_ADHERENTS_CHEMIN, "r") as fichierOriginal:
-        for ligne in fichierOriginal:
-            if not(ligneCsv in ligne):
+        lignes = reader(fichierOriginal)
+        for ligne in lignes:
+            if not(ligneCsv == ligne):
                 contenu.append(ligne)
+            else:
+                print("deleting")
 
-    with open(FICHIER_ADHERENTS, 'w') as nouveauFichier:
-        nouveauFichier.writelines(contenu)
+    with open(FICHIER_ADHERENTS_CHEMIN, 'w') as nouveauFichier:
+        ecrireCsv = writer(nouveauFichier)
+        ecrireCsv.writerows(contenu)
 
 
 def lire_dernier():
@@ -70,17 +72,20 @@ def supprimer_rfid_adherent(numero):
     """Ouvre le fichier adherent pour y chercher une cle et la supprimer."""
     with open(FICHIER_ADHERENTS_CHEMIN, 'r') as fichierLu:
         liseuseCsv = reader(fichierLu)
-        for ligne in liseuseCsv:
+        lignes = list(liseuseCsv)
+        for ligne in lignes:
             nom = ligne[1]
             prenom = ligne[2]
             if ligne[5] == numero:
                 ligne[5] = ""
                 texte = "Vous avez supprimé l'ID de l'adhérent : " + nom + " " + prenom
                 break
-            ajouter_ligne_csv(ligne)
-
         else:
             texte = "Pas d'adhérent associé à ce ID"
+
+    with open(FICHIER_ADHERENTS_CHEMIN, 'w') as fichierEcriture:
+        ecrireCsv = writer(fichierEcriture)
+        ecrireCsv.writerows(lignes)
 
     return texte
 
@@ -89,15 +94,14 @@ def ajouter_rfid_adherent(nom, prenom, numero):
     """Associe un adhérent à un ID rfid."""
     with open(FICHIER_ADHERENTS_CHEMIN, 'r') as fichier_read:
         liseuseCsv = reader(fichier_read)
-        for line in liseuseCsv:
-            chaine = line[0:6]
-            if line[1].lower() == nom.lower():
-                if line[2].lower() == prenom.lower():
-                    chaine = line[0:5]
-                    chaine.append(numero)
-                    texte = "Vous avez associé l'adhérent {} {} au numéro {}".format(line[2], line[1], numero)
-                    break
+        for ligne in liseuseCsv:
+            if ligne[1].lower() == nom.lower() and ligne[2].lower() == prenom.lower():
+                chaine = ligne[0:5]
+                chaine.append(numero)
+                texte = "Vous avez associé l'adhérent {} {} au numéro {}".format(ligne[2], ligne[1], numero)
+                break
 
+    supprimer_ligne_du_csv_adherent(ligne)
     ajouter_ligne_csv(chaine)
     return texte
 
