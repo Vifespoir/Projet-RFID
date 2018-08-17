@@ -95,26 +95,25 @@ def retourner_accueil():
 
 @app.route('/historique', methods=['GET', 'POST'])
 def retourner_historique():
-    if request.method == 'POST':
-        if request.form['bouton'] == "rechercher":
-            jour = request.form['jour']
-            mois = request.form['mois']
-            annee = request.form['annee']
-            date = "{}-{}-{}".format(annee, mois, jour)
-            suivant = '/changer?date={}&delta=1'.format(date)
-            precedent = '/changer?date={}&delta=-1'.format(date)
-            entreesDuJour = rechercher_date(date)
-
-        return render_template('voir_historique.html',
-                               precedent=precedent,
-                               suivant=suivant,
-                               date=date,
-                               contenu=entreesDuJour,
-                               **APP_PATHS)
-
+    if request.method == 'POST' and request.form['bouton'] == "rechercher":
+        print("histoire")
+        jour = request.form['jour']
+        mois = request.form['mois']
+        annee = request.form['annee']
+        date = "{}-{}-{}".format(annee, mois, jour)
+        suivant = '/changer?date={}&delta=1'.format(date)
+        precedent = '/changer?date={}&delta=-1'.format(date)
+        entreesDuJour = rechercher_date(date)
+        print(entreesDuJour)
     else:
-        return render_template('historique.html',
-                               **APP_PATHS)
+        precedent = suivant = date = entreesDuJour = None
+
+    return render_template('historique.html',
+                           precedent=precedent,
+                           suivant=suivant,
+                           date=date,
+                           contenu=entreesDuJour,
+                           **APP_PATHS)
 
 
 @app.route('/changer', methods=['GET', 'POST'])
@@ -131,7 +130,7 @@ def changer_date():
 
     entreesDuJour = rechercher_date(date)
 
-    return render_template('voir_historique.html',
+    return render_template('historique.html',
                            precedent=precedent,
                            suivant=suivant,
                            date=date,
