@@ -47,9 +47,7 @@ HTML_WRAPPER = [
     "info",
     "dark"
 ]
-HTML_FLASH = """<div class="alert lead alert-{}" role="alert">
-  {}
-</div>"""
+HTML_FLASH = '<div class="alert lead alert-{}" role="alert">{}</div>'
 STREAM_TYPE = re_compile(r"(<\w+>)(.+)")
 
 # Ne pas ajouter d'extensions au dessus
@@ -80,6 +78,7 @@ def event_stream():
             type = match.group(1)
             jsMessage = match.group(2)
             jsMessage = HTML_FLASH.format(type, jsMessage)
+            print(jsMessage)
             yield "data: {}\n\n".format(jsMessage)
 
 
