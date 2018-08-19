@@ -34,6 +34,7 @@ class BadgeScanneur(object):
             nom, prenom, dateAdhesion = result
             ajouter_entree(nom, prenom, dateAdhesion)
         else:
+            nom, prenom = None, None
             with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'w') as no_adhe:
                 no_adhe.write(code)
                 self.redis.publish("stream", "<danger>Badge non repertorié: {}, voulez-vous l'associer?".format(code))
@@ -71,9 +72,11 @@ class BadgeScanneur(object):
                     result = rechercher_rfid(code)
                     if result:
                         nom, prenom, dateAdhesion = result
-
-                    self.redis.publish("stream",
-                                       "<warning>Bien tenté {} mais ton badge est déjà scanné! {}".format(prenom))
+                        self.redis.publish("stream",
+                                           "<warning>Bien tenté {} mais ton badge est déjà scanné! {}"
+                                           .format(prenom))
+                    else:
+                        nom, prenom = self.authentifier_rfid(code)
 
                 self.MIFAREReader.MFRC522_StopCrypto1()
             else:
