@@ -75,14 +75,11 @@ if (window.navigator.userAgent.indexOf("Edge") > -1 || window.navigator.userAgen
     };
   }
   sse();
+  setTimeout(fade_out, 1000);
 }
 
-</script>
-<script type="text/javascript">
-setTimeout(fade_out, 5000);
-
 function fade_out() {
-  $("#mydiv").fadeOut().empty();
+  $("#mydiv").empty();
 }
 </script>
 {% endblock %}
