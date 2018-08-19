@@ -48,7 +48,7 @@ HTML_WRAPPER = [
     "dark"
 ]
 HTML_FLASH = '<div class="alert lead alert-{}" role="alert">{}</div>'
-STREAM_TYPE = re_compile(r"(<\w+>)(.+)")
+STREAM_TYPE = re_compile(r"<(\w+)>(.+)")
 
 # Ne pas ajouter d'extensions au dessus
 app = Flask(__name__)
