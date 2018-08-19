@@ -36,7 +36,9 @@ class BadgeScanneur(object):
         else:
             with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'w') as no_adhe:
                 no_adhe.write(code)
-                self.redis.publish("stream", "<danger>Badge non repertorié: {}".format(code))
+                self.redis.publish("stream", "<danger>Badge non repertorié: {}, voulez-vous l'associer?".format(code))
+
+        return nom, prenom
 
     def main(self):
         lastCode = (None, time())
@@ -59,13 +61,19 @@ class BadgeScanneur(object):
                     ligne = lignes[-1]
                 if (code != lastCode[0] or (time() - lastCode[1] > 1000*60*60*2)) and code not in ligne:
                     lastCode = (code, time())
-                    self.redis.publish("stream", "<warning>Badge déjà scanné: {}".format(code))
-                    self.authentifier_rfid(code)
+                    nom, prenom = self.authentifier_rfid(code)
+                    self.redis.publish("stream",
+                                       "<warning>Bonjour, {}! Bons projets!".format(prenom))
                 else:
                     if dejaScanne and time() - dejaScanne < 10:
                         continue
                     dejaScanne = time()
-                    self.redis.publish("stream", "<warning>Badge déjà scanné: {}".format(code))
+                    result = rechercher_rfid(code)
+                    if result:
+                        nom, prenom, dateAdhesion = result
+
+                    self.redis.publish("stream",
+                                       "<warning>Bien tenté {} mais ton badge est déjà scanné! {}".format(prenom))
 
                 self.MIFAREReader.MFRC522_StopCrypto1()
             else:

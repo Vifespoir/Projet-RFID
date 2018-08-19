@@ -49,6 +49,7 @@ HTML_WRAPPER = [
 ]
 HTML_FLASH = '<div class="temp alert lead alert-{} .alert-dismissible" role="alert">{}</div>'
 STREAM_TYPE = re_compile(r"<(\w+)>(.+)")
+BOUTON_AJOUT_BADGE = '<a class="btn btn-primary" name="bouton" value="ajouter" href="{}" role="button">Associer</a>'
 
 # Ne pas ajouter d'extensions au dessus
 app = Flask(__name__)
@@ -71,14 +72,15 @@ def event_stream():
     for message in pubsub.listen():
         jsMessage = message["data"]
         if isinstance(jsMessage, int):
-            pass
-        else:
-            message = message["data"].decode()
-            match = STREAM_TYPE.match(message)
-            type = match.group(1)
-            jsMessage = match.group(2)
-            jsMessage = HTML_FLASH.format(type, jsMessage)
-            yield "data: {}\n\n".format(jsMessage)
+            continue
+        message = message["data"].decode()
+        match = STREAM_TYPE.match(message)
+        type = match.group(1)
+        jsMessage = match.group(2)
+        if "non repertorié" in jsMessage:
+            jsMessage += BOUTON_AJOUT_BADGE.format(url_for("retourner_admin"))
+        jsMessage = HTML_FLASH.format(type, jsMessage)
+        yield "data: {}\n\n".format(jsMessage)
 
 
 # Create database connection object
