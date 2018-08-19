@@ -40,7 +40,7 @@ class BadgeScanneur(object):
 
     def main(self):
         lastCode = (None, time())
-        counter = 0
+        dejaScanne = None
         while self.continue_reading:
             # Detecter les tags
             (status, TagType) = self.MIFAREReader.MFRC522_Request(self.MIFAREReader.PICC_REQIDL)
@@ -62,10 +62,10 @@ class BadgeScanneur(object):
                     self.redis.publish("stream", "<warning>Badge déjà scanné: {}".format(code))
                     self.authentifier_rfid(code)
                 else:
-                    counter += 1
-                    if counter >= .2*5*10:  # publish once every 10 seconds
-                        counter = 0
-                        self.redis.publish("stream", "<warning>Badge déjà scanné: {}".format(code))
+                    if dejaScanne and time() - dejaScanne < 10:
+                        continue
+                    dejaScanne = time()
+                    self.redis.publish("stream", "<warning>Badge déjà scanné: {}".format(code))
 
                 self.MIFAREReader.MFRC522_StopCrypto1()
             else:
