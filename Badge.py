@@ -28,18 +28,15 @@ class BadgeScanneur(object):
         self.continue_reading = False
         gpio.cleanup()
 
-    def authentifier_rfid(self, code):
+    def rechercher_adherent(self, code):
         result = rechercher_rfid(code)
         if result:
-            nom, prenom, dateAdhesion = result
-            ajouter_entree(nom, prenom, dateAdhesion)
+            return result
         else:
-            nom, prenom = None, None
-            with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'w') as no_adhe:
-                no_adhe.write(code)
-                self.redis.publish("stream", "<danger>Badge non repertorié: {}, voulez-vous l'associer?".format(code))
+            return (None, None, None)
 
-        return nom, prenom
+    def authentifier_rfid(self, nom, prenom, dateAdhesion):
+        ajouter_entree(nom, prenom, dateAdhesion)
 
     def main(self):
         lastCode = (None, time())
@@ -60,21 +57,27 @@ class BadgeScanneur(object):
                 with open(FICHIER_DES_ENTREES_CHEMIN, 'r') as fichierEntrees:
                     lignes = fichierEntrees.readlines()
                     ligne = lignes[-1]
-                if (code != lastCode[0] or (time() - lastCode[1] > 1000*60*60*2)) and code not in ligne:
+
+                nom, prenom, dateAdhesion = self.rechercher_adherent(code)
+                if (code != lastCode[0] or (time() - lastCode[1] > 1000*60*60*2)) and nom not in ligne:
                     lastCode = (code, time())
-                    nom, prenom = self.authentifier_rfid(code)
+                    self.authentifier_rfid(nom, prenom, dateAdhesion)
                     self.redis.publish("stream",
                                        "<warning>Bonjour, {}! Bons projets!".format(prenom))
+                elif nom is None:
+                    with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'w') as no_adhe:
+                        # FIXME delete this file
+                        no_adhe.write(code)
+                        self.redis.publish("stream",
+                                           "<danger>Badge non repertorié: {}, voulez-vous l'associer?"
+                                           .format(code))
                 else:
                     if dejaScanne and time() - dejaScanne < 10:
                         continue
                     dejaScanne = time()
-                    result = rechercher_rfid(code)
-                    if result:
-                        nom, prenom, dateAdhesion = result
-                        self.redis.publish("stream",
-                                           "<warning>Bien tenté {} mais ton badge est déjà scanné! {}"
-                                           .format(prenom))
+                    self.redis.publish("stream",
+                                       "<warning>Bien tenté {} mais ton badge est déjà scanné! {}"
+                                       .format(prenom))
                     else:
                         nom, prenom = self.authentifier_rfid(code)
 
