@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf_8 -*-
 from datetime import date, datetime, timedelta
+from re import compile as re_compile
 
 from flask import (Flask, Response, flash, redirect, render_template, request,
                    url_for)
@@ -37,6 +38,20 @@ APP_PATHS = {
     "visiteur": APP_VISITEUR
 }
 
+HTML_WRAPPER = [
+    "primary",
+    "secondary",
+    "success",
+    "danger",
+    "warning",
+    "info",
+    "dark"
+]
+HTML_FLASH = """<div class="alert lead alert-{}" role="alert">
+  {}
+</div>"""
+STREAM_TYPE = re_compile(r"(<\w+>)(.+)")
+
 # Ne pas ajouter d'extensions au dessus
 app = Flask(__name__)
 # Extensions:
@@ -52,6 +67,9 @@ redis = StrictRedis(host='localhost', port=6379, db=0)
 
 
 def event_stream():
+    if type not in HTML_WRAPPER:
+        raise Exception("Type d'évenement inconnu: {}".format(type))
+
     pubsub = redis.pubsub()
     pubsub.subscribe("stream")
     # TODO: handle client disconnection.
@@ -60,9 +78,12 @@ def event_stream():
         if isinstance(jsMessage, int):
             pass
         else:
-            print("Flask: {}".format(jsMessage.decode()))
-            yield "data: {}\n\n".format(jsMessage.decode())
-
+            message = message["data"].decode()
+            match = STREAM_TYPE.match(message)
+            type = match.group(1)
+            jsMessage = match.group(2)
+            jsMessage = HTML_FLASH.format(type, jsMessage)
+            yield "data: {}\n\n".format(jsMessage)
 
 
 # Create database connection object
