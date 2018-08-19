@@ -43,13 +43,11 @@ class BadgeScanneur(object):
         while self.continue_reading:
             # Detecter les tags
             (status, TagType) = self.MIFAREReader.MFRC522_Request(self.MIFAREReader.PICC_REQIDL)
-            # Une carte est detectee
-            if status == self.MIFAREReader.MI_OK:
-                self.redis.publish("stream", "Carte detectée")
             # Recuperation UID
             (status, uid) = self.MIFAREReader.MFRC522_Anticoll()
             if status == self.MIFAREReader.MI_OK:
                 self.redis.publish("stream", "Badge scanné")
+                # print("'Badge.py': Carte detectee")
                 # Clee d authentification par defaut
                 key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
                 # Selection du tag
@@ -63,9 +61,11 @@ class BadgeScanneur(object):
 
                 self.MIFAREReader.MFRC522_StopCrypto1()
             else:
-                self.redis.publish("stream", "Erreur d'Authentification")
+                # FOR DEBUGGING ONLY
+                # self.redis.publish("stream", "Erreur d'Authentification")
+                pass
 
-                sleep(.2)
+            sleep(.2)
 
 
 if __name__ == '__main__':

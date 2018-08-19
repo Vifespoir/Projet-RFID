@@ -53,11 +53,16 @@ redis = StrictRedis(host='localhost', port=6379, db=0)
 
 def event_stream():
     pubsub = redis.pubsub()
-    pubsub.subscribe('stream')
+    pubsub.subscribe("stream")
     # TODO: handle client disconnection.
     for message in pubsub.listen():
-        print message
-        yield 'data: %s\n\n' % message['data']
+        jsMessage = message["data"]
+        if isinstance(jsMessage, int):
+            pass
+        else:
+            print("Flask: {}".format(jsMessage.decode()))
+            yield "data: {}\n\n".format(jsMessage.decode())
+
 
 
 # Create database connection object
