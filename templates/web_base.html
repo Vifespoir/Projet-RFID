@@ -78,8 +78,8 @@ if (window.navigator.userAgent.indexOf("Edge") > -1 || window.navigator.userAgen
 }
 </script>
 <script type="text/javascript">
-$(".alert").delay(10000).slideUp(500, function() {
-    $(this).alert('close');
+$("#stream").delay(10000).slideUp(500, function() {
+    $(this).innerHTML = "";
 });
 </script>
 {% endblock %}
