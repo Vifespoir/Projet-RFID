@@ -47,7 +47,7 @@ HTML_WRAPPER = [
     "info",
     "dark"
 ]
-HTML_FLASH = '<div class="temp alert lead alert-{}" role="alert">{}</div>'
+HTML_FLASH = '<div class="temp alert lead alert-{} .alert-dismissible" role="alert">{}</div>'
 STREAM_TYPE = re_compile(r"<(\w+)>(.+)")
 
 # Ne pas ajouter d'extensions au dessus

@@ -54,9 +54,6 @@ function concat_stream_div(messages, time) {
   messages = messages.filter(is_in_array, toDelete);
   var stream = document.getElementById('stream');
   stream.innerHTML = innerHTML;
-  $(".alert").delay(10000).slideUp(500, function() {
-      $(this).alert('close');
-  });
   return messages;
 }
 if (window.navigator.userAgent.indexOf("Edge") > -1 || window.navigator.userAgent.indexOf("MSIE") > -1) {
@@ -79,5 +76,10 @@ if (window.navigator.userAgent.indexOf("Edge") > -1 || window.navigator.userAgen
   }
   sse();
 }
+</script>
+<script type="text/javascript">
+$(".alert").delay(10000).slideUp(500, function() {
+    $(this).alert('close');
+});
 </script>
 {% endblock %}
