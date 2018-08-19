@@ -78,7 +78,7 @@ def event_stream():
         type = match.group(1)
         jsMessage = match.group(2)
         if "non repertorié" in jsMessage:
-            jsMessage += BOUTON_AJOUT_BADGE.format(url_for("retourner_admin"))
+            jsMessage += BOUTON_AJOUT_BADGE.format(APP_PATHS["admin"])
         jsMessage = HTML_FLASH.format(type, jsMessage)
         yield "data: {}\n\n".format(jsMessage)
 
