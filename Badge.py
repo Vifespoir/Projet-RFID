@@ -76,7 +76,7 @@ class BadgeScanneur(object):
                         continue
                     dejaScanne = time()
                     self.redis.publish("stream",
-                                       "<warning>Bien tenté {} mais ton badge est déjà scanné! {}"
+                                       "<warning>Bien tenté {} mais ton badge est déjà scanné!"
                                        .format(prenom))
 
                 self.MIFAREReader.MFRC522_StopCrypto1()
