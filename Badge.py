@@ -78,8 +78,6 @@ class BadgeScanneur(object):
                     self.redis.publish("stream",
                                        "<warning>Bien tenté {} mais ton badge est déjà scanné! {}"
                                        .format(prenom))
-                    else:
-                        nom, prenom = self.authentifier_rfid(code)
 
                 self.MIFAREReader.MFRC522_StopCrypto1()
             else:
