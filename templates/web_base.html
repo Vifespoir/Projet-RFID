@@ -75,11 +75,9 @@ if (window.navigator.userAgent.indexOf("Edge") > -1 || window.navigator.userAgen
     };
   }
   sse();
+  setTimeout(function() {
+      $('#stream').fadeOut('fast');
+  }, 1000); // <-- time in milliseconds
 }
-</script>
-<script type="text/javascript">
-$("#stream").delay(10000).slideUp(500, function() {
-    $(this).innerHTML = "";
-});
 </script>
 {% endblock %}
