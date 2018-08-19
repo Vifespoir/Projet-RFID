@@ -75,9 +75,12 @@ if (window.navigator.userAgent.indexOf("Edge") > -1 || window.navigator.userAgen
     };
   }
   sse();
-  setTimeout(function() {
-      $('#stream').fadeOut('fast');
-  }, 1000); // <-- time in milliseconds
+  setTimeout(fade_out, 5000);
+
+  function fade_out() {
+    $("#mydiv").fadeOut().empty();
+  }
 }
+
 </script>
 {% endblock %}
