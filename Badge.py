@@ -5,7 +5,8 @@ from time import sleep, time
 
 import modules.MFRC522 as MFRC522
 from modules.entree_sortie import (FICHIER_DERNIER_BADGE_SCANNE_CHEMIN,
-                                   ajouter_entree, rechercher_rfid)
+                                   FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
+                                   rechercher_rfid)
 from pyA20.gpio import gpio
 from redis import StrictRedis
 
@@ -53,9 +54,12 @@ class BadgeScanneur(object):
                 # Authentification
                 status = self.MIFAREReader.MFRC522_Auth(self.MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
                 code = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
-                if code != lastCode[0] or (time() - lastCode[1] > 1000*60*60*2):
+                with open(FICHIER_DES_ENTREES_CHEMIN, 'r') as fichierEntrees:
+                    lignes = fichierEntrees.readlines()
+                    ligne = lignes[-1]
+                if (code != lastCode[0] or (time() - lastCode[1] > 1000*60*60*2)) and code not in ligne:
                     lastCode = (code, time())
-                    self.redis.publish("stream", "<success>Badge scanné: {}".format(code))
+                    self.redis.publish("stream", "<warning>Badge déjà scanné: {}".format(code))
                     self.authentifier_rfid(code)
                 else:
                     counter += 1
