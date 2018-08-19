@@ -67,9 +67,6 @@ redis = StrictRedis(host='localhost', port=6379, db=0)
 
 
 def event_stream():
-    if type not in HTML_WRAPPER:
-        raise Exception("Type d'évenement inconnu: {}".format(type))
-
     pubsub = redis.pubsub()
     pubsub.subscribe("stream")
     # TODO: handle client disconnection.
