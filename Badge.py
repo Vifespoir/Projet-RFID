@@ -59,7 +59,7 @@ class BadgeScanneur(object):
                     ligne = lignes[-1]
 
                 nom, prenom, dateAdhesion = self.rechercher_adherent(code)
-                if (code != lastCode[0] or (time() - lastCode[1] > 1000*60*60*2)) and nom not in ligne:
+                if (code != lastCode[0] or (time() - lastCode[1] > 1000*60*60*2)) and nom and nom not in ligne:
                     lastCode = (code, time())
                     self.authentifier_rfid(nom, prenom, dateAdhesion)
                     self.redis.publish("stream",
