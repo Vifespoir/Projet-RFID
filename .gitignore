@@ -4,3 +4,4 @@ __pycache__/
 venv/
 MFR522/
 SPI-Pi/
+*.ipynb
