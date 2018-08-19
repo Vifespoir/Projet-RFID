@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf_8 -*-
-import os
 from datetime import date, datetime, timedelta
 
-from flask import Flask, flash, redirect, render_template, request, url_for
+from flask import (Flask, Response, flash, redirect, render_template, request,
+                   url_for)
 from flask_bootstrap import Bootstrap
 from flask_security import (RoleMixin, Security, SQLAlchemyUserDatastore,
                             UserMixin, login_required)
@@ -13,11 +13,13 @@ from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
                                    rechercher_adherent, rechercher_date,
                                    rechercher_date_adhesion,
                                    rechercher_entrees, supprimer_rfid_adherent)
+from redis import StrictRedis
 
 # TODO add the new adherent signup page
 # TODO add a page for subscribing to the newsletter
 # TODO add a page to submit a bug report or a feature request
 # TODO turn entree sortie into a class
+# TODO add a page to update adherents
 
 APP_ACCUEIL = "/"
 APP_HISTORIQUE = "/historique"
@@ -45,6 +47,17 @@ app.config['SECURITY_PASSWORD_SALT'] = 'zedzoedajdpaok'
 app.config['SECURITY_POST_LOGIN_VIEW'] = APP_ADMIN
 app.config['SECURITY_LOGIN_USER_TEMPLATE'] = 'login_user.html'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+redis = StrictRedis(host='localhost', port=6379, db=0)
+
+
+def event_stream():
+    pubsub = redis.pubsub()
+    pubsub.subscribe('stream')
+    # TODO: handle client disconnection.
+    for message in pubsub.listen():
+        print message
+        yield 'data: %s\n\n' % message['data']
 
 
 # Create database connection object
@@ -104,6 +117,11 @@ def retourner_accueil():
                            jour=jour,
                            active="accueil",
                            **APP_PATHS)
+
+
+@app.route('/stream')
+def stream():
+    return Response(event_stream(), mimetype="text/event-stream")
 
 
 @app.route('/historique', methods=['GET', 'POST'])
@@ -279,3 +297,7 @@ def pagevisiteur():
         return render_template('visiteur.html',
                                active="visiteur",
                                **APP_PATHS)
+
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0")

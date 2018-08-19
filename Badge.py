@@ -7,44 +7,28 @@ import modules.MFRC522 as MFRC522
 from modules.entree_sortie import (FICHIER_DERNIER_BADGE_SCANNE_CHEMIN,
                                    ajouter_entree, rechercher_rfid)
 from pyA20.gpio import gpio
-
-# FIXME add entree only if last badge is not last line of registre_des_entrees
-
-gpio.init()  # Initialize module. Always called first
-
-continue_reading = True
+from redis import StrictRedis
 
 
-def end_read(signal, frame):
-    """Fonction qui arrete la lecture proprement."""
-    global continue_reading
-    print ("Lecture terminée")
-    continue_reading = False
-    gpio.cleanup()
+class BadgeScanneur(object):
+    """docstring for BadgeScanneur."""
+    def __init__(self):
+        super(BadgeScanneur, self).__init__()
+        print("init")
+        self.redis = StrictRedis(host='localhost', port=6379, db=0)
+        gpio.init()  # Initialize module. Always called first
+        self.continue_reading = True
+        signal.signal(signal.SIGINT, self.end_read)
+        self.MIFAREReader = MFRC522.MFRC522()
+        print ("Passer le tag RFID a lire")
 
+    def end_read(self, signal, frame):
+        """Fonction qui arrete la lecture proprement."""
+        print ("Lecture terminée")
+        self.continue_reading = False
+        gpio.cleanup()
 
-print("init")
-signal.signal(signal.SIGINT, end_read)
-MIFAREReader = MFRC522.MFRC522()
-
-print ("Passer le tag RFID a lire")
-
-while continue_reading:
-    # Detecter les tags
-    (status, TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
-    # Une carte est detectee
-    if status == MIFAREReader.MI_OK:
-        print ("Carte detectee")
-    # Recuperation UID
-    (status, uid) = MIFAREReader.MFRC522_Anticoll()
-    if status == MIFAREReader.MI_OK:
-        # Clee d authentification par defaut
-        key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
-        # Selection du tag
-        MIFAREReader.MFRC522_SelectTag(uid)
-        # Authentification
-        status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
-        code = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
+    def authentifier_rfid(self, code):
         result = rechercher_rfid(code)
         if result:
             nom, prenom, dateAdhesion = result
@@ -54,9 +38,36 @@ while continue_reading:
                 no_adhe.write(code)
                 print("carte non repertioriee")
 
-        if status == MIFAREReader.MI_OK:
-            MIFAREReader.MFRC522_StopCrypto1()
-        else:
-            print ("Erreur d'Authentification")
+    def main(self):
+        lastCode = None
+        while self.continue_reading:
+            # Detecter les tags
+            (status, TagType) = self.MIFAREReader.MFRC522_Request(self.MIFAREReader.PICC_REQIDL)
+            # Une carte est detectee
+            if status == self.MIFAREReader.MI_OK:
+                self.redis.publish("stream", "Carte detectée")
+            # Recuperation UID
+            (status, uid) = self.MIFAREReader.MFRC522_Anticoll()
+            if status == self.MIFAREReader.MI_OK:
+                self.redis.publish("stream", "Badge scanné")
+                # Clee d authentification par defaut
+                key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
+                # Selection du tag
+                self.MIFAREReader.MFRC522_SelectTag(uid)
+                # Authentification
+                status = self.MIFAREReader.MFRC522_Auth(self.MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
+                code = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
+                if code != lastCode:
+                    lastCode = code
+                    self.authentifier_rfid(code)
 
-        sleep(.2)
+                self.MIFAREReader.MFRC522_StopCrypto1()
+            else:
+                self.redis.publish("stream", "Erreur d'Authentification")
+
+                sleep(.2)
+
+
+if __name__ == '__main__':
+    badgeScanneur = BadgeScanneur()
+    badgeScanneur.main()

@@ -34,4 +34,21 @@
 </br>
 </br>
 </br>
+<div class="alert lead alert-primary" role="alert" id="stream">
+</div>
+<script type="text/javascript">
+if (window.navigator.userAgent.indexOf("Edge") > -1 ) or (window.navigator.userAgent.indexOf("MSIE") > -1) {
+  var stream = document.getElementById('stream');
+  stream.interHTML = "Cette application ne marche ni avec Internet Explorer ni avec Edge.";
+} else {
+  function sse() {
+    var source = new EventSource('/stream');
+    var stream = document.getElementById('stream');
+    source.onmessage = function(event) {
+      stream.innerHTML =  event.data;
+    };
+  }
+  sse();
+}
+</script>
 {% endblock %}
