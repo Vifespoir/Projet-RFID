@@ -76,10 +76,10 @@ if (window.navigator.userAgent.indexOf("Edge") > -1 || window.navigator.userAgen
   }
   sse();
 }
-window.setTimeout(function() {
-  $(".temp").fadeTo(500, 0).slideUp(500, function(){
-    $(this).remove();
-  });
-}, 10000);
+</script>
+<script type="text/javascript">
+$(".alert").delay(10000).slideUp(500, function() {
+    $(this).alert('close');
+});
 </script>
 {% endblock %}
