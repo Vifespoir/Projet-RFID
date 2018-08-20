@@ -53,7 +53,7 @@ class BadgeScanneur(object):
         print(entrees)
 
         for ligne in entrees:
-            date, heure, prenom, nom = ligne[0:4]
+            date, heure, nom, prenom = ligne[0:4]
             date = date + " " + heure
             print(date, nom, prenom)
             date = datetime.strptime(date, '%Y-%m-%d %H:%M')
@@ -67,7 +67,7 @@ class BadgeScanneur(object):
                 else:
                     print("long time elapsed")
             else:
-                print("no name match: {} != {} AND {}!={}".format(refNom, nom, refPrenom, prenom))
+                print("no name match: {} != {} AND {} != {}".format(refNom, nom, refPrenom, prenom))
 
         return False
 
