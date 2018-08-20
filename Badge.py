@@ -39,7 +39,7 @@ class BadgeScanneur(object):
                  "prenom": ligne[2],
                  "nom": ligne[3],
                  "cotisation": ligne[4]}
-        ligne["date"] = datetime.strptime(ligne["date"], '%Y/%m/%d')
+        ligne["date"] = datetime.strptime(ligne["date"], '%Y-%m-%d')
         ligne["heure"] = datetime.strptime(ligne["heure"], "%H:%M")
         derniereDate = ligne["date"] + ligne["heure"]
         return ligne, derniereDate
