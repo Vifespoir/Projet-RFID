@@ -19,27 +19,28 @@
   </head>
   <body{% block body_attribs %}{% endblock body_attribs %}>
     {% block body -%}
-    <div class="row">
-      <div class="col-3">
-        <!-- <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
-        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</a>
-        <a class="nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a> -->
-        <div class="nav flex-column nav-pills" id="nav-tab" role="tablist">
-          <a class="nav-link text-uppercase font-weight-bold {% if active == 'accueil' %}active{% endif %}" style="font-size: 180%;" href="{{ accueil }}">Accueil<span class="sr-only">(current)</span></a>
-          <a class="nav-link text-uppercase font-weight-bold {% if active == 'historique' %}active{% endif %}" style="font-size: 180%;" href="{{ historique }}">Historique</a>
-          <a class="nav-link text-uppercase font-weight-bold {% if active == 'visiteur' %}active{% endif %}" style="font-size: 180%;" href="{{ visiteur }}">Espace sans badge</a>
-          <a class="nav-link text-uppercase font-weight-bold {% if active == 'admin' %}active{% endif %}" style="font-size: 180%;" href="{{ admin }}">Admin</a>
-          {% if current_user.is_authenticated %}
-          <a class="nav-link text-uppercase font-weight-bold" style="font-size: 180%;" href="{{ logout }}">Se déconnecter</a>
-          {% endif %}
+    <div class="container">
+      <div class="row">
+        <div class="col-2">
+          <!-- <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
+          <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</a>
+          <a class="nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a> -->
+          <div class="nav flex-column nav-pills" id="nav-tab" role="tablist">
+            <a class="nav-link text-uppercase font-weight-bold {% if active == 'accueil' %}active{% endif %}" style="font-size: 180%;" href="{{ accueil }}">Accueil<span class="sr-only">(current)</span></a>
+            <a class="nav-link text-uppercase font-weight-bold {% if active == 'historique' %}active{% endif %}" style="font-size: 180%;" href="{{ historique }}">Historique</a>
+            <a class="nav-link text-uppercase font-weight-bold {% if active == 'visiteur' %}active{% endif %}" style="font-size: 180%;" href="{{ visiteur }}">Espace sans badge</a>
+            <a class="nav-link text-uppercase font-weight-bold {% if active == 'admin' %}active{% endif %}" style="font-size: 180%;" href="{{ admin }}">Admin</a>
+            {% if current_user.is_authenticated %}
+            <a class="nav-link text-uppercase font-weight-bold" style="font-size: 180%;" href="{{ logout }}">Se déconnecter</a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-10 float-left">
+          {% block content -%}
+          {%- endblock content %}
         </div>
       </div>
-      <div class="col-9">
-        {% block content -%}
-        {%- endblock content %}
-      </div>
     </div>
-
     {% block scripts %}
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
