@@ -169,7 +169,7 @@ def rechercher_entrees(nom, prenom):
         for ligne in lignes:
             if prenom in ligne and nom in ligne:
                 ligne = ligne.split(' ')
-                entrees.extend(ligne[0:4])
+                entrees.extend(ligne[0:5])
 
     return entrees
 
