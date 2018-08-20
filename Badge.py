@@ -53,19 +53,10 @@ class BadgeScanneur(object):
         for ligne in entrees:
             date, heure, prenom, nom = ligne[0:4]
             date = date + " " + heure
-            print(date, nom, prenom)
             date = datetime.strptime(date, '%Y-%m-%d %H:%M')
-            print("time check")
-            print(datetime.now() - date)
-            print(datetime.now() - date < timedelta(0, 60*60*4))
             if refNom.lower() == nom.lower() and refPrenom.lower() == prenom.lower():
                 if datetime.now() - date < timedelta(0, 60*60*2):  # compare to 2 hours (+2 due to GMT)
-                    print("little time elapsed")
                     return True
-                else:
-                    print("long time elapsed")
-            else:
-                print("no name match: {} != {} AND {} != {}".format(refNom, nom, refPrenom, prenom))
 
         return False
 
