@@ -53,10 +53,9 @@ class BadgeScanneur(object):
         print(entrees)
 
         for ligne in entrees:
-            for index in range(0, 5):
-                date, heure, nom, prenom = ligne[0], ligne[1], ligne[2], ligne[3]
+            date, heure, nom, prenom = ligne[0:4]
             date = date + " " + heure
-            print(date)
+            print(date, nom, prenom)
             date = datetime.strptime(date, '%Y-%m-%d %H:%M')
             print("time check")
             print(datetime.now() - date)
