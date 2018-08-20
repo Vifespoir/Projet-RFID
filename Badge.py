@@ -21,7 +21,7 @@ class BadgeScanneur(object):
         self.continue_reading = True
         signal.signal(signal.SIGINT, self.end_read)
         self.MIFAREReader = MFRC522.MFRC522()
-        self.derniereEntree, self.derniereDate = self.lire_derniere_entree()
+        self.lire_derniere_entree()
         self.redis.publish("stream", "<success>Badgeuse initialisé, prête à scanner.")
 
     def end_read(self, signal, frame):
@@ -41,8 +41,8 @@ class BadgeScanneur(object):
                  "cotisation": ligne[4]}
         ligne["date"] = datetime.strptime(ligne["date"], '%Y-%m-%d')
         ligne["heure"] = datetime.strptime(ligne["heure"], "%H:%M").time()
-        derniereDate = datetime.combine(ligne["date"], ligne["heure"])
-        return ligne, derniereDate
+        self.derniereEntree = ligne
+        self.derniereDate = datetime.combine(ligne["date"], ligne["heure"])
 
     def rechercher_adherent(self, code):
         result = rechercher_rfid(code)
