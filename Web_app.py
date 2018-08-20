@@ -16,11 +16,9 @@ from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
                                    rechercher_entrees, supprimer_rfid_adherent)
 from redis import StrictRedis
 
-# TODO add the new adherent signup page
-# TODO add a page for subscribing to the newsletter
-# TODO add a page to submit a bug report or a feature request
 # TODO turn entree sortie into a class
 # TODO add a page to update adherents
+
 
 APP_ACCUEIL = "/"
 APP_HISTORIQUE = "/historique"
@@ -145,6 +143,25 @@ def retourner_accueil():
 @app.route('/stream')
 def stream():
     return Response(event_stream(), mimetype="text/event-stream")
+
+
+# TODO add the new adherent signup page
+@app.route("/adhesion")
+def retourner_adhesion():
+    return redirect("https://ppr.hatlab.fr/inscription/adhesions.php")
+
+
+# TODO add a page for subscribing to the newsletter
+@app.route("/newsletter")
+def retourner_newsletter():
+    return redirect("https://ppr.hatlab.fr/inscription/adhesions.php")
+
+
+# TODO add a page to submit a bug report or a feature request
+@app.route("/bug")
+def retourner_bug():
+    """Email me."""
+    pass
 
 
 @app.route('/historique', methods=['GET', 'POST'])

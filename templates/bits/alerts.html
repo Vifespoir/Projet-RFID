@@ -1,0 +1,46 @@
+<script type="text/javascript">
+var messages = [];
+function is_in_array(item) {
+  return !this.includes(item)
+}
+function concat_stream_div(messages, time) {
+  var innerHTML = "";
+  var toDelete = [];
+  for (var i = 0; i < messages.length; i++) {
+    if ((time - messages[i].time) > 60000) {
+      toDelete.push(messages[i]);
+    } else {
+      innerHTML = innerHTML.concat(messages[i].data);
+    }
+  }
+  messages = messages.filter(is_in_array, toDelete);
+  var stream = document.getElementById('stream');
+  stream.innerHTML = innerHTML;
+  setTimeout(fade_out, 10000);
+  return messages;
+}
+if (window.navigator.userAgent.indexOf("Edge") > -1 || window.navigator.userAgent.indexOf("MSIE") > -1) {
+  var stream = document.getElementById('stream');
+  stream.interHTML = "Cette application ne marche ni avec Internet Explorer ni avec Edge.";
+} else {
+  function sse(event) {
+    var source = new EventSource('{{ url_for('stream') }}');
+    source.onmessage = function(event) {
+      var time = new Date();
+      toDelete = [];
+      messages.push({"data": String(event.data), "time": time})
+      if (messages.length < 5) {
+        messages = concat_stream_div(messages, time);
+      } else {
+        messages.shift();
+        messages = concat_stream_div(messages, time);
+      }
+    };
+  }
+  sse();
+}
+function fade_out() {
+  $("#stream").empty();
+  location.reload();
+}
+</script>
