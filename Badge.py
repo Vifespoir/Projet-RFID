@@ -50,10 +50,8 @@ class BadgeScanneur(object):
                 subEntree.append(self.derniereEntrees[ligneIndex*5+index])
             entrees.append(subEntree)
 
-        print(entrees)
-
         for ligne in entrees:
-            date, heure, nom, prenom = ligne[0:4]
+            date, heure, prenom, nom = ligne[0:4]
             date = date + " " + heure
             print(date, nom, prenom)
             date = datetime.strptime(date, '%Y-%m-%d %H:%M')
