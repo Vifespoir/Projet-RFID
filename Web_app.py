@@ -137,7 +137,7 @@ def retourner_accueil():
 
     return render_template('accueil.html',
                            contenu=entreesDuJour,
-                           jour=jour,
+                           cherche=jour,
                            active="accueil",
                            **APP_PATHS)
 
@@ -247,6 +247,7 @@ def ajouter():
             return render_template('accueil.html',
                                    contenu=lignes,
                                    cherche=cherche,
+                                   active="accueil",
                                    **APP_PATHS)
 
         else:
@@ -271,6 +272,7 @@ def simuler():
         return render_template('accueil.html',
                                contenu=entrees,
                                cherche=cherche,
+                               active="accueil",
                                **APP_PATHS)
 
     return redirect(url_for('retourner_admin'))

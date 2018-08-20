@@ -31,8 +31,6 @@
 </br>
 </div>
 
-
-{% if contenu %}
 <div class="container">
 <div class="row ">
   <div class="col col-lg-4">
@@ -47,28 +45,7 @@
 </div>
 </br>
 </div>
-<div class="container">
-  <table class="table">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col">Date</th>
-        <th scope="col">Heure</th>
-        <th scope="col">Nom</th>
-        <th scope="col">Prenom</th>
-      </tr>
-    </thead>
-    <tbody>
-  	<tr>
-  	{% for item in contenu %}
-      <td>{{ item }}</td>
-      {% if loop.index is divisibleby(4) %}
-  	</tr>
-  	<tr>
-  	{% endif %}
-  	{% endfor %}
-  	</tr>
-    </tbody>
-  </table>
-</div>
+{% if contenu %}
+{% include "bits/registre_entrees.html" %}
 {% endif %}
 {% endblock %}
