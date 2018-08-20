@@ -41,7 +41,7 @@ class BadgeScanneur(object):
                  "cotisation": ligne[4]}
         ligne["date"] = datetime.strptime(ligne["date"], '%Y-%m-%d')
         ligne["heure"] = datetime.strptime(ligne["heure"], "%H:%M")
-        derniereDate = ligne["date"] + ligne["heure"]
+        derniereDate = timedelta(0, ligne["date"]) + timedelta(0, ligne["heure"])
         return ligne, derniereDate
 
     def rechercher_adherent(self, code):
@@ -57,7 +57,7 @@ class BadgeScanneur(object):
 
     def detecter_deja_scanne(self, nom, prenom):
         if nom in self.derniereEntree and prenom in self.derniereEntree and\
-                (timedelta(0, self.datetime.now()) - timedelta(0, self.derniereDate) < timedelta(0, 60*4)):
+                (timedelta(0, self.datetime.now()) - self.derniereDate < timedelta(0, 60*4)):
             return True
 
         return False
