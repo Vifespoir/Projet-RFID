@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf_8 -*-
 from csv import reader, writer
-from datetime import datetime
+from datetime import date, datetime
 from os.path import abspath, dirname, isdir, join, pardir
 
 DOSSIER_DONNEES = "data"
@@ -158,6 +158,12 @@ def rechercher_entrees(nom=None, prenom=None, jour=None):
                 if jour in ligne:
                     entrees.extend(ligne[0:5])
 
+    return entrees
+
+
+def lire_derniere_entrees(self):
+    jour = str(date.today())
+    entrees = rechercher_entrees(jour=jour)
     return entrees
 
 

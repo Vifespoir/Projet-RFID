@@ -7,7 +7,7 @@ from time import sleep
 import modules.MFRC522 as MFRC522
 from modules.entree_sortie import (FICHIER_DERNIER_BADGE_SCANNE_CHEMIN,
                                    FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
-                                   rechercher_rfid)
+                                   lire_derniere_entrees, rechercher_rfid)
 from pyA20.gpio import gpio
 from redis import StrictRedis
 
@@ -21,7 +21,7 @@ class BadgeScanneur(object):
         self.continue_reading = True
         signal.signal(signal.SIGINT, self.end_read)
         self.MIFAREReader = MFRC522.MFRC522()
-        self.lire_derniere_entree()
+        self.derniereEntrees = self.lire_derniere_entrees()
         self.redis.publish("stream", "<success>Badgeuse initialisé, prête à scanner.")
 
     def end_read(self, signal, frame):
@@ -29,20 +29,6 @@ class BadgeScanneur(object):
         self.redis.publish("stream", "<warning>Lecture terminée, badgeuse arrêtée.")
         self.continue_reading = False
         gpio.cleanup()
-
-    def lire_derniere_entree(self):
-        with open(FICHIER_DES_ENTREES_CHEMIN, 'r') as fichierEntrees:
-            lignes = fichierEntrees.readlines()
-        ligne = lignes[-1].split(" ")
-        ligne = {"date": ligne[0],
-                 "heure": ligne[1],
-                 "prenom": ligne[2],
-                 "nom": ligne[3],
-                 "cotisation": ligne[4]}
-        ligne["date"] = datetime.strptime(ligne["date"], '%Y-%m-%d')
-        ligne["heure"] = datetime.strptime(ligne["heure"], "%H:%M").time()
-        self.derniereEntree = ligne
-        self.derniereDate = datetime.combine(ligne["date"], ligne["heure"])
 
     def rechercher_adherent(self, code):
         result = rechercher_rfid(code)
@@ -53,13 +39,16 @@ class BadgeScanneur(object):
 
     def authentifier_rfid(self, nom, prenom, dateAdhesion):
         ajouter_entree(nom, prenom, dateAdhesion)
-        self.lire_derniere_entree()
+        self.derniereEntrees = self.lire_derniere_entrees()
 
     def detecter_deja_scanne(self, nom, prenom):
-        if nom.lower() in self.derniereEntree["nom"].lower()\
-                and prenom.lower() in self.derniereEntree["prenom"].lower():
-            if datetime.now() - self.derniereDate < timedelta(0, 60*60*4):
-                print("only little time elapsed")
+        for ligne in self.derniereEntrees:
+            date, heure, nom, prenom = ligne[0:4]
+            date = date + " " + heure
+            date = datetime.strptime(date, '%Y-%m-%d %H:%M')
+            if nom.lower() in self.derniereEntree["nom"].lower()\
+                    and prenom.lower() in self.derniereEntree["prenom"].lower()\
+                    and datetime.now() - date < timedelta(0, 60*60*4):  # compare to 4 hours
                 return True
 
         return False
