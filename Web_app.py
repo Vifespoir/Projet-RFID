@@ -244,7 +244,7 @@ def ajouter():
             cherche = "{} {}".format(prenom, nom)
             lignes = rechercher_entrees(nom=nom, prenom=prenom)
 
-            return render_template('voir_entrees.html',
+            return render_template('accueil.html',
                                    contenu=lignes,
                                    cherche=cherche,
                                    **APP_PATHS)
@@ -268,7 +268,7 @@ def simuler():
         ajouter_entree(nom, prenom, dateAdhesion)
         entrees = rechercher_entrees(nom=nom, prenom=prenom)
 
-        return render_template('voir_entrees.html',
+        return render_template('accueil.html',
                                contenu=entrees,
                                cherche=cherche,
                                **APP_PATHS)
