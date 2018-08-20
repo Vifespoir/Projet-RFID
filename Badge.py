@@ -60,12 +60,14 @@ class BadgeScanneur(object):
             print("time check")
             print(datetime.now() - date)
             print(datetime.now() - date < timedelta(0, 60*60*4))
-            if refNom.lower() == nom.lower() and refPrenom.lower() == prenom.lower()\
-                    and datetime.now() - date < timedelta(0, 60*60*2):  # compare to 2 hours (+2 due to GMT)
-                print("little time elapsed")
-                return True
+            if refNom.lower() == nom.lower() and refPrenom.lower() == prenom.lower():
+                if datetime.now() - date < timedelta(0, 60*60*2):  # compare to 2 hours (+2 due to GMT)
+                    print("little time elapsed")
+                    return True
+                else:
+                    print("long time elapsed")
             else:
-                print("long time elapsed")
+                print("no name match")
 
         return False
 
