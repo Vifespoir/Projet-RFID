@@ -42,7 +42,6 @@ class BadgeScanneur(object):
         self.derniereEntrees = lire_entrees_du_jour()
 
     def detecter_deja_scanne(self, nom, prenom):
-        print(self.derniereEntrees)
 
         entrees = []
         for ligneIndex in range(0, int(len(self.derniereEntrees) / 5)):
@@ -51,14 +50,15 @@ class BadgeScanneur(object):
                 subEntree.append(self.derniereEntrees[ligneIndex*5+index])
             entrees.append(subEntree)
 
+        print(entrees)
+
         for ligne in entrees:
             for index in range(0, 5):
                 date, heure, nom, prenom = ligne[0], ligne[1], ligne[2], ligne[3]
             date = date + " " + heure
             print(date)
             date = datetime.strptime(date, '%Y-%m-%d %H:%M')
-            if nom.lower() in self.derniereEntree["nom"].lower()\
-                    and prenom.lower() in self.derniereEntree["prenom"].lower()\
+            if nom.lower() == nom.lower() and prenom.lower() == prenom.lower()\
                     and datetime.now() - date < timedelta(0, 60*60*4):  # compare to 4 hours
                 return True
 
