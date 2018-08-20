@@ -53,7 +53,7 @@ class BadgeScanneur(object):
         print(entrees)
 
         for ligne in entrees:
-            date, heure, nom, prenom = ligne[0:4]
+            date, heure, prenom, nom = ligne[0:4]
             date = date + " " + heure
             print(date, nom, prenom)
             date = datetime.strptime(date, '%Y-%m-%d %H:%M')
@@ -72,7 +72,7 @@ class BadgeScanneur(object):
         return False
 
     def traiter_rfid(self, code):
-        prenom, nom, dateAdhesion = self.rechercher_adherent(code)
+        nom, prenom, dateAdhesion = self.rechercher_adherent(code)
         if nom is None:
             # FIXME delete this file
             with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'w') as no_adhe:

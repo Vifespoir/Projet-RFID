@@ -67,6 +67,7 @@ if (window.navigator.userAgent.indexOf("Edge") > -1 || window.navigator.userAgen
       var time = new Date();
       toDelete = [];
       messages.push({"data": String(event.data), "time": time})
+       location.reload();
       if (messages.length < 5) {
         messages = concat_stream_div(messages, time);
       } else {
@@ -77,7 +78,6 @@ if (window.navigator.userAgent.indexOf("Edge") > -1 || window.navigator.userAgen
   }
   sse();
 }
-
 function fade_out() {
   $("#stream").empty();
 }
