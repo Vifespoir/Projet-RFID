@@ -149,7 +149,7 @@ def rechercher_entrees(nom=None, prenom=None, jour=None):
     if nom is None and prenom is None and jour is None:
         raise UserWarning("Aucune clé n'a été fourni pour la recherche...")
     with open(FICHIER_DES_ENTREES_CHEMIN, "r") as fichierEntrees:
-        lignes = reader(fichierEntrees)
+        lignes = reader(fichierEntrees, delimiter=' ')
         for ligne in lignes:
             if prenom and nom:
                 if prenom in ligne and nom in ligne:
