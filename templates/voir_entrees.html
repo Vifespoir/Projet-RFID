@@ -3,31 +3,7 @@
 
 {% block content %}
 
-<div class="container">
-<h2> Voici l'historique d'entrée de : {{cherche}} </h2>
-<table class="table">
-  <thead class="thead-light">
-    <tr>
-      <th scope="col">Date</th>
-      <th scope="col">Heure</th>
-      <th scope="col">Prenom</th>
-      <th scope="col">Nom</th>
-      <th scope="col">Adhérent</th>
-    </tr>
-  </thead>
-  <tbody>
-	<tr>
-	{% for item in contenu %}
-    <td>{{ item }}</td>
-    {% if loop.index is divisibleby(5) %}
-	</tr>
-	<tr>
-	{% endif %}
-	{% endfor %}
-	</tr>
-  </tbody>
-</table>
-</div>
+{% includes "bits/registre_entrees.html" %}
 
 
 {% endblock %}
