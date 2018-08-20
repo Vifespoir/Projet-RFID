@@ -21,7 +21,7 @@ class BadgeScanneur(object):
         self.continue_reading = True
         signal.signal(signal.SIGINT, self.end_read)
         self.MIFAREReader = MFRC522.MFRC522()
-        self.derniereEntrees = self.lire_derniere_entrees()
+        self.derniereEntrees = lire_derniere_entrees()
         self.redis.publish("stream", "<success>Badgeuse initialisé, prête à scanner.")
 
     def end_read(self, signal, frame):
@@ -39,7 +39,7 @@ class BadgeScanneur(object):
 
     def authentifier_rfid(self, nom, prenom, dateAdhesion):
         ajouter_entree(nom, prenom, dateAdhesion)
-        self.derniereEntrees = self.lire_derniere_entrees()
+        self.derniereEntrees = lire_derniere_entrees()
 
     def detecter_deja_scanne(self, nom, prenom):
         for ligne in self.derniereEntrees:
