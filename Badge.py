@@ -41,7 +41,7 @@ class BadgeScanneur(object):
         ajouter_entree(nom, prenom, dateAdhesion)
         self.derniereEntrees = lire_entrees_du_jour()
 
-    def detecter_deja_scanne(self, nom, prenom):
+    def detecter_deja_scanne(self, refNom, refPrenom):
 
         entrees = []
         for ligneIndex in range(0, int(len(self.derniereEntrees) / 5)):
@@ -61,7 +61,7 @@ class BadgeScanneur(object):
             print("time check")
             print(datetime.now() - date)
             print(datetime.now() - date < timedelta(0, 60*60*4))
-            if nom.lower() == nom.lower() and prenom.lower() == prenom.lower()\
+            if refNom.lower() == nom.lower() and refPrenom.lower() == prenom.lower()\
                     and datetime.now() - date < timedelta(0, 60*60*2):  # compare to 2 hours (+2 due to GMT)
                 print("little time elapsed")
                 return True
