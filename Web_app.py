@@ -49,7 +49,7 @@ HTML_WRAPPER = [
 ]
 HTML_FLASH = '<div class="temp alert lead alert-{} .alert-dismissible" role="alert">{}</div>'
 STREAM_TYPE = re_compile(r"<(\w+)>(.+)")
-BOUTON_AJOUT_BADGE = '<a class="btn btn-primary" name="bouton" value="ajouter" href="{}" role="button">Associer</a>'
+BOUTON_AJOUT_BADGE = '<a class="btn btn-primary " name="bouton" value="ajouter" href="{}" role="button">Associer</a>'
 
 # Ne pas ajouter d'extensions au dessus
 app = Flask(__name__)

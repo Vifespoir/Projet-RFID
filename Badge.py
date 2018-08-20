@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # Version modifiee de la librairie https://github.com/mxgxw/MFRC522-python
 import signal
-from time import sleep, time
+from datetime import datetime, timedelta
+from time import sleep
 
 import modules.MFRC522 as MFRC522
 from modules.entree_sortie import (FICHIER_DERNIER_BADGE_SCANNE_CHEMIN,
@@ -20,6 +21,7 @@ class BadgeScanneur(object):
         self.continue_reading = True
         signal.signal(signal.SIGINT, self.end_read)
         self.MIFAREReader = MFRC522.MFRC522()
+        self.derniereEntree, self.derniereDate = self.lire_derniere_entree()
         self.redis.publish("stream", "<success>Badgeuse initialisé, prête à scanner.")
 
     def end_read(self, signal, frame):
@@ -27,6 +29,20 @@ class BadgeScanneur(object):
         self.redis.publish("stream", "<warning>Lecture terminée, badgeuse arrêtée.")
         self.continue_reading = False
         gpio.cleanup()
+
+    def lire_derniere_entree(self):
+        with open(FICHIER_DES_ENTREES_CHEMIN, 'r') as fichierEntrees:
+            lignes = fichierEntrees.readlines()
+        ligne = lignes[-1].split(" ")
+        ligne = {"date": ligne[0],
+                 "heure": ligne[1],
+                 "prenom": ligne[2],
+                 "nom": ligne[3],
+                 "cotisation": ligne[4]}
+        ligne["date"] = datetime.strptime(ligne["date"], '%Y/%m/%d')
+        ligne["heure"] = datetime.strptime(ligne["heure"], "%H:%M")
+        derniereDate = ligne["date"] + ligne["heure"]
+        return ligne, derniereDate
 
     def rechercher_adherent(self, code):
         result = rechercher_rfid(code)
@@ -37,11 +53,38 @@ class BadgeScanneur(object):
 
     def authentifier_rfid(self, nom, prenom, dateAdhesion):
         ajouter_entree(nom, prenom, dateAdhesion)
+        self.lire_derniere_entree()
+
+    def detecter_deja_scanne(self, nom, prenom):
+        if nom in self.derniereEntree and prenom in self.derniereEntree and\
+                (self.datetime.now() - self.derniereDate < timedelta(0, 60*4)):
+            return True
+
+        return False
+
+    def traiter_rfid(self, code):
+        nom, prenom, dateAdhesion = self.rechercher_adherent(code)
+        if nom is None:
+            # FIXME delete this file
+            with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'w') as no_adhe:
+                no_adhe.write(code)
+            self.redis.publish("stream",
+                               "<danger>Badge non repertorié: {}, voulez-vous l'associer?"
+                               .format(code))
+        elif self.detecter_deja_scanne(nom, prenom):
+            self.redis.publish("stream",
+                               "<warning>Bien tenté {} mais ton badge est déjà scanné!"
+                               .format(prenom))
+        else:
+            self.authentifier_rfid(nom, prenom, dateAdhesion)
+            self.redis.publish("stream",
+                               "<warning>Bonjour, {}! Bons projets!".format(prenom))
+
+        sleep(3)
 
     def main(self):
-        lastCode = (None, time())
-        dejaScanne = None
         while self.continue_reading:
+            sleep(.2)
             # Detecter les tags
             (status, TagType) = self.MIFAREReader.MFRC522_Request(self.MIFAREReader.PICC_REQIDL)
             # Recuperation UID
@@ -54,38 +97,12 @@ class BadgeScanneur(object):
                 # Authentification
                 status = self.MIFAREReader.MFRC522_Auth(self.MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
                 code = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
-                with open(FICHIER_DES_ENTREES_CHEMIN, 'r') as fichierEntrees:
-                    lignes = fichierEntrees.readlines()
-                    ligne = lignes[-1]
-
-                nom, prenom, dateAdhesion = self.rechercher_adherent(code)
-                if (code != lastCode[0] or (time() - lastCode[1] > 1000*60*60*2)) and nom and nom not in ligne:
-                    lastCode = (code, time())
-                    self.authentifier_rfid(nom, prenom, dateAdhesion)
-                    self.redis.publish("stream",
-                                       "<warning>Bonjour, {}! Bons projets!".format(prenom))
-                elif nom is None:
-                    with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'w') as no_adhe:
-                        # FIXME delete this file
-                        no_adhe.write(code)
-                        self.redis.publish("stream",
-                                           "<danger>Badge non repertorié: {}, voulez-vous l'associer?"
-                                           .format(code))
-                else:
-                    if dejaScanne and time() - dejaScanne < 10:
-                        continue
-                    dejaScanne = time()
-                    self.redis.publish("stream",
-                                       "<warning>Bien tenté {} mais ton badge est déjà scanné!"
-                                       .format(prenom))
-
+                self.traiter_rfid(code)
                 self.MIFAREReader.MFRC522_StopCrypto1()
             else:
                 # DEBUG POUR DEBUGGER SEULEMENT
                 # self.redis.publish("danger", "Erreur d'Authentification")
                 pass
-
-            sleep(.2)
 
 
 if __name__ == '__main__':
