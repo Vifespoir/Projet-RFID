@@ -45,6 +45,7 @@ class BadgeScanneur(object):
         for ligne in self.derniereEntrees:
             date, heure, nom, prenom = ligne[0:4]
             date = date + " " + heure
+            print(date)
             date = datetime.strptime(date, '%Y-%m-%d %H:%M')
             if nom.lower() in self.derniereEntree["nom"].lower()\
                     and prenom.lower() in self.derniereEntree["prenom"].lower()\
