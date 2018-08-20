@@ -42,7 +42,10 @@ class BadgeScanneur(object):
         self.derniereEntrees = lire_entrees_du_jour()
 
     def detecter_deja_scanne(self, nom, prenom):
+        print(self.derniereEntrees)
         for ligne in self.derniereEntrees:
+            ligne = ligne.split(" ")
+            print(ligne)
             date, heure, nom, prenom = ligne[0], ligne[1], ligne[2], ligne[3]
             date = date + " " + heure
             print(date)
