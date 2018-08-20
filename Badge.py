@@ -62,7 +62,7 @@ class BadgeScanneur(object):
             print(datetime.now() - date)
             print(datetime.now() - date < timedelta(0, 60*60*4))
             if nom.lower() == nom.lower() and prenom.lower() == prenom.lower()\
-                    and datetime.now() - date < timedelta(0, 60*60*4):  # compare to 4 hours
+                    and datetime.now() - date < timedelta(0, 60*60*2):  # compare to 2 hours (+2 due to GMT)
                 print("little time elapsed")
                 return True
             else:
