@@ -43,10 +43,17 @@ class BadgeScanneur(object):
 
     def detecter_deja_scanne(self, nom, prenom):
         print(self.derniereEntrees)
-        for ligne in self.derniereEntrees:
-            ligne = ligne.split(" ")
-            print(ligne)
-            date, heure, nom, prenom = ligne[0], ligne[1], ligne[2], ligne[3]
+
+        entrees = []
+        for ligneIndex in range(0, len(self.derniereEntrees) / 5):
+            subEntree = []
+            for index in range(0, 5):
+                subEntree.append(self.derniereEntrees[ligneIndex*5+index])
+            entrees.append(subEntree)
+
+        for ligne in entrees:
+            for index in range(0, 5):
+                date, heure, nom, prenom = ligne[0], ligne[1], ligne[2], ligne[3]
             date = date + " " + heure
             print(date)
             date = datetime.strptime(date, '%Y-%m-%d %H:%M')
