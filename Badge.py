@@ -45,7 +45,7 @@ class BadgeScanneur(object):
         print(self.derniereEntrees)
 
         entrees = []
-        for ligneIndex in range(0, len(self.derniereEntrees) / 5):
+        for ligneIndex in range(0, int(len(self.derniereEntrees) / 5)):
             subEntree = []
             for index in range(0, 5):
                 subEntree.append(self.derniereEntrees[ligneIndex*5+index])
