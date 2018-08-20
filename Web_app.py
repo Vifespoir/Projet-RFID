@@ -11,9 +11,9 @@ from flask_security import (RoleMixin, Security, SQLAlchemyUserDatastore,
 from flask_sqlalchemy import SQLAlchemy
 from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
                                    ajouter_rfid_adherent, lire_dernier,
-                                   rechercher_adherent, rechercher_entrees,
-                                   rechercher_entrees_adhesion,
-                                   supprimer_rfid_adherent)
+                                   rechercher_adherent,
+                                   rechercher_date_adhesion,
+                                   rechercher_entrees, supprimer_rfid_adherent)
 from redis import StrictRedis
 
 # TODO add the new adherent signup page
@@ -264,7 +264,7 @@ def simuler():
         # numero = request.args.get('numero')
         cherche = "{} {}".format(prenom, nom)
 
-        dateAdhesion = rechercher_entrees_adhesion(nom, prenom)
+        dateAdhesion = rechercher_date_adhesion(nom, prenom)
         ajouter_entree(nom, prenom, dateAdhesion)
         entrees = rechercher_entrees(nom, prenom)
 
