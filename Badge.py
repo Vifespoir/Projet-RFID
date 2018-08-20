@@ -57,7 +57,7 @@ class BadgeScanneur(object):
 
     def detecter_deja_scanne(self, nom, prenom):
         if nom in self.derniereEntree and prenom in self.derniereEntree and\
-                (self.datetime.now() - self.derniereDate < timedelta(0, 60*4)):
+                (timedelta(0, self.datetime.now()) - timedelta(0, self.derniereDate) < timedelta(0, 60*4)):
             return True
 
         return False
