@@ -144,14 +144,21 @@ def ajouter_entree(nom, prenom, dateAdhesion):
         fichierEntrees.write(entree)
 
 
-def rechercher_entrees(nom, prenom):
+def rechercher_entrees(nom=None, prenom=None, jour=None):
     entrees = []
+    if nom is None and prenom is None and jour is None:
+        raise UserWarning("Aucune clé n'a été fourni pour la recherche...")
     with open(FICHIER_DES_ENTREES_CHEMIN, "r") as fichierEntrees:
         lignes = fichierEntrees.readlines()
         for ligne in lignes:
-            if prenom in ligne and nom in ligne:
-                ligne = ligne.split(' ')
-                entrees.extend(ligne[0:5])
+            if prenom and nom:
+                if prenom in ligne and nom in ligne:
+                    ligne = ligne.split(' ')
+                    entrees.extend(ligne[0:5])
+            else:
+                if jour in ligne:
+                    ligne = ligne.split(' ')
+                    entrees.extend(ligne[0:5])
 
     return entrees
 

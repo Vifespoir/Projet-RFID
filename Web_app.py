@@ -133,7 +133,7 @@ def retourner_accueil():
     """Affiche les entrées du jour sur la page d'accueil."""
     jour = str(date.today())
 
-    entreesDuJour = rechercher_entrees(jour, heure=True)
+    entreesDuJour = rechercher_entrees(jour=jour)
 
     return render_template('accueil.html',
                            contenu=entreesDuJour,
@@ -157,7 +157,7 @@ def retourner_historique():
         date = "{}-{}-{}".format(annee, mois, jour)
         suivant = '/changer?date={}&delta=1'.format(date)
         precedent = '/changer?date={}&delta=-1'.format(date)
-        entreesDuJour = rechercher_entrees(date)
+        entreesDuJour = rechercher_entrees(jour=date)
     else:
         precedent = suivant = entreesDuJour = None
         date = str(datetime.today().date())
@@ -186,7 +186,7 @@ def changer_date():
     suivant = '/changer?date={}&delta=1'.format(date)
     precedent = '/changer?date={}&delta=-1'.format(date)
 
-    entreesDuJour = rechercher_entrees(date)
+    entreesDuJour = rechercher_entrees(jour=date)
 
     return render_template('historique.html',
                            active="historique",
@@ -242,7 +242,7 @@ def ajouter():
         numero = request.args.get('numero')
         if "action" in request.args.keys() and request.args['action'] == "entree":
             cherche = "{} {}".format(prenom, nom)
-            lignes = rechercher_entrees(nom, prenom)
+            lignes = rechercher_entrees(nom=nom, prenom=prenom)
 
             return render_template('voir_entrees.html',
                                    contenu=lignes,
@@ -266,7 +266,7 @@ def simuler():
 
         dateAdhesion = rechercher_date_adhesion(nom, prenom)
         ajouter_entree(nom, prenom, dateAdhesion)
-        entrees = rechercher_entrees(nom, prenom)
+        entrees = rechercher_entrees(nom=nom, prenom=prenom)
 
         return render_template('voir_entrees.html',
                                contenu=entrees,
