@@ -62,7 +62,7 @@ class BadgeScanneur(object):
         if nom.lower() in self.derniereEntree["nom"].lower()\
                 and prenom.lower() in self.derniereEntree["prenom"].lower():
             print("same name in last entry")
-            if (timedelta(0, datetime.now()) - timedelta(0, self.derniereDate) < timedelta(0, 60*4)):
+            if (0, datetime.now() - self.derniereDate.time()) < timedelta(0, 60*4):
                 print("only little time elapsed")
                 return True
 
