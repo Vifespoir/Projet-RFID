@@ -56,9 +56,14 @@ class BadgeScanneur(object):
         self.lire_derniere_entree()
 
     def detecter_deja_scanne(self, nom, prenom):
-        if nom in self.derniereEntree and prenom in self.derniereEntree and\
-                (timedelta(0, self.datetime.now()) - timedelta(0, self.derniereDate) < timedelta(0, 60*4)):
-            return True
+        print("scan detection")
+        print(self.derniereEntree)
+        print(nom, prenom)
+        if nom in self.derniereEntree and prenom in self.derniereEntree:
+            print("same name in last entry")
+            if (timedelta(0, self.datetime.now()) - timedelta(0, self.derniereDate) < timedelta(0, 60*4)):
+                print("only little time elapsed")
+                return True
 
         return False
 
