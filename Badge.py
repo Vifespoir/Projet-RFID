@@ -67,7 +67,7 @@ class BadgeScanneur(object):
                 else:
                     print("long time elapsed")
             else:
-                print("no name match")
+                print("no name match: {} != {} AND {}!={}".format(refNom, nom, refPrenom, prenom))
 
         return False
 
