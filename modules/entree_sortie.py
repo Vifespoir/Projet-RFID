@@ -153,7 +153,6 @@ def rechercher_entrees(nom=None, prenom=None, jour=None):
         for ligne in lignes:
             if prenom and nom:
                 if prenom in ligne and nom in ligne:
-                    ligne = ligne.split(' ')
                     entrees.extend(ligne[0:5])
             else:
                 if jour in ligne:
