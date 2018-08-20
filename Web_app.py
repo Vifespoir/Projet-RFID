@@ -11,9 +11,9 @@ from flask_security import (RoleMixin, Security, SQLAlchemyUserDatastore,
 from flask_sqlalchemy import SQLAlchemy
 from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
                                    ajouter_rfid_adherent, lire_dernier,
-                                   rechercher_adherent, rechercher_date,
-                                   rechercher_date_adhesion,
-                                   rechercher_entrees, supprimer_rfid_adherent)
+                                   rechercher_adherent, rechercher_entrees,
+                                   rechercher_entrees_adhesion,
+                                   supprimer_rfid_adherent)
 from redis import StrictRedis
 
 # TODO add the new adherent signup page
@@ -133,7 +133,7 @@ def retourner_accueil():
     """Affiche les entrées du jour sur la page d'accueil."""
     jour = str(date.today())
 
-    entreesDuJour = rechercher_date(jour, heure=True)
+    entreesDuJour = rechercher_entrees(jour, heure=True)
 
     return render_template('accueil.html',
                            contenu=entreesDuJour,
@@ -157,8 +157,7 @@ def retourner_historique():
         date = "{}-{}-{}".format(annee, mois, jour)
         suivant = '/changer?date={}&delta=1'.format(date)
         precedent = '/changer?date={}&delta=-1'.format(date)
-        entreesDuJour = rechercher_date(date)
-        entreesDuJour = rechercher_date(date)
+        entreesDuJour = rechercher_entrees(date)
     else:
         precedent = suivant = entreesDuJour = None
         date = str(datetime.today().date())
@@ -187,7 +186,7 @@ def changer_date():
     suivant = '/changer?date={}&delta=1'.format(date)
     precedent = '/changer?date={}&delta=-1'.format(date)
 
-    entreesDuJour = rechercher_date(date)
+    entreesDuJour = rechercher_entrees(date)
 
     return render_template('historique.html',
                            active="historique",
@@ -265,7 +264,7 @@ def simuler():
         # numero = request.args.get('numero')
         cherche = "{} {}".format(prenom, nom)
 
-        dateAdhesion = rechercher_date_adhesion(nom, prenom)
+        dateAdhesion = rechercher_entrees_adhesion(nom, prenom)
         ajouter_entree(nom, prenom, dateAdhesion)
         entrees = rechercher_entrees(nom, prenom)
 

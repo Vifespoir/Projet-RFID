@@ -126,24 +126,6 @@ def rechercher_adherent(nom, uri):
     return texte, lignes
 
 
-def rechercher_date(jour, heure=False):
-    entreesDuJour = []
-    with open(FICHIER_DES_ENTREES_CHEMIN, "r") as fichierDesEntrees:
-        lignes = fichierDesEntrees.readlines()
-        for ligne in lignes:
-            if jour in ligne:
-                ligne = ligne.split(' ')
-                # heure, prenom, nom, cotisation = ligne
-                ligne = ligne[0:6]
-                if not heure:
-                    ligne.pop(1)
-                else:
-                    ligne.pop(0)
-                entreesDuJour.extend(ligne)
-
-    return entreesDuJour
-
-
 def rechercher_date_adhesion(nom, prenom):
     dateAdhesion = None
     with open(FICHIER_ADHERENTS_CHEMIN, "r") as fichierAdherents:
