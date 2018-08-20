@@ -72,7 +72,7 @@ class BadgeScanneur(object):
         return False
 
     def traiter_rfid(self, code):
-        nom, prenom, dateAdhesion = self.rechercher_adherent(code)
+        prenom, nom, dateAdhesion = self.rechercher_adherent(code)
         if nom is None:
             # FIXME delete this file
             with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'w') as no_adhe:
