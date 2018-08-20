@@ -7,7 +7,7 @@ from time import sleep
 import modules.MFRC522 as MFRC522
 from modules.entree_sortie import (FICHIER_DERNIER_BADGE_SCANNE_CHEMIN,
                                    FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
-                                   lire_derniere_entrees, rechercher_rfid)
+                                   lire_entrees_du_jour, rechercher_rfid)
 from pyA20.gpio import gpio
 from redis import StrictRedis
 
@@ -21,7 +21,7 @@ class BadgeScanneur(object):
         self.continue_reading = True
         signal.signal(signal.SIGINT, self.end_read)
         self.MIFAREReader = MFRC522.MFRC522()
-        self.derniereEntrees = lire_derniere_entrees()
+        self.derniereEntrees = lire_entrees_du_jour()
         self.redis.publish("stream", "<success>Badgeuse initialisé, prête à scanner.")
 
     def end_read(self, signal, frame):
@@ -39,7 +39,7 @@ class BadgeScanneur(object):
 
     def authentifier_rfid(self, nom, prenom, dateAdhesion):
         ajouter_entree(nom, prenom, dateAdhesion)
-        self.derniereEntrees = lire_derniere_entrees()
+        self.derniereEntrees = lire_entrees_du_jour()
 
     def detecter_deja_scanne(self, nom, prenom):
         for ligne in self.derniereEntrees:

@@ -161,7 +161,7 @@ def rechercher_entrees(nom=None, prenom=None, jour=None):
     return entrees
 
 
-def lire_derniere_entrees(self):
+def lire_entrees_du_jour():
     jour = str(date.today())
     entrees = rechercher_entrees(jour=jour)
     return entrees
