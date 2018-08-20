@@ -43,7 +43,7 @@ class BadgeScanneur(object):
 
     def detecter_deja_scanne(self, nom, prenom):
         for ligne in self.derniereEntrees:
-            date, heure, nom, prenom = ligne[0:4]
+            date, heure, nom, prenom = ligne[0], ligne[1], ligne[2], ligne[3]
             date = date + " " + heure
             print(date)
             date = datetime.strptime(date, '%Y-%m-%d %H:%M')
