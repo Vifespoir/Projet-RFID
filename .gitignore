@@ -6,3 +6,5 @@ MFR522/
 SPI-Pi/
 *.ipynb
 *.rdb
+uploads/
+data/

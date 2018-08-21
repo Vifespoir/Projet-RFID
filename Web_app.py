@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf_8 -*-
 from datetime import date, datetime, timedelta
+from os import path
 from re import compile as re_compile
 
 from requests import get as get_url
@@ -15,8 +16,10 @@ from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
                                    ajouter_rfid_adherent, lire_dernier,
                                    rechercher_adherent,
                                    rechercher_date_adhesion,
-                                   rechercher_entrees, supprimer_rfid_adherent)
+                                   rechercher_entrees, supprimer_rfid_adherent,
+                                   test_fichier_csv)
 from redis import StrictRedis
+from werkzeug.utils import secure_filename
 
 # TODO turn entree sortie into a class
 
@@ -62,6 +65,9 @@ TELEGRAM_TOKEN = "691918800:AAH8ZbKRsvOWQDUc0tIKO723wCFqUPK8neo"
 TELEGRAM_CHAT_ID = "58293600"
 TELEGRAM_API_URL = "https://api.telegram.org/bot{}/sendMessage".format(TELEGRAM_TOKEN)
 TELEGRAM_API_MESSAGE_PAYLOAD = {"chat_id": TELEGRAM_CHAT_ID, "text": "HELLO FROM PYTHON"}
+# Upload
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = set(['csv', 'txt'])
 
 
 # Ne pas ajouter d'extensions au dessus
@@ -74,6 +80,8 @@ app.config['SECURITY_PASSWORD_SALT'] = 'lb30Z5EGUuZf3Mr4TiuC06JJN1EY9s0E+dS2bkgd
 app.config['SECURITY_POST_LOGIN_VIEW'] = APP_ADMIN
 app.config['SECURITY_LOGIN_USER_TEMPLATE'] = 'login_user.html'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 redis = StrictRedis(host='localhost', port=6379, db=0)
 
@@ -146,6 +154,11 @@ def redirgiger_accueil():
     return redirect(url_for("retourner_accueil"))
 
 
+@app.route('/stream')
+def stream():
+    return Response(event_stream(), mimetype="text/event-stream")
+
+
 @app.route('/accueil')
 def retourner_accueil():
     """Affiche les entrées du jour sur la page d'accueil."""
@@ -158,11 +171,6 @@ def retourner_accueil():
                            cherche=jour,
                            active="accueil",
                            **APP_PATHS)
-
-
-@app.route('/stream')
-def stream():
-    return Response(event_stream(), mimetype="text/event-stream")
 
 
 # TODO add the new adherent signup page
@@ -266,7 +274,7 @@ def retourner_admin():
                                active="admin",
                                **APP_PATHS)
 
-    if request.method == 'POST' and request.form['bouton'] == "rechercher":
+    elif request.method == 'POST' and request.form['bouton'] == "rechercher":
         nom = request.form['nom']
         # FIXME ajouter for associer? what to do with associer endpoint
         uri = "/ajouter?nom={}&prenom={}"
@@ -283,7 +291,34 @@ def retourner_admin():
                                active="admin",
                                contenu=lignes,
                                **APP_PATHS)
+    elif request.method == 'POST' and request.form['bouton'] == "televerser":
+        print(request.files, request.form)
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('Pas de fichier...')
+            return redirect(request.url)
+        fichier = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if fichier.filename == '':
+            flash('Aucun fichier séléctionné')
+            return redirect(request.url)
 
+        if fichier and allowed_file(fichier.filename):
+            nomDuFichier = secure_filename(fichier.filename)
+            fichier.save(path.join(app.config['UPLOAD_FOLDER'], nomDuFichier))
+            test = test_fichier_csv(path.join(app.config['UPLOAD_FOLDER'], nomDuFichier))
+            if test is True:
+                # TODO rename and move
+                flash("Fichier: {} téléversé!".format(nomDuFichier))
+            else:
+                flash("Erreur, fichier non compatible...")
+                for text in test.split("\n"):
+                    flash(text)
+
+        return render_template("admin.html",
+                               active="admin",
+                               **APP_PATHS)
     else:
         return render_template('admin.html',
                                active="admin",
@@ -379,6 +414,10 @@ def pagevisiteur():
         return render_template('visiteur.html',
                                active="visiteur",
                                **APP_PATHS)
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 if __name__ == '__main__':

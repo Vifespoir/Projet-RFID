@@ -3,6 +3,7 @@
 from csv import reader, writer
 from datetime import date, datetime
 from os.path import abspath, dirname, isdir, join, pardir
+from re import compile as re_compile
 
 DOSSIER_DONNEES = "data"
 CHEMIN_DONNEES = abspath(join(dirname(__file__), pardir, DOSSIER_DONNEES))
@@ -175,3 +176,33 @@ def rechercher_rfid(numero):
                 return ligne[1], ligne[2], ligne[4]  # nom prenom date_adhesion
         else:
             return None
+
+
+TEST_MME_MR = re_compile(r"([M.|Mme])")
+TEST_NOM = re_compile(r"(\S+)")
+TEST_EMAIL = re_compile(r"(\S+)(@)(\S+)")
+TEST_DATE = re_compile(r"\d{2}\/\d{2}\/\d{4}")
+TEST_RFID = re_compile(r"\d+")
+
+
+def test_fichier_csv(fichier):
+    """Function to test that the uploaded csv matches the specs.
+
+    Exemple de ligne: "M.,BÉLIÈRES,Denis,denibel@yahoo.fr,25/03/2018,19253157164"
+    """
+    with open(fichier, "r") as fichierLu:
+        lignes = reader(fichierLu)
+        compteur = 0
+        for ligne in lignes:
+            compteur += 1
+            try:
+                assert TEST_MME_MR.match(ligne[0])
+                assert TEST_NOM.match(ligne[1])
+                assert TEST_NOM.match(ligne[2])
+                assert TEST_EMAIL.match(ligne[3])
+                assert TEST_DATE.match(ligne[4])
+                assert TEST_RFID.match(ligne[5])
+            except AssertionError:
+                return "Erreur ligne: {}\n{}".format(compteur, ", ".join(ligne))
+        else:
+            return True
