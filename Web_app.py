@@ -62,8 +62,11 @@ STREAM_TYPE = re_compile(r"<(\w+)>(.+)")
 BOUTON_AJOUT_BADGE = '<a class="btn btn-primary " name="bouton" value="ajouter" href="{}" role="button">Associer</a>'
 
 # Telegram API stuff
-TELEGRAM_TOKEN = "691918800:AAH8ZbKRsvOWQDUc0tIKO723wCFqUPK8neo"
-TELEGRAM_CHAT_ID = "58293600"
+with open("secrets.txt", "r") as secrets:
+    lignesSecretes = secrets.readlines()
+    TELEGRAM_TOKEN = lignesSecretes[0]
+    TELEGRAM_CHAT_ID = lignesSecretes[1]
+
 TELEGRAM_API_URL = "https://api.telegram.org/bot{}/sendMessage".format(TELEGRAM_TOKEN)
 TELEGRAM_API_MESSAGE_PAYLOAD = {"chat_id": TELEGRAM_CHAT_ID, "text": "HELLO FROM PYTHON"}
 # Upload
