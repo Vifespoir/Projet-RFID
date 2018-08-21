@@ -8,3 +8,4 @@ SPI-Pi/
 *.rdb
 uploads/
 data/
+secrets.txt
