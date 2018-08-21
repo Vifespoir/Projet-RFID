@@ -1,0 +1,26 @@
+{% extends "web_base.html" %}
+
+{% block content %}
+
+<div class="container">
+	<div class="card card-body">
+    <h2>Un bug? Une suggestion?</h2>
+	</div>
+</div>
+<br>
+<div class="container">
+  <form action="" method="post">
+    <div class="row ">
+      <div class="col col-12">
+        <h3>Veuillez décrire votre bug:</h3>
+      </div>
+      <div class="col col-12">
+       <input type="text" name="text" style="height: 200px; margin-bottom: 2em;" class="form-control" placeholder="Franchement cette application est top!"></input>
+      </div>
+      <div class="col col-3">
+        <button type="submit" name="bouton" value="envoyer" class="btn btn-primary">Envoyer</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,21 +1,15 @@
 {% extends "web_base.html" %}
-
 {% block title %}Administration des comptes du SQYLAB{% endblock %}
-
 {% block content %}
-
 <div class="container">
-<h4> ID du dernier badge : {{dernier}} </h4>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for message in messages %}
-    <div class="alert lead alert-primary" role="alert">
-      {{ message }}
-    </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-<br>
-{% include "bits/boutons_admin.html" %}
+	<div class="card card-body">
+    <h2>Administration des comptes</h2>
+	</div>
 </div>
+<br>
+<div class="container">
+	{% include "includes/flash_messages.html" %}
+</div>
+{% include "includes/voir_adherents.html" %}
+{% include "includes/boutons_admin.html" %}
 {% endblock %}

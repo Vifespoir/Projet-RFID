@@ -1,0 +1,24 @@
+{% set texte_bouton = "Associer un badge à un adhérent" %}
+{% include "includes/bouton_recherche.html" %}
+<div class="container">
+ <button class="btn btn-danger btn-lg btn-block" type="button" data-toggle="collapse" data-target="#supprimer" aria-expanded="false" aria-controls="collapseExample">
+   Supprimer un badge
+ </button>
+  <br>
+  <div class="collapse card card-body" id="supprimer">
+    <form action="" method="post">
+      <div class="row">
+        <h2> Entrez le numéro de badge à supprimer dans la base de donnée </h2>
+        <div class="col col-6">
+          <input type="text" name="numero"class="form-control" placeholder="Numéro de badge">
+        </div>
+        <div class="col col-3">
+          <button type="submit" name = "bouton" value = "supprimer" class="btn btn-primary">
+            Envoyer
+          </button>
+        </div>
+        <br>
+      </div>
+    </form>
+  </div>
+</div>

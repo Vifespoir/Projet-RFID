@@ -19,14 +19,14 @@
   <body>
     {% block body -%}
     <div class="d-flex float-left" style="width: 100%; margin: 6em;">
-      <!-- <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
-      <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</a>
-      <a class="nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a> -->
       <div class="nav flex-column nav-pills w-10" id="nav-tab" role="tablist">
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'accueil' %}active{% endif %}" style="font-size: 180%;" href="{{ accueil }}">Accueil<span class="sr-only">(current)</span></a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'historique' %}active{% endif %}" style="font-size: 180%;" href="{{ historique }}">Historique</a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'visiteur' %}active{% endif %}" style="font-size: 180%;" href="{{ visiteur }}">Espace sans badge</a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'admin' %}active{% endif %}" style="font-size: 180%;" id="admin-pill" href="{{ admin }}">Admin</a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'news' %}active{% endif %}" style="font-size: 180%;" href="{{ newsletter }}">Newsletter<span class="sr-only">(current)</span></a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'adhesion' %}active{% endif %}" style="font-size: 180%;" href="{{ adhesion }}">Adhésion<span class="sr-only">(current)</span></a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'bug' %}active{% endif %}" style="font-size: 180%;" href="{{ bug }}">Suggestion / Bug<span class="sr-only">(current)</span></a>
         {% if current_user.is_authenticated %}
         <a class="nav-link text-uppercase font-weight-bold" style="font-size: 180%;" href="{{ logout }}">Se déconnecter</a>
         {% endif %}
@@ -37,12 +37,10 @@
       </div>
     </div>
     {% block scripts %}
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-    {% include "bits/alerts.html" %}
-
+    {% include "includes/alerts.html" %}
     {%- endblock scripts %}
     {%- endblock body %}
   </body>

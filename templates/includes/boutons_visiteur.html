@@ -1,0 +1,28 @@
+{% set texte_bouton = "Simuler un badge" %}
+{% include "includes/bouton_recherche.html" %}
+<div class="container">
+  <button class="btn btn-success btn-lg btn-block" type="button" data-toggle="collapse" data-target="#visiteur" aria-expanded="false" aria-controls="collapseExample">Ajouter un visiteur
+  </button>
+  <br>
+  <div class="collapse card card-body" id="visiteur">
+    <form action="" method="post">
+      <h2> Entrez nom et prénom du visiteur </h2>
+      <div class="row container">
+        <div class="col col-4">
+          <input type="text" name="prenom" class="form-control" placeholder="Prénom">
+          <small id="emailHelp" class="form-text text-muted">Exemple : Michel</small>
+        </div>
+        <div class="col col-4">
+          <input type="text" name="nom"class="form-control" placeholder="Nom en MAJUSCULE">
+          <small id="emailHelp" class="form-text text-muted">Exemple : FAUVET</small>
+        </div>
+        <div class="col col-4">
+          <button type="submit" name = "bouton" value = "visiteur" class="btn btn-primary">
+            Envoyer
+          </button>
+        </div>
+        <br>
+      </div>
+    </form>
+  </div>
+</div>

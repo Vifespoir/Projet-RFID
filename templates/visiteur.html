@@ -3,10 +3,15 @@
 {% block content %}
 
 <div class="container">
-<h1> Espace sans badge/visiteur </h1>
-<br>
-{% include "bits/boutons-visiteur.html" %}
+	<div class="card card-body">
+    <h2>Espace sans badge / visiteur</h2>
+		{% if dernier %}
+		<h2>ID du dernier badge : {{ dernier }} </h2>
+		{% endif %}
+	</div>
 </div>
-
+<br>
+{% include "includes/voir_adherents.html" %}
+{% include "includes/boutons_visiteur.html" %}
 
 {% endblock %}

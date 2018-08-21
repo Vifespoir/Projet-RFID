@@ -3,6 +3,8 @@
 from datetime import date, datetime, timedelta
 from re import compile as re_compile
 
+from requests import get as get_url
+
 from flask import (Flask, Response, flash, redirect, render_template, request,
                    url_for)
 from flask_bootstrap import Bootstrap
@@ -17,23 +19,29 @@ from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
 from redis import StrictRedis
 
 # TODO turn entree sortie into a class
-# TODO add a page to update adherents
 
 
-APP_ACCUEIL = "/"
-APP_HISTORIQUE = "/historique"
-APP_ADMIN = "/admin"
-APP_LOGIN = '/login'
-APP_LOGOUT = '/logout'
-APP_VISITEUR = '/visiteur'
+APP_ACCUEIL = "accueil"
+APP_HISTORIQUE = "historique"
+APP_ADMIN = "admin"
+APP_LOGIN = "login"
+APP_LOGOUT = "logout"
+APP_VISITEUR = "visiteur"
+APP_BUG = "bug"
+APP_NEWS = "newsletter"
+APP_ADHESION = "adhesion"
+APP_EMAIL = "etienne.pouget@outlook.com"
 
 APP_PATHS = {
-    "accueil": APP_ACCUEIL,
-    "historique": APP_HISTORIQUE,
-    "admin": APP_ADMIN,
-    "login": APP_LOGIN,
-    "logout": APP_LOGOUT,
-    "visiteur": APP_VISITEUR
+    APP_ACCUEIL: "/" + APP_ACCUEIL,
+    APP_HISTORIQUE: "/" + APP_HISTORIQUE,
+    APP_ADMIN: "/" + APP_ADMIN,
+    APP_LOGIN: "/" + APP_LOGIN,
+    APP_LOGOUT: "/" + APP_LOGOUT,
+    APP_VISITEUR: "/" + APP_VISITEUR,
+    APP_BUG: "/" + APP_BUG,
+    APP_NEWS: "/" + APP_NEWS,
+    APP_ADHESION: "/" + APP_ADHESION
 }
 
 HTML_WRAPPER = [
@@ -49,13 +57,20 @@ HTML_FLASH = '<div class="temp alert lead alert-{} .alert-dismissible" role="ale
 STREAM_TYPE = re_compile(r"<(\w+)>(.+)")
 BOUTON_AJOUT_BADGE = '<a class="btn btn-primary " name="bouton" value="ajouter" href="{}" role="button">Associer</a>'
 
+# Telegram API stuff
+TELEGRAM_TOKEN = "691918800:AAH8ZbKRsvOWQDUc0tIKO723wCFqUPK8neo"
+TELEGRAM_CHAT_ID = "58293600"
+TELEGRAM_API_URL = "https://api.telegram.org/bot{}/sendMessage".format(TELEGRAM_TOKEN)
+TELEGRAM_API_MESSAGE_PAYLOAD = {"chat_id": TELEGRAM_CHAT_ID, "text": "HELLO FROM PYTHON"}
+
+
 # Ne pas ajouter d'extensions au dessus
 app = Flask(__name__)
 # Extensions:
 Bootstrap(app)
-app.config['SECRET_KEY'] = 'super-secret'
+app.config['SECRET_KEY'] = '8eFTBQFSgMhAJc3MztXo8KelHEUX+0bI79VRMTn088SQNJDjFk7lam6U76Ka1zDfpBgk3yN//+cpHENlZzDvsg=='
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
-app.config['SECURITY_PASSWORD_SALT'] = 'zedzoedajdpaok'
+app.config['SECURITY_PASSWORD_SALT'] = 'lb30Z5EGUuZf3Mr4TiuC06JJN1EY9s0E+dS2bkgdOrdu+QNi1CLY6ubm4IUY0Uc8pQslIo0uhe2XQdHBiGg7Og=='
 app.config['SECURITY_POST_LOGIN_VIEW'] = APP_ADMIN
 app.config['SECURITY_LOGIN_USER_TEMPLATE'] = 'login_user.html'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -76,7 +91,7 @@ def event_stream():
         type = match.group(1)
         jsMessage = match.group(2)
         if "non repertorié" in jsMessage:
-            jsMessage += BOUTON_AJOUT_BADGE.format(APP_PATHS["admin"])
+            jsMessage += BOUTON_AJOUT_BADGE.format(APP_PATHS[APP_ADMIN])
         jsMessage = HTML_FLASH.format(type, jsMessage)
         yield "data: {}\n\n".format(jsMessage)
 
@@ -127,6 +142,11 @@ def security_context_processor():
 
 
 @app.route('/')
+def redirgiger_accueil():
+    return redirect(url_for("retourner_accueil"))
+
+
+@app.route('/accueil')
 def retourner_accueil():
     """Affiche les entrées du jour sur la page d'accueil."""
     jour = str(date.today())
@@ -148,24 +168,42 @@ def stream():
 # TODO add the new adherent signup page
 @app.route("/adhesion")
 def retourner_adhesion():
-    return redirect("https://ppr.hatlab.fr/inscription/adhesions.php")
+    return render_template("501.html",
+                           active="adhesion",
+                           **APP_PATHS)
 
 
 # TODO add a page for subscribing to the newsletter
 @app.route("/newsletter")
 def retourner_newsletter():
-    return redirect("https://ppr.hatlab.fr/inscription/adhesions.php")
+    return render_template("501.html",
+                           active="news",
+                           **APP_PATHS)
 
 
 # TODO add a page to submit a bug report or a feature request
-@app.route("/bug")
+@app.route("/bug", methods=['GET', 'POST'])
 def retourner_bug():
-    """Email me."""
-    pass
+    """Telegram a bug."""
+    if request.method == 'POST' and request.form['bouton'] == "envoyer":
+        message = request.form['text']
+        TELEGRAM_API_MESSAGE_PAYLOAD["text"] = message
+        r = get_url(TELEGRAM_API_URL, params=TELEGRAM_API_MESSAGE_PAYLOAD)
+        if r.status_code == 200:
+            flash("Telegram envoyé avec succès!")
+        else:
+            flash("Telegram non envoyé!")
+        return redirect(url_for("retourner_accueil"))
+
+    return render_template("bug.html",
+                           active="bug",
+                           **APP_PATHS)
 
 
 @app.route('/historique', methods=['GET', 'POST'])
 def retourner_historique():
+    ceJour = str(datetime.now().date())
+    ceJour = '/changer?date={}&delta=0'.format(ceJour)
     if request.method == 'POST' and request.form['bouton'] == "rechercher":
         print("histoire")
         jour = request.form['jour']
@@ -186,6 +224,7 @@ def retourner_historique():
                            active="historique",
                            precedent=precedent,
                            suivant=suivant,
+                           ceJour=ceJour,
                            date=date,
                            contenu=entreesDuJour,
                            **APP_PATHS)
@@ -237,10 +276,11 @@ def retourner_admin():
             ligne[-1] += "&numero={}".format(dernier)
             print(ligne)
 
-        return render_template('voir_adherents.html',
+        return render_template('admin.html',
                                dernier=dernier,
                                texte=texte,
                                nom=nom,
+                               active="admin",
                                contenu=lignes,
                                **APP_PATHS)
 
@@ -328,9 +368,10 @@ def pagevisiteur():
             ligne[-1] += "&numero={}".format(dernier)
             ligne.insert(-1, dernier)
 
-        return render_template('voir_liste.html',
+        return render_template('visiteur.html',
                                dernier=dernier,
                                texte=texte,
+                               active="visiteur",
                                contenu=lignes,
                                **APP_PATHS)
 
