@@ -16,8 +16,9 @@ from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
                                    ajouter_rfid_adherent, lire_dernier,
                                    rechercher_adherent,
                                    rechercher_date_adhesion,
-                                   rechercher_entrees, supprimer_rfid_adherent,
-                                   test_fichier_csv)
+                                   rechercher_entrees,
+                                   reecrire_registre_des_entrees,
+                                   supprimer_rfid_adherent, test_fichier_csv)
 from redis import StrictRedis
 from werkzeug.utils import secure_filename
 
@@ -272,6 +273,7 @@ def retourner_admin():
         flash(texte)
         return render_template('admin.html',
                                active="admin",
+                               dernier=dernier,
                                **APP_PATHS)
 
     elif request.method == 'POST' and request.form['bouton'] == "rechercher":
@@ -306,10 +308,11 @@ def retourner_admin():
 
         if fichier and allowed_file(fichier.filename):
             nomDuFichier = secure_filename(fichier.filename)
-            fichier.save(path.join(app.config['UPLOAD_FOLDER'], nomDuFichier))
-            test = test_fichier_csv(path.join(app.config['UPLOAD_FOLDER'], nomDuFichier))
+            cheminFichier = path.join(app.config['UPLOAD_FOLDER'], nomDuFichier)
+            fichier.save(cheminFichier)
+            test = test_fichier_csv(cheminFichier)
             if test is True:
-                # TODO rename and move
+                reecrire_registre_des_entrees(cheminFichier)
                 flash("Fichier: {} téléversé!".format(nomDuFichier))
             else:
                 flash("Erreur, fichier non compatible...")
@@ -318,10 +321,12 @@ def retourner_admin():
 
         return render_template("admin.html",
                                active="admin",
+                               dernier=dernier,
                                **APP_PATHS)
     else:
         return render_template('admin.html',
                                active="admin",
+                               dernier=dernier,
                                **APP_PATHS)
 
 

@@ -2,6 +2,7 @@
 # -*- coding: utf_8 -*-
 from csv import reader, writer
 from datetime import date, datetime
+from os import remove
 from os.path import abspath, dirname, isdir, join, pardir
 from re import compile as re_compile
 
@@ -206,3 +207,13 @@ def test_fichier_csv(fichier):
                 return "Erreur ligne: {}\n{}".format(compteur, ", ".join(ligne))
         else:
             return True
+
+
+def reecrire_registre_des_entrees(fichier):
+    with open(fichier, "r") as fichierLu:
+        contenu = fichierLu.read()
+
+    with open(FICHIER_ADHERENTS_CHEMIN, "w") as fichierEcris:
+        fichierEcris.write(contenu)
+
+    remove(fichier)
