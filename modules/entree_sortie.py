@@ -18,6 +18,14 @@ FICHIER_DES_ENTREES = "registre_des_entrees.txt"
 FICHIER_DES_ENTREES_CHEMIN = join(CHEMIN_DONNEES, FICHIER_DES_ENTREES)
 FICHIER_DERNIER_BADGE_SCANNE = "dernier_badge_scanne.txt"
 FICHIER_DERNIER_BADGE_SCANNE_CHEMIN = join(CHEMIN_DONNEES, FICHIER_DERNIER_BADGE_SCANNE)
+FICHIER_EMAILS = "emails.csv"
+FICHIER_EMAILS_CHEMIN = join(CHEMIN_DONNEES, FICHIER_EMAILS)
+# REGEXES
+TEST_MME_MR = re_compile(r"([M.|Mme])")
+TEST_NOM = re_compile(r"(\S+)")
+TEST_EMAIL = re_compile(r"(\S+)(@)(\S+)")
+TEST_DATE = re_compile(r"\d{2}\/\d{2}\/\d{4}")
+TEST_RFID = re_compile(r"\d+")
 
 
 def ajouter_ligne_csv(ligneCsv):
@@ -179,13 +187,6 @@ def rechercher_rfid(numero):
             return None
 
 
-TEST_MME_MR = re_compile(r"([M.|Mme])")
-TEST_NOM = re_compile(r"(\S+)")
-TEST_EMAIL = re_compile(r"(\S+)(@)(\S+)")
-TEST_DATE = re_compile(r"\d{2}\/\d{2}\/\d{4}")
-TEST_RFID = re_compile(r"\d+")
-
-
 def test_fichier_csv(fichier):
     """Function to test that the uploaded csv matches the specs.
 
@@ -217,3 +218,26 @@ def reecrire_registre_des_entrees(fichier):
         fichierEcris.write(contenu)
 
     remove(fichier)
+
+
+def ajouter_email(nom, prenom, email):
+    with open(FICHIER_EMAILS_CHEMIN, "a") as fichierEmail:
+        fichierEmail.write(",".join([nom, prenom, email]))
+
+
+def supprimer_email(email):
+    newEmails = []
+    with open(FICHIER_EMAILS_CHEMIN, "r") as fichierEmail:
+        emails = reader(fichierEmail)
+        for ligne in emails:
+            if email in ligne:
+                continue
+            newEmails.append(ligne)
+
+        if len(newEmails) == len(emails):
+            return False
+
+    with open(FICHIER_EMAILS_CHEMIN, "w") as fichierEmail:
+        writer(newEmails)
+
+    return True
