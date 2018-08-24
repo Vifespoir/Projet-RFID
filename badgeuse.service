@@ -1,7 +1,7 @@
 [Unit]
 Description=Badgeuse
 [Service]
-ExecStart=/bin/bash /home/michel/Projet-RFID/stop_jobs.sh
+ExecStart=/bin/bash /home/michel/Projet-RFID/start_jobs.sh
 ExecStop=/bin/bash /home/michel/Projet-RFID/stop_jobs.sh
 Restart=on-failure
 [Install]

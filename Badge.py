@@ -81,6 +81,7 @@ class BadgeScanneur(object):
         sleep(3)
 
     def main(self):
+        print("lecture en cours")
         while self.continue_reading:
             sleep(.2)
             # Detecter les tags
@@ -95,6 +96,7 @@ class BadgeScanneur(object):
                 # Authentification
                 status = self.MIFAREReader.MFRC522_Auth(self.MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
                 code = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
+                print("badge:{} detectee".format(code))
                 self.traiter_rfid(code)
                 self.MIFAREReader.MFRC522_StopCrypto1()
             else:

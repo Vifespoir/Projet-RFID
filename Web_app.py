@@ -19,7 +19,7 @@ from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_email,
                                    rechercher_entrees,
                                    reecrire_registre_des_entrees,
                                    supprimer_rfid_adherent, test_fichier_csv)
-from modules.secrets import (SECRET_KEY, SECURITY_PASSWORD_SALT,
+from modules.app_secrets import (SECRET_KEY, SECURITY_PASSWORD_SALT,
                              TELEGRAM_API_CHAT_ID, TELEGRAM_API_TOKEN)
 from redis import StrictRedis
 from werkzeug.utils import secure_filename
@@ -377,7 +377,7 @@ def sans_badge():
     return redirect(url_for("retourner_accueil"))
 
 
-@app.route("visiteur", methods=["GET", "POST"])
+@app.route("/visiteur", methods=["GET", "POST"])
 def pagevisiteur():
     dernier = lire_dernier()
     if request.method == "POST" and request.form["bouton"] == "visiteur":
