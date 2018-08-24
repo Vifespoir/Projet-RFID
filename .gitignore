@@ -8,4 +8,4 @@ SPI-Pi/
 *.rdb
 uploads/
 data/
-secrets.txt
+app_secrets.py

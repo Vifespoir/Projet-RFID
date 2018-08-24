@@ -1,10 +1,9 @@
 [Unit]
-Description=Mouse Logging Service
-
+Description=Badgeuse
 [Service]
-ExecStart=/root/mouse.py
-StandardOutput=null
-
+ExecStart=/bin/bash /home/michel/Projet-RFID/stop_jobs.sh
+ExecStop=/bin/bash /home/michel/Projet-RFID/stop_jobs.sh
+Restart=on-failure
 [Install]
 WantedBy=multi-user.target
-Alias=mouselogger.service
+Alias=badgeuse.service

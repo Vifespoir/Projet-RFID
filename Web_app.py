@@ -12,13 +12,15 @@ from flask_bootstrap import Bootstrap
 from flask_security import (RoleMixin, Security, SQLAlchemyUserDatastore,
                             UserMixin, login_required)
 from flask_sqlalchemy import SQLAlchemy
-from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
-                                   ajouter_rfid_adherent, lire_dernier,
-                                   rechercher_adherent,
+from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_email,
+                                   ajouter_entree, ajouter_rfid_adherent,
+                                   lire_dernier, rechercher_adherent,
                                    rechercher_date_adhesion,
                                    rechercher_entrees,
                                    reecrire_registre_des_entrees,
                                    supprimer_rfid_adherent, test_fichier_csv)
+from modules.secrets import (SECRET_KEY, SECURITY_PASSWORD_SALT,
+                             TELEGRAM_API_CHAT_ID, TELEGRAM_API_TOKEN)
 from redis import StrictRedis
 from werkzeug.utils import secure_filename
 
@@ -61,14 +63,9 @@ HTML_FLASH = '<div class="temp alert lead alert-{} .alert-dismissible" role="ale
 STREAM_TYPE = re_compile(r"<(\w+)>(.+)")
 BOUTON_AJOUT_BADGE = '<a class="btn btn-primary " name="bouton" value="ajouter" href="{}" role="button">Associer</a>'
 
-# Telegram API stuff
-with open("secrets.txt", "r") as secrets:
-    lignesSecretes = secrets.readlines()
-    TELEGRAM_TOKEN = lignesSecretes[0]
-    TELEGRAM_CHAT_ID = lignesSecretes[1]
 
-TELEGRAM_API_URL = "https://api.telegram.org/bot{}/sendMessage".format(TELEGRAM_TOKEN)
-TELEGRAM_API_MESSAGE_PAYLOAD = {"chat_id": TELEGRAM_CHAT_ID, "text": "HELLO FROM PYTHON"}
+TELEGRAM_API_URL = "https://api.telegram.org/bot{}/sendMessage".format(TELEGRAM_API_TOKEN)
+TELEGRAM_API_MESSAGE_PAYLOAD = {"chat_id": TELEGRAM_API_CHAT_ID, "text": "HELLO FROM PYTHON"}
 # Upload
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['csv', 'txt'])
@@ -78,9 +75,9 @@ ALLOWED_EXTENSIONS = set(['csv', 'txt'])
 app = Flask(__name__)
 # Extensions:
 Bootstrap(app)
-app.config['SECRET_KEY'] = '8eFTBQFSgMhAJc3MztXo8KelHEUX+0bI79VRMTn088SQNJDjFk7lam6U76Ka1zDfpBgk3yN//+cpHENlZzDvsg=='
+app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
-app.config['SECURITY_PASSWORD_SALT'] = 'lb30Z5EGUuZf3Mr4TiuC06JJN1EY9s0E+dS2bkgdOrdu+QNi1CLY6ubm4IUY0Uc8pQslIo0uhe2XQdHBiGg7Og=='
+app.config['SECURITY_PASSWORD_SALT'] = SECURITY_PASSWORD_SALT
 app.config['SECURITY_POST_LOGIN_VIEW'] = APP_ADMIN
 app.config['SECURITY_LOGIN_USER_TEMPLATE'] = 'login_user.html'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -182,14 +179,6 @@ def retourner_accueil():
 def retourner_adhesion():
     return render_template("501.html",
                            active="adhesion",
-                           **APP_PATHS)
-
-
-# TODO add a page for subscribing to the newsletter
-@app.route("/newsletter")
-def retourner_newsletter():
-    return render_template("501.html",
-                           active="news",
                            **APP_PATHS)
 
 
@@ -385,15 +374,18 @@ def sans_badge():
         nom = request.args.get('nom')
         ajouter_entree(nom, prenom)
 
-    return redirect(url_for('retourner_accueil'))
+    return redirect(url_for("retourner_accueil"))
 
 
-@app.route('/visiteur', methods=['GET', 'POST'])
+@app.route("visiteur", methods=["GET", "POST"])
 def pagevisiteur():
     dernier = lire_dernier()
-    if request.method == 'POST' and request.form['bouton'] == "visiteur":
-        prenom = request.form['prenom']
-        nom = request.form['nom']
+    if request.method == "POST" and request.form["bouton"] == "visiteur":
+        prenom = request.form["prenom"]
+        nom = request.form["nom"]
+        email = request.form["email"]
+        if email:
+            ajouter_email(nom, prenom, email)
         maintenant = date.today()
         heure = maintenant.strftime("%H:%M")
         maintenant = str(maintenant)

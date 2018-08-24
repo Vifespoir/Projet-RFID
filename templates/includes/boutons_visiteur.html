@@ -8,15 +8,19 @@
     <form action="" method="post">
       <h2> Entrez nom et prénom du visiteur </h2>
       <div class="row container">
-        <div class="col col-4">
-          <input type="text" name="prenom" class="form-control" placeholder="Prénom">
+        <div class="col col-3">
+          <input type="text" name="prenom" class="form-control" placeholder="Prénom" required>
           <small id="emailHelp" class="form-text text-muted">Exemple : Michel</small>
         </div>
-        <div class="col col-4">
-          <input type="text" name="nom"class="form-control" placeholder="Nom en MAJUSCULE">
+        <div class="col col-3">
+          <input type="text" name="nom"class="form-control" placeholder="Nom en MAJUSCULE" required>
           <small id="emailHelp" class="form-text text-muted">Exemple : FAUVET</small>
         </div>
-        <div class="col col-4">
+        <div class="col col-3">
+          <input type="email" name="email" class="form-control" placeholder="Adresse email">
+          <small id="emailHelp" class="form-text text-muted">Facultatif, pour recevoir la newsletter.</small>
+        </div>
+        <div class="col col-3">
           <button type="submit" name = "bouton" value = "visiteur" class="btn btn-primary">
             Envoyer
           </button>
