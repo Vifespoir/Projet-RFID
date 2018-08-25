@@ -21,7 +21,7 @@ class MessageCounter(telepot.aio.helper.ChatHandler):
                 email = msg["text"].split(" ")
                 if len(email) > 1:
                     email = email[1]
-                    reuslt = supprimer_email(email)
+                    result = supprimer_email(email)
                     if result:
                         await self.sender.sendMessage("Email supprimer avec succès.")
                     else:
