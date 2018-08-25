@@ -1,9 +1,13 @@
-{% with messages = get_flashed_messages() %}
+<div class="container" id="stream">
+  {% with messages = get_flashed_messages() %}
   {% if messages %}
+  <div class="card card-body">
     {% for message in messages %}
     <div class="alert lead alert-primary" role="alert">
       {{ message }}
     </div>
     {% endfor %}
+  </div>
   {% endif %}
-{% endwith %}
+  {% endwith %}
+</div>
