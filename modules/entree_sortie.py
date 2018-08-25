@@ -2,7 +2,7 @@
 # -*- coding: utf_8 -*-
 from csv import reader, writer
 from datetime import date, datetime
-from os import remove
+from os import remove, rename
 from os.path import abspath, dirname, isdir, join, pardir
 from re import compile as re_compile
 
@@ -192,10 +192,14 @@ def test_fichier_csv(fichier):
 
     Exemple de ligne: "M.,BÉLIÈRES,Denis,denibel@yahoo.fr,25/03/2018,19253157164"
     """
+    first = True
     with open(fichier, "r") as fichierLu:
         lignes = reader(fichierLu)
         compteur = 0
         for ligne in lignes:
+            if first:
+                first = False
+                continue
             compteur += 1
             try:
                 assert TEST_MME_MR.match(ligne[0])
@@ -211,6 +215,8 @@ def test_fichier_csv(fichier):
 
 
 def reecrire_registre_des_entrees(fichier):
+    archive = "{}-{}.csv".format(FICHIER_ADHERENTS_CHEMIN[:-4] + str(datetime.today()))
+    rename(FICHIER_ADHERENTS_CHEMIN, archive)
     with open(fichier, "r") as fichierLu:
         contenu = fichierLu.read()
 
