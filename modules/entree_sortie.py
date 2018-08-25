@@ -208,7 +208,8 @@ def test_fichier_csv(fichier):
                 assert TEST_NOM.match(ligne[2]), "Problem with last name :" + ligne[2]
                 assert TEST_EMAIL.match(ligne[3]), "Problem with email :" + ligne[3]
                 assert TEST_DATE.match(ligne[4]), "Problem with date :" + ligne[4]
-                assert TEST_RFID.match(ligne[5]), "Problem with RFID :" + ligne[5]
+                if ligne[5]:
+                    assert TEST_RFID.match(ligne[5]), "Problem with RFID :" + ligne[5]
             except AssertionError as e:
                 print(e)
                 return "Erreur ligne: {}\n{}\n{}".format(compteur, ", ".join(ligne), e)
