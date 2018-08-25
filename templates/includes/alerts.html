@@ -24,7 +24,7 @@ if (window.navigator.userAgent.indexOf("Edge") > -1 || window.navigator.userAgen
   stream.interHTML = "Cette application ne marche ni avec Internet Explorer ni avec Edge.";
 } else {
   function sse(event) {
-    var source = new EventSource('{{ url_for('stream') }}');
+    var source = new EventSource("{{ url_for('stream') }}");
     source.onmessage = function(event) {
       var time = new Date();
       toDelete = [];

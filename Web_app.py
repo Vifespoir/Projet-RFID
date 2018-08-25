@@ -12,6 +12,8 @@ from flask_bootstrap import Bootstrap
 from flask_security import (RoleMixin, Security, SQLAlchemyUserDatastore,
                             UserMixin, login_required)
 from flask_sqlalchemy import SQLAlchemy
+from modules.app_secrets import (SECRET_KEY, SECURITY_PASSWORD_SALT,
+                                 TELEGRAM_API_CHAT_ID, TELEGRAM_API_TOKEN)
 from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_email,
                                    ajouter_entree, ajouter_rfid_adherent,
                                    lire_dernier, rechercher_adherent,
@@ -19,8 +21,6 @@ from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_email,
                                    rechercher_entrees,
                                    reecrire_registre_des_entrees,
                                    supprimer_rfid_adherent, test_fichier_csv)
-from modules.app_secrets import (SECRET_KEY, SECURITY_PASSWORD_SALT,
-                             TELEGRAM_API_CHAT_ID, TELEGRAM_API_TOKEN)
 from redis import StrictRedis
 from werkzeug.utils import secure_filename
 
@@ -92,6 +92,7 @@ def event_stream():
     pubsub.subscribe("stream")
     # TODO: handle client disconnection.
     for message in pubsub.listen():
+        print("Nouvelle entrée: {}".format(message))
         jsMessage = message["data"]
         if isinstance(jsMessage, int):
             continue
