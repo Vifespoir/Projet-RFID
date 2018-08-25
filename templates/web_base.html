@@ -32,6 +32,9 @@
         {% endif %}
       </div>
       <div class="flex-column w-75">
+        <div class="card card-body">
+          {% include "includes/flash_messages.html" %}
+        </div>
         {% block content -%}
         {%- endblock content %}
       </div>
