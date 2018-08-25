@@ -25,7 +25,9 @@ if (window.navigator.userAgent.indexOf("Edge") > -1 || window.navigator.userAgen
 } else {
   function sse(event) {
     var source = new EventSource("{{ url_for('stream') }}");
+    console.log(source);
     source.onmessage = function(event) {
+      console.log(event);
       var time = new Date();
       toDelete = [];
       messages.push({"data": String(event.data), "time": time})
