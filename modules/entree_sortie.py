@@ -229,13 +229,15 @@ def supprimer_email(email):
     newEmails = []
     with open(FICHIER_EMAILS_CHEMIN, "r") as fichierEmail:
         emails = reader(fichierEmail)
-        for ligne in emails:
-            if email in ligne:
-                continue
-            newEmails.append(ligne)
+        lignes = list(emails)
 
-        if len(newEmails) == len(emails):
-            return False
+    for ligne in lignes:
+        if email in ligne:
+            continue
+        newEmails.append(ligne)
+
+    if len(newEmails) == len(emails):
+        return False
 
     with open(FICHIER_EMAILS_CHEMIN, "w") as fichierEmail:
         writer(newEmails)
