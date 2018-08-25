@@ -24,9 +24,9 @@
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'visiteur' %}active{% endif %}" style="font-size: 180%;" href="{{ visiteur }}">Espace sans badge</a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'historique' %}active{% endif %}" style="font-size: 180%;" href="{{ historique }}">Historique</a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'admin' %}active{% endif %}" style="font-size: 180%;" id="admin-pill" href="{{ admin }}">Admin</a>
-        <a class="nav-link text-uppercase font-weight-bold {% if active == 'news' %}active{% endif %}" style="font-size: 180%;" href="{{ newsletter }}">Newsletter<span class="sr-only">(current)</span></a>
+        <!-- <a class="nav-link text-uppercase font-weight-bold {% if active == 'news' %}active{% endif %}" style="font-size: 180%;" href="{{ newsletter }}">Newsletter<span class="sr-only">(current)</span></a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'adhesion' %}active{% endif %}" style="font-size: 180%;" href="{{ adhesion }}">Adhésion<span class="sr-only">(current)</span></a>
-        <a class="nav-link text-uppercase font-weight-bold {% if active == 'bug' %}active{% endif %}" style="font-size: 180%;" href="{{ bug }}">Suggestion / Bug<span class="sr-only">(current)</span></a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'bug' %}active{% endif %}" style="font-size: 180%;" href="{{ bug }}">Suggestion / Bug<span class="sr-only">(current)</span></a> -->
         {% if current_user.is_authenticated %}
         <a class="nav-link text-uppercase font-weight-bold" style="font-size: 180%;" href="{{ logout }}">Se déconnecter</a>
         {% endif %}
