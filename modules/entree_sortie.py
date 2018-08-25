@@ -222,7 +222,9 @@ def reecrire_registre_des_entrees(fichier):
 
 def ajouter_email(nom, prenom, email):
     with open(FICHIER_EMAILS_CHEMIN, "a") as fichierEmail:
-        fichierEmail.write(",".join([nom, prenom, email]))
+        nouvelleLigne = ",".join([nom, prenom, email])
+        nouvelleLigne += "\n"
+        fichierEmail.write(nouvelleLigne)
 
 
 def supprimer_email(email):
@@ -232,7 +234,8 @@ def supprimer_email(email):
         lignes = list(emails)
 
     for ligne in lignes:
-        if email.lower() in [l.lower() for l in ligne]:
+        print(ligne)
+        if email.lower() in ligne[2].lower():
             continue
         newEmails.append(ligne)
 
