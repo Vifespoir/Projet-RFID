@@ -235,7 +235,7 @@ def supprimer_email(email):
 
     for ligne in lignes:
         print(ligne)
-        if email.lower() in ligne[2].lower():
+        if ligne and email.lower() in ligne[2].lower():
             continue
         newEmails.append(ligne)
 
