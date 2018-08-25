@@ -240,6 +240,7 @@ def supprimer_email(email):
         return False
 
     with open(FICHIER_EMAILS_CHEMIN, "w") as fichierEmail:
-        writer(newEmails)
+        ecriture = writer(fichierEmail)
+        ecriture.writerows(newEmails)
 
     return True
