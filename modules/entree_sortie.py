@@ -232,11 +232,11 @@ def supprimer_email(email):
         lignes = list(emails)
 
     for ligne in lignes:
-        if email in ligne:
+        if email.lower() in ligne.lower():
             continue
         newEmails.append(ligne)
 
-    if len(newEmails) == len(emails):
+    if len(newEmails) == len(lignes):
         return False
 
     with open(FICHIER_EMAILS_CHEMIN, "w") as fichierEmail:
