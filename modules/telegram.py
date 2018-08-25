@@ -13,7 +13,9 @@ class MessageCounter(telepot.aio.helper.ChatHandler):
         super(MessageCounter, self).__init__(*args, **kwargs)
 
     async def on_chat_message(self, msg):
+        print("message reçu:")
         if "text" in msg.keys():
+            print(msg["text"])
             if msg["text"] == "/emails":
                 with open(FICHIER_EMAILS_CHEMIN, "r") as docFile:
                     await self.sender.sendDocument(document=docFile)
@@ -23,7 +25,7 @@ class MessageCounter(telepot.aio.helper.ChatHandler):
                     email = email[1]
                     result = supprimer_email(email)
                     if result:
-                        await self.sender.sendMessage("Email supprimer avec succès.")
+                        await self.sender.sendMessage("Email supprimé avec succès.")
                     else:
                         await self.sender.sendMessage("Email non trouvé, email non supprimé.")
                 else:
