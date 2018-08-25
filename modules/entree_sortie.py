@@ -223,7 +223,7 @@ def test_fichier_csv(fichier):
 
 
 def reecrire_registre_des_entrees(fichier):
-    archive = "{}-{}.csv".format(FICHIER_ADHERENTS_CHEMIN[:-4] + str(datetime.today()))
+    archive = "{}-{}.csv".format(FICHIER_ADHERENTS_CHEMIN[:-4], str(datetime.today()))
     rename(FICHIER_ADHERENTS_CHEMIN, archive)
     with open(fichier, "r") as fichierLu:
         contenu = fichierLu.read()
