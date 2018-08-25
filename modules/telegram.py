@@ -18,6 +18,7 @@ class MessageCounter(telepot.aio.helper.ChatHandler):
             print(msg["text"])
             if msg["text"] == "/emails":
                 with open(FICHIER_EMAILS_CHEMIN, "r") as docFile:
+                    print("Sending document")
                     await self.sender.sendDocument(document=docFile)
             elif "/unsubscribe" in msg["text"]:
                 email = msg["text"].split(" ")
