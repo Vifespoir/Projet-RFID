@@ -16,22 +16,26 @@
     {%- endblock styles %}
     {%- endblock head %}
   </head>
-  <body>
+  <body style="width: 100vw; height: 100vh; overflow: hidden;">
     {% block body -%}
-    <div class="d-flex float-left">
-      <div class="nav flex-column nav-pills w-10" id="nav-tab" role="tablist">
+    <div class="row" style="width: 100%; height: 100%; margin: 2em;">
+      <div class="nav flex-column nav-pills col-3" id="nav-tab" role="tablist">
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'accueil' %}active{% endif %}" style="font-size: 180%;" href="{{ accueil }}">Accueil<span class="sr-only">(current)</span></a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'visiteur' %}active{% endif %}" style="font-size: 180%;" href="{{ visiteur }}">Espace sans badge</a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'historique' %}active{% endif %}" style="font-size: 180%;" href="{{ historique }}">Historique</a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'evenement' %}active{% endif %}" style="font-size: 180%;" href="{{ evenement }}">Événement</a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'admin' %}active{% endif %}" style="font-size: 180%;" id="admin-pill" href="{{ admin }}">Admin</a>
         <!-- <a class="nav-link text-uppercase font-weight-bold {% if active == 'news' %}active{% endif %}" style="font-size: 180%;" href="{{ newsletter }}">Newsletter<span class="sr-only">(current)</span></a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'adhesion' %}active{% endif %}" style="font-size: 180%;" href="{{ adhesion }}">Adhésion<span class="sr-only">(current)</span></a> -->
-        <a class="nav-link text-uppercase font-weight-bold {% if active == 'bug' %}active{% endif %}" style="font-size: 180%;" href="{{ bug }}">Suggestion / Bug<span class="sr-only">(current)</span></a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'bug' %}active{% endif %}" style="font-size: 180%;" href="{{ bug }}">Suggestion / Bug</a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'changelog' %}active{% endif %}" style="font-size: 180%;" href="{{ changelog }}">Changelog</a>
         {% if current_user.is_authenticated %}
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'bugs' %}active{% endif %}" style="font-size: 180%;" href="{{ bugs }}">Rapport de bugs</a>
         <a class="nav-link text-uppercase font-weight-bold" style="font-size: 180%;" href="{{ logout }}">Se déconnecter</a>
         {% endif %}
+        {% include "includes/statistiques.html" %}
       </div>
-      <div class="flex-column">
+      <div class="col-9" style="overflow: scroll; height: 100vh;">
         {% include "includes/flash_messages.html" %}
         {% block content -%}
         {%- endblock content %}
@@ -42,6 +46,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     {% include "includes/alerts.html" %}
+    {% include "includes/logout-script.html" %}
     {%- endblock scripts %}
     {%- endblock body %}
   </body>

@@ -6,23 +6,26 @@ from re import compile as re_compile
 
 from requests import get as get_url
 
-from flask import (Flask, Response, flash, redirect, render_template, request,
-                   url_for)
+from flask import (Flask, Response, flash, g, redirect, render_template,
+                   request, url_for)
 from flask_bootstrap import Bootstrap
 from flask_security import (RoleMixin, Security, SQLAlchemyUserDatastore,
                             UserMixin, login_required)
 from flask_sqlalchemy import SQLAlchemy
+from markdown import markdown
 from modules.app_secrets import (SECRET_KEY, SECURITY_PASSWORD_SALT,
                                  TELEGRAM_API_CHAT_ID, TELEGRAM_API_TOKEN)
-from modules.entree_sortie import (CHEMIN_CSV_ENTREES, ajouter_email,
-                                   ajouter_entree, ajouter_rfid_adherent,
-                                   lire_dernier,
-                                   obtenir_date_et_heure_actuelle,
+from modules.entree_sortie import (ajouter_bug, ajouter_email, ajouter_entree,
+                                   ajouter_evenement, ajouter_rfid_adherent,
+                                   detecter_deja_scanne, editer_evenement,
+                                   lire_dernier, obtenir_bugs,
+                                   obtenir_derniers_evenements,
                                    rechercher_adherent,
                                    rechercher_date_adhesion,
                                    rechercher_entrees,
                                    reecrire_registre_des_entrees,
-                                   supprimer_rfid_adherent, test_fichier_csv)
+                                   supprimer_rfid_adherent, test_fichier_csv,
+                                   update_stats)
 from redis import StrictRedis
 from werkzeug.utils import secure_filename
 
@@ -38,6 +41,9 @@ APP_VISITEUR = "visiteur"
 APP_BUG = "bug"
 APP_NEWS = "newsletter"
 APP_ADHESION = "adhesion"
+APP_CHANGELOG = "changelog"
+APP_EVENEMENT = "evenement"
+APP_BUGS = "bugs"
 APP_EMAIL = "etienne.pouget@outlook.com"
 
 APP_PATHS = {
@@ -49,7 +55,10 @@ APP_PATHS = {
     APP_VISITEUR: "/" + APP_VISITEUR,
     APP_BUG: "/" + APP_BUG,
     APP_NEWS: "/" + APP_NEWS,
-    APP_ADHESION: "/" + APP_ADHESION
+    APP_ADHESION: "/" + APP_ADHESION,
+    APP_CHANGELOG: "/" + APP_CHANGELOG,
+    APP_EVENEMENT: "/" + APP_EVENEMENT,
+    APP_BUGS: "/" + APP_BUGS
 }
 
 HTML_WRAPPER = [
@@ -139,6 +148,14 @@ security = Security(app, user_datastore)
 security.SECURITY_PASSWORD_HASH = None
 
 
+# Setup stats
+def flask_update_stats():
+    g.visiteurCeJour, g.visiteurCetteSemaine, g.visiteurCeMois = update_stats()
+
+
+app.before_request(flask_update_stats)
+
+
 @app.before_first_request
 def create_user():
     """Create a user to test with."""
@@ -170,27 +187,58 @@ def retourner_accueil():
 
     entreesDuJour = rechercher_entrees(jour=jour)
 
-    return render_template('accueil.html',
-                           contenu=entreesDuJour,
-                           cherche=jour,
-                           active="accueil",
-                           **APP_PATHS)
+    return render_template('accueil.html', contenu=entreesDuJour, cherche=jour, active="accueil", **APP_PATHS)
+
+
+@app.route("/changelog")
+def retourner_changelog():
+    """Affiche les derniers changement sur le logiciel."""
+    with open("CHANGELOG.md", mode='r') as changelog:
+        html = markdown(changelog.read())
+
+    kwargs = {"content": html, "active": "changelog"}
+    kwargs.update(APP_PATHS)
+    return render_template("changelog.html", **kwargs)
+
+
+@app.route("/evenement", methods=["GET", "POST"])
+def retourner_evenement():
+    """Enregistre un événement."""
+    kwargs = {"active": "evenement"}
+    if request.method == "POST" and "participants" not in request.form.keys():
+        print(request.form)
+        flash("Événement enregistré! Merci d'animer le FABLAB!")
+        ligneCsv = {}
+        ligneCsv["Evenement"] = request.form["evenement"]
+        ligneCsv["Nom"] = request.form["nom"]
+        ligneCsv["Prenom"] = request.form["prenom"]
+        ligneCsv["Date"] = request.form["date"]
+        ligneCsv["Heure"] = request.form["heure"]
+        ajouter_evenement(ligneCsv)
+    if request.method == "POST" and "participants" in request.form.keys():
+        editer_evenement(request.form["evenement"], request.form["date"], int(request.form["participants"]))
+
+    contenu = obtenir_derniers_evenements(10)
+    print(contenu)
+    kwargs["contenu"] = contenu
+    kwargs.update(APP_PATHS)
+    return render_template("evenement.html", **kwargs)
 
 
 # TODO add the new adherent signup page
 @app.route("/adhesion")
 def retourner_adhesion():
-    return render_template("501.html",
-                           active="adhesion",
-                           **APP_PATHS)
+    return render_template("501.html", active="adhesion", **APP_PATHS)
 
 
-# TODO add a page to submit a bug report or a feature request
 @app.route("/bug", methods=['GET', 'POST'])
 def retourner_bug():
     """Telegram a bug."""
     if request.method == 'POST' and request.form['bouton'] == "envoyer":
-        message = request.form['text']
+        ligneCsv = {"Nom": request.form["nom"], "Prenom": request.form["prenom"],
+                    "Description": request.form["description"]}
+        ajouter_bug(ligneCsv)
+        message = "Bug rapporté par {Nom} {Prenom}\n{Description}".format(ligneCsv)
         TELEGRAM_API_MESSAGE_PAYLOAD["text"] = message
         r = get_url(TELEGRAM_API_URL, params=TELEGRAM_API_MESSAGE_PAYLOAD)
         if r.status_code == 200:
@@ -199,65 +247,58 @@ def retourner_bug():
             flash("Telegram non envoyé!")
         return redirect(url_for("retourner_accueil"))
 
-    return render_template("bug.html",
-                           active="bug",
-                           **APP_PATHS)
+    return render_template("bug.html", active="bug", **APP_PATHS)
+
+
+@app.route('/bugs')
+@login_required
+def retourner_bugs():
+    kwargs = {"active": "bugs", "contenu": obtenir_bugs()}
+    kwargs.update(APP_PATHS)
+    return render_template("bugs.html", **kwargs)
 
 
 @app.route('/historique', methods=['GET', 'POST'])
 def retourner_historique():
-    ceJour = str(datetime.now().date())
-    ceJour = '/changer?date={}&delta=0'.format(ceJour)
+    kwargs = {}
     if request.method == 'POST' and request.form['bouton'] == "rechercher":
-        print("histoire")
         jour = request.form['jour']
         mois = request.form['mois']
         annee = request.form['annee']
-        date = "{}-{}-{}".format(annee, mois, jour)
-        suivant = '/changer?date={}&delta=1'.format(date)
-        precedent = '/changer?date={}&delta=-1'.format(date)
-        entreesDuJour = rechercher_entrees(jour=date)
+        kwargs["date"] = "{}-{}-{}".format(annee, mois, jour)
+    elif request.method == "GET" and request.args:
+        date = request.args.get('date')
+        dateTemporaire = datetime.strptime(date, '%Y-%m-%d').date()
+        jourActuel = timedelta(days=int(request.args["delta"]))
+        kwargs["date"] = str(dateTemporaire + jourActuel)
     else:
-        precedent = suivant = entreesDuJour = None
-        date = str(datetime.today().date())
+        kwargs["date"] = str(datetime.today().date())
+        print("HELLO")
 
-    suivant = '/changer?date={}&delta=1'.format(date)
-    precedent = '/changer?date={}&delta=-1'.format(date)
+    kwargs["contenu"] = rechercher_entrees(jour=kwargs["date"])
 
-    return render_template('historique.html',
-                           active="historique",
-                           precedent=precedent,
-                           suivant=suivant,
-                           ceJour=ceJour,
-                           date=date,
-                           contenu=entreesDuJour,
-                           **APP_PATHS)
+    kwargs["ceJour"] = str(datetime.now().date())
+    kwargs["ceJour"] = '/historique?date={}&delta=0'.format(kwargs["ceJour"])
+    kwargs["suivant"] = '/historique?date={}&delta=1'.format(kwargs["date"])
+    kwargs["precedent"] = '/historique?date={}&delta=-1'.format(kwargs["date"])
+    kwargs["active"] = "historique"
+    kwargs.update(APP_PATHS)
+    return render_template('historique.html', **kwargs)
 
 
-@app.route('/changer', methods=['GET', 'POST'])
-def changer_date():
-    date = request.args.get('date')
-    delta = int(request.args.get('delta'))
-    dateTemporaire = datetime.strptime(date, '%Y-%m-%d')
-    dateTemporaire = dateTemporaire.date()
-    jourActuel = timedelta(days=delta)
-    jourSuivant = dateTemporaire + jourActuel
-    date = str(jourSuivant)
-    suivant = '/changer?date={}&delta=1'.format(date)
-    precedent = '/changer?date={}&delta=-1'.format(date)
-
-    entreesDuJour = rechercher_entrees(jour=date)
-    ceJour = str(datetime.now().date())
-    ceJour = '/changer?date={}&delta=0'.format(ceJour)
-
-    return render_template('historique.html',
-                           active="historique",
-                           precedent=precedent,
-                           suivant=suivant,
-                           date=date,
-                           ceJour=ceJour,
-                           contenu=entreesDuJour,
-                           **APP_PATHS)
+def mise_a_jour_adherents(fichier):
+    if fichier and allowed_file(fichier.filename):
+        nomDuFichier = secure_filename(fichier.filename)
+        cheminFichier = path.join(app.config['UPLOAD_FOLDER'], nomDuFichier)
+        fichier.save(cheminFichier)
+        test = test_fichier_csv(cheminFichier)
+        if test is True:
+            reecrire_registre_des_entrees(cheminFichier)
+            flash("Fichier: {} téléversé!".format(nomDuFichier))
+        else:
+            flash("Erreur, fichier non compatible...")
+            for text in test.split("\n"):
+                flash(text)
 
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -265,15 +306,12 @@ def changer_date():
 def retourner_admin():
     texte = 'Espace Admin'
     dernier = lire_dernier()
+    kwargs = {"active": "admin", "dernier": dernier}
+    newKwargs = {}
     if request.method == 'POST' and request.form['bouton'] == "supprimer":
         numero = request.form['numero']
         texte = supprimer_rfid_adherent(numero)
         flash(texte)
-        return render_template('admin.html',
-                               active="admin",
-                               dernier=dernier,
-                               **APP_PATHS)
-
     elif request.method == 'POST' and request.form['bouton'] == "rechercher":
         nom = request.form['nom']
         # FIXME ajouter for associer? what to do with associer endpoint
@@ -281,155 +319,96 @@ def retourner_admin():
         texte, lignes = rechercher_adherent(nom, uri)
         for ligne in lignes:
             ligne["uri"] = uri.format(ligne["Nom"], ligne["Prenom"], dernier)
-            print(ligne)
-
-        return render_template('admin.html',
-                               dernier=dernier,
-                               texte=texte,
-                               nom=nom,
-                               active="admin",
-                               contenu=lignes,
-                               **APP_PATHS)
+        newKwargs = {"texte": texte, "nom": nom, "contenu": lignes}
     elif request.method == 'POST' and request.form['bouton'] == "entree":
         nom = request.form["nom"]
         prenom = request.form["prenom"]
         texte, lignes = rechercher_entrees(nom, prenom)
-
-        return render_template('admin.html',
-                               dernier=dernier,
-                               texte=texte,
-                               nom=nom,
-                               active="admin",
-                               contenu=lignes,
-                               **APP_PATHS)
-
+        newKwargs = {"texte": texte, "nom": nom, "contenu": lignes}
     elif request.method == 'POST' and request.form['bouton'] == "televerser":
-        print(request.files, request.form)
-        # check if the post request has the file part
-        if 'file' not in request.files:
+        if 'file' not in request.files:  # check if the post request has the file part
             flash('Pas de fichier...')
             return redirect(request.url)
         fichier = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if fichier.filename == '':
+        if fichier.filename == '':  # if user does not select file, browser also submit an empty part without filename
             flash('Aucun fichier séléctionné')
             return redirect(request.url)
 
-        if fichier and allowed_file(fichier.filename):
-            nomDuFichier = secure_filename(fichier.filename)
-            cheminFichier = path.join(app.config['UPLOAD_FOLDER'], nomDuFichier)
-            fichier.save(cheminFichier)
-            test = test_fichier_csv(cheminFichier)
-            if test is True:
-                reecrire_registre_des_entrees(cheminFichier)
-                flash("Fichier: {} téléversé!".format(nomDuFichier))
-            else:
-                flash("Erreur, fichier non compatible...")
-                for text in test.split("\n"):
-                    flash(text)
+        mise_a_jour_adherents(fichier)
 
-        return render_template("admin.html",
-                               active="admin",
-                               dernier=dernier,
-                               **APP_PATHS)
-    else:
-        return render_template('admin.html',
-                               active="admin",
-                               dernier=dernier,
-                               **APP_PATHS)
+    kwargs.update(newKwargs)
+    kwargs.update(APP_PATHS)
+    return render_template('admin.html', **kwargs)
 
 
 @app.route('/ajouter', methods=['GET', 'POST'])
 @login_required
 def ajouter():
-    if request.method == "GET":
-        prenom = request.args.get('prenom')
-        nom = request.args.get('nom')
-        numero = request.args.get('numero')
-        if "action" in request.args.keys() and request.args['action'] == "entree":
-            cherche = "{} {}".format(prenom, nom)
-            lignes = rechercher_entrees(nom=nom, prenom=prenom)
+    kwargs = {"active": "accueil"}
+    if request.method == "GET" and "action" in request.args.keys() and request.args['action'] == "entree":
+        kwargs["prenom"] = request.args.get('prenom')
+        kwargs["nom"] = request.args.get('nom')
+        kwargs["numero"] = request.args.get('numero')
+        kwargs["cherche"] = "{} {}".format(kwargs["prenom"], kwargs["nom"])
+        kwargs["contenu"] = rechercher_entrees(nom=kwargs["nom"], prenom=kwargs["prenom"])
+        kwargs.update(APP_PATHS)
 
-            return render_template('accueil.html',
-                                   contenu=lignes,
-                                   cherche=cherche,
-                                   active="accueil",
-                                   **APP_PATHS)
+        return render_template('accueil.html', **kwargs)
+    elif request.method == "GET":
+        ajouter_rfid_adherent(kwargs["nom"], kwargs["prenom"], kwargs["numero"])
+        flash("Association entre rfid '{}' et adhérent '{} {}' réussie.".format(
+            kwargs["numero"], kwargs["prenom"], kwargs["nom"]))
 
-        else:
-            ajouter_rfid_adherent(nom, prenom, numero)
-            flash("Association entre rfid '{}' et adhérent '{} {}' réussie.".format(numero, prenom, nom))
-
-            return redirect(url_for('retourner_admin'))
+        return redirect(url_for('retourner_admin'))
 
 
 @app.route('/simuler', methods=['GET', 'POST'])
 def simuler():
+    kwargs = {"active": "accukwargseil"}
     if request.method == "GET" and request.args["nom"] and request.args["prenom"] and request.args["numero"]:
-        prenom = request.args.get('prenom')
-        nom = request.args.get('nom')
-        # numero = request.args.get('numero')
-        cherche = "{} {}".format(prenom, nom)
+        kwargs["prenom"] = request.args.get('prenom')
+        kwargs["nom"] = request.args.get('nom')
+        kwargs["cherche"] = "{} {}".format(kwargs["prenom"], kwargs["nom"])
+        if not detecter_deja_scanne(kwargs["nom"], kwargs["prenom"]):
+            dateAdhesion = rechercher_date_adhesion(kwargs["nom"], kwargs["prenom"])
+            ajouter_entree(kwargs["nom"], kwargs["prenom"], dateAdhesion)
+            flash("Bonjour, {}! Bons projets!".format(kwargs["prenom"]))
+        else:
+            flash("Bien tenté {} mais tu t'es déjà inscrit!".format(kwargs["prenom"]))
 
-        dateAdhesion = rechercher_date_adhesion(nom, prenom)
-        ajouter_entree(nom, prenom, dateAdhesion)
-        entrees = rechercher_entrees(nom=nom, prenom=prenom)
-
-        return render_template('accueil.html',
-                               contenu=entrees,
-                               cherche=cherche,
-                               active="accueil",
-                               **APP_PATHS)
-
-    return redirect(url_for('retourner_admin'))
-
-
-@app.route('/sans_badge', methods=['GET', 'POST'])
-def sans_badge():
-    if request.method == "POST":
-        prenom = request.args.get('prenom')
-        nom = request.args.get('nom')
-        ajouter_entree(nom, prenom)
-
-    return redirect(url_for("retourner_accueil"))
+        kwargs.update(APP_PATHS)
+        kwargs["contenu"] = rechercher_entrees(nom=kwargs["nom"], prenom=kwargs["prenom"])
+        return render_template('accueil.html', **kwargs)
 
 
 @app.route("/visiteur", methods=["GET", "POST"])
 def pagevisiteur():
     dernier = lire_dernier()
+    kwargs = {"active": "visiteur", "dernier": dernier}
     if request.method == "POST" and request.form["bouton"] == "visiteur":
-        prenom = request.form["prenom"]
-        nom = request.form["nom"]
-        email = request.form["email"]
-        if email:
-            ajouter_email(nom, prenom, email)
+        ligneCsv = {"Prenom": request.form["prenom"], "Nom": request.form["nom"],
+                    "Email": request.form["email"], "Organisme": request.form["organisme"]}
+        if ligneCsv["Email"]:
+            ajouter_email(ligneCsv["Nom"], ligneCsv["Prenom"], ligneCsv["Email"])
 
-        date, heure = obtenir_date_et_heure_actuelle()
-        entree = "\n{} {} {} {} visiteur".format(date, heure, prenom, nom)
-        with open(CHEMIN_CSV_ENTREES, 'a') as ecrireVisiteur:
-            ecrireVisiteur.write(entree)
+        if not detecter_deja_scanne(ligneCsv["Nom"], ligneCsv["Prenom"]):
+            ajouter_entree(ligneCsv["Nom"], ligneCsv["Prenom"], "visiteur")
+            flash("Bonjour, {}! Bons projets!".format(ligneCsv["Prenom"]))
+        else:
+            flash("Bien tenté {} mais tu t'es déjà inscrit!".format(ligneCsv["Prenom"]))
+
         return redirect(url_for('retourner_accueil'))
 
     if request.method == 'POST' and request.form['bouton'] == "rechercher":
-        nom = request.form['nom']
+        kwargs["nom"] = request.form['nom']
         uri = "/simuler?nom={}&prenom={}&numero={}"
-        texte, lignes = rechercher_adherent(nom, uri)
-        for ligne in lignes:
+        kwargs["texte"], kwargs["contenu"] = rechercher_adherent(kwargs["nom"], uri)
+        for ligne in kwargs["contenu"]:
             ligne["uri"] = uri.format(ligne["Nom"], ligne["Prenom"], dernier)
-            print(ligne)
 
-        return render_template('visiteur.html',
-                               dernier=dernier,
-                               texte=texte,
-                               active="visiteur",
-                               contenu=lignes,
-                               **APP_PATHS)
+    kwargs.update(APP_PATHS)
 
-    else:
-        return render_template('visiteur.html',
-                               active="visiteur",
-                               **APP_PATHS)
+    return render_template('visiteur.html', **kwargs)
 
 
 def allowed_file(filename):
@@ -437,4 +416,4 @@ def allowed_file(filename):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0", debug=1)

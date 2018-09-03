@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 # Version modifiee de la librairie https://github.com/mxgxw/MFRC522-python
 import signal
-from datetime import datetime, timedelta
 from time import sleep
 
 import modules.MFRC522 as MFRC522
-from modules.entree_sortie import (TXT_DERNIER_BADGE_CHEMIN,
-                                   CHEMIN_CSV_ENTREES, ajouter_entree,
-                                   lire_entrees_du_jour, rechercher_rfid)
+from modules.entree_sortie import (TXT_DERNIER_BADGE_CHEMIN, ajouter_entree,
+                                   detecter_deja_scanne, rechercher_rfid)
 from pyA20.gpio import gpio
 from redis import StrictRedis
 
@@ -21,7 +19,6 @@ class BadgeScanneur(object):
         self.continue_reading = True
         signal.signal(signal.SIGINT, self.end_read)
         self.MIFAREReader = MFRC522.MFRC522()
-        self.derniereEntrees = lire_entrees_du_jour()
         self.redis.publish("stream", "<success>Badgeuse initialisé, prête à scanner.")
 
     def end_read(self, signal, frame):
@@ -39,26 +36,9 @@ class BadgeScanneur(object):
 
     def authentifier_rfid(self, nom, prenom, dateAdhesion):
         ajouter_entree(nom, prenom, dateAdhesion)
-        self.derniereEntrees = lire_entrees_du_jour()
 
     def detecter_deja_scanne(self, refNom, refPrenom):
-
-        entrees = []
-        for ligneIndex in range(0, int(len(self.derniereEntrees) / 5)):
-            subEntree = []
-            for index in range(0, 5):
-                subEntree.append(self.derniereEntrees[ligneIndex*5+index])
-            entrees.append(subEntree)
-
-        for ligne in entrees:
-            date, heure, prenom, nom = ligne[0:4]
-            date = date + " " + heure
-            date = datetime.strptime(date, '%Y-%m-%d %H:%M')
-            if refNom.lower() == nom.lower() and refPrenom.lower() == prenom.lower():
-                if datetime.now() - date < timedelta(0, 60*60*2):  # compare to 2 hours (+2 due to GMT)
-                    return True
-
-        return False
+        return detecter_deja_scanne(refNom, refPrenom)
 
     def traiter_rfid(self, code):
         nom, prenom, dateAdhesion = self.rechercher_adherent(code)

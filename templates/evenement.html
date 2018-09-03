@@ -1,0 +1,77 @@
+{% extends "web_base.html" %}
+
+{% block content %}
+<div class="container">
+	<div class="card card-body">
+    <h2>Événement</h2>
+	</div>
+	<br>
+  <form action="" method="post">
+    <h3>Veuillez renseigner les champs suivants:</h3>
+    <div class="form-group">
+      <div class="input-group-lg mb-3">
+        <input class="form-control"type="text" name="evenement" value="" placeholder="Nom de l'événement" required>
+      </div>
+      <div class="input-group-lg mb-3">
+        <input class="form-control"type="text" name="prenom" value="" placeholder="Prenom de l'organisateur">
+      </div>
+      <div class="input-group-lg mb-3">
+        <input class="form-control"type="text" name="nom" value="" placeholder="Nom de l'organisateur">
+      </div>
+      <div class="input-group-lg mb-3 d-flex justify-content-around">
+        <input class="mr-auto form-control" type="date" name="date" required>
+        <input class="form-control" type="time" name="heure" required>
+        <div class="input-group-append">
+          <span class="input-group-text">12:00 PM</span>
+        </div>
+      </div>
+      <div class="form-group mb-3">
+        <button type="submit" name="bouton" value="envoyer" class="btn btn-lg btn-primary">Envoyer</button>
+      </div>
+    </div>
+  </form>
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Événement</th>
+        <th scope="col">Date</th>
+        <th scope="col">Participants</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ligne in contenu | reverse() %}
+      <form class="form-group" method="post">
+        <tr>
+          <td>
+            <div class="input-group">
+              <input style="display: none;" type="text" name="evenement" value="{{ ligne['Evenement'] }}" placeholder="100"><span>{{ ligne["Evenement"] }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="input-group">
+              <input style="display: none;" type="date" name="date" value="{{ ligne['Date'] }}" placeholder="100"><span>{{ ligne["Date"] }}</span>
+            </div>
+          </td>
+          <td>
+            {% if not ligne["Participants"] %}
+            <div class="input-group-sm">
+              <div class="row">
+                <div class="col">
+                  <input class="form-control" type="number" name="participants" value="0" placeholder="100">
+                </div>
+                <div class="col">
+                  <button class="btn btn-primary" type="submit" value="submit" role="button">Nombre de participants</button>
+                </div>
+              </div>
+            </div>
+          {% else %}
+          {{ ligne["Participants"] }}
+          {% endif %}
+          </td>
+        </tr>
+      </form>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

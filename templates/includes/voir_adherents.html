@@ -10,7 +10,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for ligne in contenu %}
+			{% for ligne in contenu | reverse() %}
 			<tr>
 				<td>{{ ligne["Prenom"] }}</td>
 				<td>{{ ligne["Nom"] }}</td>
@@ -23,8 +23,6 @@
 					<a class="btn btn-success" name="bouton" value="entree" href="{{ ligne["uri"] }}&action=entree" role="button">Voir les entrées</a>
 					{% endif %}
 				</td>
-			</tr>
-			<tr>
 			</tr>
 			{% endfor %}
 		</tbody>

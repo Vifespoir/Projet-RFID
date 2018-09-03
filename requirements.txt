@@ -8,3 +8,4 @@ pyA20==0.2.1
 redis==2.10.6
 requests==2.12.4
 telepot==12.7
+Markdown==2.6.11

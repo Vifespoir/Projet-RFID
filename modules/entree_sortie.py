@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf_8 -*-
 from csv import DictReader, DictWriter
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from os import remove, rename
 from os.path import abspath, dirname, join, pardir
 from re import compile as re_compile
@@ -17,6 +17,10 @@ TXT_DERNIER_BADGE = "dernier_badge_scanne.txt"
 CHEMIN_TXT_DERNIER_BADGE = join(CHEMIN_DONNEES, TXT_DERNIER_BADGE)
 CSV_EMAILS = "emails.csv"
 CHEMIN_CSV_EMAILS = join(CHEMIN_DONNEES, CSV_EMAILS)
+CSV_EVENEMENTS = "evenements.csv"
+CHEMIN_CSV_EVENEMENTS = join(CHEMIN_DONNEES, CSV_EVENEMENTS)
+CSV_BUGS = "bugs.csv"
+CHEMIN_CSV_BUGS = join(CHEMIN_DONNEES, CSV_BUGS)
 # REGEXES
 TEST_MME_MR = re_compile(r"([M.|Mme])")
 TEST_NOM = re_compile(r"(\S+)")
@@ -33,16 +37,26 @@ CSV_COTISATION = "Date de cotisation"
 CSV_STATUS = "Status cotisation"
 CSV_RFID = "RFID"
 CSV_GENRE = "Genre"
+CSV_ORGANISME = "Organisme"
+CSV_EVENEMENT = "Evenement"
+CSV_PARTICIPANTS = "Participants"
+CSV_DESCRIPTION = "Description"
 ENTETE_CSV_ADHERENTS = [CSV_GENRE, CSV_NOM, CSV_PRENOM, CSV_EMAIL, CSV_COTISATION, CSV_RFID]
 SEPARATEUR_CSV_ADHERENTS = ","
 PARAMETRE_CSV_ADHERENTS = {"fieldnames": ENTETE_CSV_ADHERENTS, "delimiter": SEPARATEUR_CSV_ADHERENTS}
-ENTETE_REGISTRE_DES_ENTREES = [CSV_DATE, CSV_HEURE, CSV_PRENOM, CSV_NOM, CSV_STATUS]
+ENTETE_REGISTRE_DES_ENTREES = [CSV_DATE, CSV_HEURE, CSV_PRENOM, CSV_NOM, CSV_STATUS, CSV_ORGANISME]
 SEPARATEUR_REGISTRE_DES_ENTREES = " "
 PARAMETRE_CSV_REGISTRE_DES_ENTREES = {"fieldnames": ENTETE_REGISTRE_DES_ENTREES,
                                       "delimiter": SEPARATEUR_REGISTRE_DES_ENTREES}
 ENTETE_CSV_EMAILS = [CSV_PRENOM, CSV_NOM, CSV_EMAIL]
 SEPARATEUR_CSV_EMAILS = ","
 PARAMETRE_CSV_EMAILS = {"fieldnames": ENTETE_CSV_EMAILS, "delimiter": SEPARATEUR_CSV_EMAILS}
+ENTETE_CSV_EVENEMENTS = [CSV_EVENEMENT, CSV_NOM, CSV_PRENOM, CSV_DATE, CSV_HEURE, CSV_PARTICIPANTS]
+SEPARATEUR_CSV_EVENEMENTS = ","
+PARAMETRE_CSV_EVENEMENTS = {"fieldnames": ENTETE_CSV_EVENEMENTS, "delimiter": SEPARATEUR_CSV_EVENEMENTS}
+ENTETE_CSV_BUGS = [CSV_NOM, CSV_PRENOM, CSV_DATE, CSV_DESCRIPTION]
+SEPARATEUR_CSV_BUGS = ","
+PARAMETRE_CSV_BUGS = {"fieldnames": ENTETE_CSV_BUGS, "delimiter": SEPARATEUR_CSV_BUGS}
 
 
 def ecrire_fichier_csv(fichier, contenu, mode, parametres):
@@ -60,11 +74,33 @@ def lire_fichier_csv(fichier, parametres):
     return contenu
 
 
-def ajouter_ligne_csv(ligneCsv):
-    """Permet d'écrire dans la base de donnée csv."""
-    assert isinstance(ligneCsv, list()), "Le contenu n'est pas une liste..."
-    assert isinstance(ligneCsv[0], dict()), "La ligne n'est pas un dictionnaire..."
-    ecrire_fichier_csv(CHEMIN_CSV_ADHERENTS, ligneCsv, mode="a", parametres=PARAMETRE_CSV_ADHERENTS)
+def ajouter_bug(ligneCsv):
+    date, heure = obtenir_date_et_heure_actuelle()
+    ligneCsv[CSV_DATE] = date
+    ecrire_fichier_csv(CHEMIN_CSV_BUGS, [ligneCsv], mode="a", parametres=PARAMETRE_CSV_BUGS)
+
+
+def obtenir_bugs():
+    csvLu = lire_fichier_csv(CHEMIN_CSV_BUGS, parametres=PARAMETRE_CSV_BUGS)
+    return csvLu
+
+
+def ajouter_evenement(evenement):
+    """Ajoute un evenement."""
+    ecrire_fichier_csv(CHEMIN_CSV_EVENEMENTS, [evenement], mode="a", parametres=PARAMETRE_CSV_EVENEMENTS)
+
+
+def obtenir_derniers_evenements(nombre):
+    csvLu = lire_fichier_csv(CHEMIN_CSV_EVENEMENTS, parametres=PARAMETRE_CSV_EVENEMENTS)
+    return csvLu[-nombre:]
+
+
+def editer_evenement(nom, date, participants):
+    csvLu = lire_fichier_csv(CHEMIN_CSV_EVENEMENTS, parametres=PARAMETRE_CSV_EVENEMENTS)
+    for ligne in csvLu:
+        if nom == ligne[CSV_EVENEMENT] and date == ligne[CSV_DATE]:
+            ligne[CSV_PARTICIPANTS] = participants
+    ecrire_fichier_csv(CHEMIN_CSV_EVENEMENTS, csvLu, mode="w", parametres=PARAMETRE_CSV_EVENEMENTS)
 
 
 def formatter_ligne_csv(nom, prenom, dateAdhesion):
@@ -277,3 +313,35 @@ def supprimer_email(email):
 
     ecrire_fichier_csv(CHEMIN_CSV_EMAILS, csvLu, mode="w", parametres=PARAMETRE_CSV_EMAILS)
     return True
+
+
+def detecter_deja_scanne(refNom, refPrenom):
+    entrees = lire_entrees_du_jour()
+
+    for ligne in entrees:
+        date = ligne[CSV_DATE] + " " + ligne[CSV_HEURE]
+        date = datetime.strptime(date, '%Y-%m-%d %H:%M')
+        if refNom.lower() == ligne[CSV_NOM].lower() and refPrenom.lower() == ligne[CSV_PRENOM].lower():
+            if datetime.now() - date < timedelta(0, 60*60*2):  # compare to 2 hours (+2 due to GMT)
+                return True
+
+    return False
+
+
+def update_stats():
+    csvLu = lire_fichier_csv(CHEMIN_CSV_ENTREES, parametres=PARAMETRE_CSV_REGISTRE_DES_ENTREES)
+    ceJour = datetime.today().date()
+    visiteurCeJour, visiteurCetteSemaine, visiteurCeMois = 0, 0, 0
+    for ligne in csvLu:
+        date = datetime.strptime(ligne["Date"], '%Y-%m-%d').date()
+        if (ceJour - date).days < 1:
+            visiteurCeJour += 1
+            visiteurCetteSemaine += 1
+            visiteurCeMois += 1
+        elif (ceJour - date).days < 8:
+            visiteurCetteSemaine += 1
+            visiteurCeMois += 1
+        elif (ceJour - date).days < 31:
+            visiteurCeMois += 1
+
+    return visiteurCeJour, visiteurCetteSemaine, visiteurCeMois
