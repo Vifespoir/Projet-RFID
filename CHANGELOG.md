@@ -9,6 +9,7 @@
 * API
 * Graphiques
 * Convertir csv en base de donnée
+* Ajouter un cronjob pour se mettre à jour à distance
 
 #### IMPOSSIBLE A RESOUDRE - DONNEE NON DISPONIBLE
 <hr>
