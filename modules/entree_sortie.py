@@ -62,10 +62,9 @@ def lire_fichier_csv(fichier, parametres):
 
 def ajouter_ligne_csv(ligneCsv):
     """Permet d'écrire dans la base de donnée csv."""
-    assert isinstance(ligneCsv, dict()), "La ligne n'est pas un dictionnaire..."
-    with open(CHEMIN_CSV_ADHERENTS, mode='a', newline="") as ecriture:
-        scribeCsv = DictWriter(ecriture, **PARAMETRE_CSV_ADHERENTS)
-        scribeCsv.writerow(ligneCsv)
+    assert isinstance(ligneCsv, list()), "Le contenu n'est pas une liste..."
+    assert isinstance(ligneCsv[0], dict()), "La ligne n'est pas un dictionnaire..."
+    ecrire_fichier_csv(CHEMIN_CSV_ADHERENTS, ligneCsv, mode="a", parametres=PARAMETRE_CSV_ADHERENTS)
 
 
 def formatter_ligne_csv(nom, prenom, dateAdhesion):
@@ -266,19 +265,15 @@ def ajouter_email(nom, prenom, email):
 
 
 def supprimer_email(email):
-    newEmails = []
-    with open(CHEMIN_CSV_EMAILS, mode="r", newline="") as fichierEmail:
-        emails = DictReader(fichierEmail, **PARAMETRE_CSV_EMAILS)
-        nombreEmails = len(emails)
-        for ligne in emails:
-            print(ligne)
-            if ligne and email.lower() in ligne[CSV_EMAIL].lower():
-                continue
-            newEmails.append(ligne)
+    csvLu = lire_fichier_csv(CHEMIN_CSV_EMAILS, parametres=PARAMETRE_CSV_EMAILS)
+    nombreEmails = len(csvLu)
+    for ligne in csvLu:
+        if ligne and email.lower() in ligne[CSV_EMAIL].lower():
+            csvLu.remove(ligne)
+            break
 
-    if len(newEmails) == nombreEmails:
+    if nombreEmails == len(csvLu):
         return False
 
-    ecrire_fichier_csv(CHEMIN_CSV_EMAILS, newEmails, mode="w", parametres=PARAMETRE_CSV_EMAILS)
-
+    ecrire_fichier_csv(CHEMIN_CSV_EMAILS, csvLu, mode="w", parametres=PARAMETRE_CSV_EMAILS)
     return True

@@ -2,13 +2,11 @@
 
 {% block content %}
 
-<div class="container">
-	<div class="card card-body">
-    <h2>Espace sans badge / visiteur</h2>
-		{% if dernier %}
-		<h2>ID du dernier badge : {{ dernier }} </h2>
-		{% endif %}
-	</div>
+<div class="container card card-body">
+	<h2>Espace sans badge / visiteur</h2>
+	{% if dernier %}
+	<h2>ID du dernier badge : {{ dernier }} </h2>
+	{% endif %}
 </div>
 <br>
 {% include "includes/voir_adherents.html" %}

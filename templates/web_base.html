@@ -18,20 +18,20 @@
   </head>
   <body>
     {% block body -%}
-    <div class="d-flex float-left" style="width: 100%; margin: 6em;">
+    <div class="d-flex float-left">
       <div class="nav flex-column nav-pills w-10" id="nav-tab" role="tablist">
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'accueil' %}active{% endif %}" style="font-size: 180%;" href="{{ accueil }}">Accueil<span class="sr-only">(current)</span></a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'visiteur' %}active{% endif %}" style="font-size: 180%;" href="{{ visiteur }}">Espace sans badge</a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'historique' %}active{% endif %}" style="font-size: 180%;" href="{{ historique }}">Historique</a>
         <a class="nav-link text-uppercase font-weight-bold {% if active == 'admin' %}active{% endif %}" style="font-size: 180%;" id="admin-pill" href="{{ admin }}">Admin</a>
         <!-- <a class="nav-link text-uppercase font-weight-bold {% if active == 'news' %}active{% endif %}" style="font-size: 180%;" href="{{ newsletter }}">Newsletter<span class="sr-only">(current)</span></a>
-        <a class="nav-link text-uppercase font-weight-bold {% if active == 'adhesion' %}active{% endif %}" style="font-size: 180%;" href="{{ adhesion }}">Adhésion<span class="sr-only">(current)</span></a>
-        <a class="nav-link text-uppercase font-weight-bold {% if active == 'bug' %}active{% endif %}" style="font-size: 180%;" href="{{ bug }}">Suggestion / Bug<span class="sr-only">(current)</span></a> -->
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'adhesion' %}active{% endif %}" style="font-size: 180%;" href="{{ adhesion }}">Adhésion<span class="sr-only">(current)</span></a> -->
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'bug' %}active{% endif %}" style="font-size: 180%;" href="{{ bug }}">Suggestion / Bug<span class="sr-only">(current)</span></a>
         {% if current_user.is_authenticated %}
         <a class="nav-link text-uppercase font-weight-bold" style="font-size: 180%;" href="{{ logout }}">Se déconnecter</a>
         {% endif %}
       </div>
-      <div class="flex-column w-75">
+      <div class="flex-column">
         {% include "includes/flash_messages.html" %}
         {% block content -%}
         {%- endblock content %}
