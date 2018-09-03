@@ -1,28 +1,53 @@
 {% extends "web_base.html" %}
 {% block title %}Historique des entrées du SQYLAB{% endblock %}
 {% block content %}
-
-
-  <div class="container">
-	  <h2> Historique des entrées </h2>
+<!-- historique.html -->
+<div class="container">
+	<div class="card card-body">
+    <h2>Historique des entrées</h2>
+	</div>
+</div>
 <br>
 <div class="container">
-	
-<h5> Entrez la date souhaitée</h5>
-<form action="" method="post">
+  <form action="" method="post">
+    <div class="row ">
+      <div class="col col-4">
+        <h3>Rechercher une date:</h3>
+      </div>
+      <div class="col col-2">
+       <input type="text" name="jour" class="form-control" placeholder="Jour"></input>
+      </div>
+      <div class="col col-2">
+       <input type="text" name="mois"class="form-control" placeholder="Mois"></input>
+      </div>
+      <div class="col col-2">
+        <input type="text" name="annee"class="form-control" placeholder="Année"></input>
+      </div>
+      <div class="col col-2">
+        <button type="submit" name = "bouton" value ="rechercher" class="btn btn-primary">Rechercher</button>
+      </div>
+    </div>
+  </form>
+  <hr>
+</div>
+<div class="container">
   <div class="row ">
-    <div class="col col-lg-2">
-     <input type="text" name="jour" class="form-control" placeholder="Jour">
+    <div class="col col-6">
+      <h3> Entrée du : {{ date }}</h3>
     </div>
-    <div class="col col-lg-2">
-     <input type="text" name="mois"class="form-control" placeholder="Mois">
+    <div class="col col-2">
+      <a class="btn btn-success"  name ="bouton" value = "precedent" href="{{precedent}}" role="button">Jour précedent</a>
     </div>
-    <div class="col col-lg-2">
-      <input type="text" name="annee"class="form-control" placeholder="Année">
+    <div class="col col-2">
+      <a class="btn btn-success"  name ="bouton" value = "precedent" href="{{ceJour}}" role="button">Aujourd'hui</a>
     </div>
-    <button type="submit" name = "bouton" value ="rechercher" class="btn btn-primary">Rechercher</button>
+    <div class="col col-2">
+      <a class="btn btn-success"  name ="bouton" value = "suivant" href="{{suivant}}" role="button">Jour suivant</a>
+    </div>
   </div>
-     
-</form>
-
+  <hr>
+</div>
+{% if contenu %}
+{% include "includes/registre_entrees.html" %}
+{% endif %}
 {% endblock %}

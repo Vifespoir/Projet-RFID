@@ -1,41 +1,18 @@
-{% extends "base.html" %}
-
-{% block navbar %}
-
-<p>  </p>
-
-<div class="alert alert-primary" role="alert">
-<div class="container">
-
-<h4>
-<a href="/">accueil</a>- <a href="/historique">historique</a> - <a href="/admin">admin</a> 
-
-{% if current_user.is_authenticated %}
-<a href="/logout"> - se déconnecter</a> 
-{% endif %}
-
-</h4>
-
- 
-</div>
-</div>
-
-{% endblock %}
-
-{% from "_macros.html" import render_field_with_errors, render_field %}
-{% include "security/_messages.html" %}
+{% extends "web_base.html" %}
 {% block content %}
-
-<form action="{{ url_for_security('login') }}" method="POST" name="login_user_form">
 <div class="container">
-<h1>{{ _('Login') }}</h1>
-  {{ login_user_form.hidden_tag() }}
-  {{ render_field_with_errors(login_user_form.email, class="form-control") }}
-  {{ render_field_with_errors(login_user_form.password, class="form-control")}}
-  {{ render_field(login_user_form.next, class="form-control") }}
-  {{ render_field(login_user_form.submit, class="btn btn-primary") }}
-  </div>
-</form>
-
-{% include "security/_menu.html" %}
+  {% from "includes/_macros.html" import render_field_with_errors, render_field %}
+  <form action="{{ url_for_security('login') }}" method="POST" name="login_user_form">
+    <h1>{{ _('Login') }}</h1>
+    {{ login_user_form.hidden_tag() }}
+    {{ render_field_with_errors(login_user_form.email, class="form-control") }}
+    {{ render_field_with_errors(login_user_form.password, class="form-control")}}
+    {{ render_field(login_user_form.next, class="form-control") }}
+    {{ render_field(login_user_form.submit, class="btn btn-primary") }}
+  </form>
+  {% include "security/_menu.html" %}
+</div>
+<script type="text/javascript">
+  document.getElementById("admin-pill").classList.add('active');
+</script>
 {% endblock %}

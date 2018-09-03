@@ -1,0 +1,28 @@
+{% extends "web_base.html" %}
+
+{% block content %}
+<div class="container">
+	{% if contenu %}
+	<table class="table">
+		<thead class="thead-light">
+			<tr>
+				<th scope="col">Prenom</th>
+				<th scope="col">Nom</th>
+				<th scope="col">Date</th>
+				<th scope="col">Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for ligne in contenu | reverse() %}
+			<tr>
+				<td>{{ ligne["Prenom"] }}</td>
+				<td>{{ ligne["Nom"] }}</td>
+				<td>{{ ligne["Date"] }}</td>
+				<td>{{ ligne["Description"] }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+<div class="container">
+  <button class="btn btn-info btn-lg btn-block" type="button" data-toggle="collapse" data-target="#recherche" aria-expanded="false" aria-controls="collapseExample">
+    {{ texte_bouton }}
+  </button>
+  <br>
+  <div class="collapse card card-body" id="recherche">
+    <form action="" method="post">
+      <div class="row">
+        <h2> Entrez nom ou prénom pour rechercher un adhérent </h2>
+        <div class="col col-6">
+          <input type="text" name="nom" class="form-control" placeholder="Nom ou Prénom">
+        </div>
+        <div class="col col-3">
+          <button type="submit" name="bouton" value="rechercher" class="btn btn-primary">Envoyer</button>
+        </div>
+        <br>
+      </div>
+    </form>
+  </div>
+</div>

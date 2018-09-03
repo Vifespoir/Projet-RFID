@@ -1,0 +1,35 @@
+{% set texte_bouton = "Simuler un badge" %}
+{% include "includes/bouton_recherche.html" %}
+<div class="container">
+  <button class="btn btn-success btn-lg btn-block" type="button" data-toggle="collapse" data-target="#visiteur" aria-expanded="false" aria-controls="collapseExample">Ajouter un visiteur
+  </button>
+  <br>
+  <div class="collapse card card-body" id="visiteur">
+    <form action="" method="post">
+      <h2> Entrez nom et prénom du visiteur </h2>
+      <div class="row container">
+        <div class="col col-3">
+          <input type="text" name="prenom" class="form-control" placeholder="Prénom" required>
+          <small id="emailHelp" class="form-text text-muted">Exemple : Michel</small>
+        </div>
+        <div class="col col-3">
+          <input type="text" name="nom"class="form-control" placeholder="Nom en MAJUSCULE" required>
+          <small id="emailHelp" class="form-text text-muted">Exemple : FAUVET</small>
+        </div>
+        <div class="col col-3">
+          <input type="email" name="email" class="form-control" placeholder="Adresse email">
+          <small id="emailHelp" class="form-text text-muted">Facultatif, pour recevoir la newsletter.</small>
+        </div>
+        <div class="col col-3">
+          <button type="submit" name="bouton" value="visiteur" class="btn btn-primary">
+            Envoyer
+          </button>
+        </div>
+        <div class="col col-3">
+            <input type="text" name="organisme" class="form-control" placeholder="Organisme ou entreprise"><small class="form-text text-muted">Facultatif pour statistique interne</small>
+        </div>
+        <br>
+      </div>
+    </form>
+  </div>
+</div>

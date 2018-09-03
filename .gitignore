@@ -2,3 +2,10 @@ virtualenv/
 __pycache__/
 *.pyc
 venv/
+MFR522/
+SPI-Pi/
+*.ipynb
+*.rdb
+uploads/
+data/
+app_secrets.py

@@ -1,24 +1,55 @@
-{% extends "base.html" %}
+{% block doc -%}
+<!DOCTYPE html>
+<html>
+{%- block html %}
+  <head>
+    {%- block head %}
+    <title>{% block title %}{{title|default}}{% endblock title %}</title>
 
-{% block navbar %}
+    {%- block metas %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%- endblock metas %}
 
-<p>  </p>
-
-<div class="alert alert-primary" role="alert">
-<div class="container">
-
-<h4>
-<a href="{{ accueil }}">Accueil</a> - <a href="{{ historique }}">Historique</a> - <a href="{{ visiteur }}">Espace sans badge</a> - <a href="{{ admin }}">Admin</a> 
-
-{% if current_user.is_authenticated %}
-<a href="{{ logout }}"> - Se déconnecter</a> 
-{% endif %}
-
-</h4>
-
- 
-</div>
-</div>
-
-{% endblock %}
-
+    {%- block styles %}
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    {%- endblock styles %}
+    {%- endblock head %}
+  </head>
+  <body style="width: 100vw; height: 100vh; overflow: hidden;">
+    {% block body -%}
+    <div class="row" style="width: 100%; height: 100%; margin: 2em;">
+      <div class="nav flex-column nav-pills col-3" id="nav-tab" role="tablist">
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'accueil' %}active{% endif %}" style="font-size: 180%;" href="{{ accueil }}">Accueil<span class="sr-only">(current)</span></a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'visiteur' %}active{% endif %}" style="font-size: 180%;" href="{{ visiteur }}">Espace sans badge</a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'historique' %}active{% endif %}" style="font-size: 180%;" href="{{ historique }}">Historique</a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'evenement' %}active{% endif %}" style="font-size: 180%;" href="{{ evenement }}">Événement</a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'admin' %}active{% endif %}" style="font-size: 180%;" id="admin-pill" href="{{ admin }}">Admin</a>
+        <!-- <a class="nav-link text-uppercase font-weight-bold {% if active == 'news' %}active{% endif %}" style="font-size: 180%;" href="{{ newsletter }}">Newsletter<span class="sr-only">(current)</span></a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'adhesion' %}active{% endif %}" style="font-size: 180%;" href="{{ adhesion }}">Adhésion<span class="sr-only">(current)</span></a> -->
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'bug' %}active{% endif %}" style="font-size: 180%;" href="{{ bug }}">Suggestion / Bug</a>
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'changelog' %}active{% endif %}" style="font-size: 180%;" href="{{ changelog }}">Changelog</a>
+        {% if current_user.is_authenticated %}
+        <a class="nav-link text-uppercase font-weight-bold {% if active == 'bugs' %}active{% endif %}" style="font-size: 180%;" href="{{ bugs }}">Rapport de bugs</a>
+        <a class="nav-link text-uppercase font-weight-bold" style="font-size: 180%;" href="{{ logout }}">Se déconnecter</a>
+        {% endif %}
+        {% include "includes/statistiques.html" %}
+      </div>
+      <div class="col-9" style="overflow: scroll; height: 100vh;">
+        {% include "includes/flash_messages.html" %}
+        {% block content -%}
+        {%- endblock content %}
+      </div>
+    </div>
+    {% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    {% include "includes/alerts.html" %}
+    {% include "includes/logout-script.html" %}
+    {%- endblock scripts %}
+    {%- endblock body %}
+  </body>
+{%- endblock html %}
+</html>
+{% endblock doc -%}

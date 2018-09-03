@@ -1,0 +1,31 @@
+<div class="container">
+	{% if contenu %}
+	<table class="table">
+		<thead class="thead-light">
+			<tr>
+				<th scope="col">Prenom</th>
+				<th scope="col">Nom</th>
+				<th scope="col">Numero de badge</th>
+				<th scope="col">Bouton</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for ligne in contenu | reverse() %}
+			<tr>
+				<td>{{ ligne["Prenom"] }}</td>
+				<td>{{ ligne["Nom"] }}</td>
+				<td>{{ ligne["RFID"] }}</td>
+				<td>
+					{% if active == "visiteur" %}
+					<a class="btn btn-primary" value = "simuler" href="{{ ligne["uri"] }}" role="button">Simuler badge</a>
+					{% else %}
+					<a class="btn btn-primary" name="bouton" value="ajouter" href="{{ ligne["uri"] }}" role="button">Associer</a>
+					<a class="btn btn-success" name="bouton" value="entree" href="{{ ligne["uri"] }}&action=entree" role="button">Voir les entrées</a>
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
+</div>

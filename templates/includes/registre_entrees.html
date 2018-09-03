@@ -1,0 +1,25 @@
+<div class="container">
+  <h2> Historique d'entrée: {{ cherche }} </h2>
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Heure</th>
+        <th scope="col">Prenom</th>
+        <th scope="col">Nom</th>
+        <th scope="col">Adhérent</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for item in contenu | reverse() %}
+  	<tr>
+      <td>{{ item["Date"] }}</td>
+      <td>{{ item["Heure"] }}</td>
+      <td>{{ item["Prenom"] }}</td>
+      <td>{{ item["Nom"] }}</td>
+      <td>{{ item["Status cotisation"] }}</td>
+  	</tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>

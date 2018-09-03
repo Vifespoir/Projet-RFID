@@ -1,96 +1,90 @@
 #!/usr/bin/env python3
 # Version modifiee de la librairie https://github.com/mxgxw/MFRC522-python
-
-# import RPi.GPIO as GPIO
-# FOR ORANGEPI ONLY
-from pyA20.gpio import gpio
-from pyA20.gpio import port
-from pyA20.gpio import connector
-
-gpio.init() #Initialize module. Always called first
-
-import MFRC522
 import signal
-import time
-import datetime
-from datetime import date
-from datetime import datetime
+from time import sleep
 
-fichier = '/home/michel/Documents/test.csv'
-sortie = '/home/michel/Documents/sortie.txt'
-no_adherent = '/home/michel/Documents/non_repertorie.txt'
-
-continue_reading = True
-
-# Fonction qui arrete la lecture proprement 
-def end_read(signal,frame):
-    global continue_reading
-    print ("Lecture terminée")
-    continue_reading = False
-    gpio.cleanup()
-
-def faire_string(ligne):
-        ligne = line.split(',')
-        date_cotisation = datetime.strptime(ligne[4],'%d/%m/%Y')
-        date = date_cotisation.date()
-        difference = date.today() - date
-        if difference.days <365:
-            texte = ' Oui'
-        else : texte = ' Date_de_cotisation_depassee'
-        date = time.strftime("%A %d %B %Y %H:%M")
-        return '\n' +  date +' '+ ligne[2] + ' ' + ligne[1] + texte
-        
-
-    
-
-print("init")
-signal.signal(signal.SIGINT, end_read)
-MIFAREReader = MFRC522.MFRC522()
-
-print ("Passer le tag RFID a lire")
-
-while continue_reading:
-    
-    # Detecter les tags
-    (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
-
-    # Une carte est detectee
-    if status == MIFAREReader.MI_OK:
-        print ("Carte detectee")
-    
-    # Recuperation UID
-    (status,uid) = MIFAREReader.MFRC522_Anticoll()
-    if status == MIFAREReader.MI_OK:
-
-        # Clee d authentification par defaut
-        key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
-        
-        # Selection du tag
-        MIFAREReader.MFRC522_SelectTag(uid)
-
-        # Authentification
-        status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
-
-        code = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
-
-        compteur=0
-        for line in open (fichier):
-            if code in line:
-                compteur+=1
-                test = open(sortie,'a')
-                entree = faire_string(line)
-                test.write(entree)
-                test.close()
-
-        if compteur == 0:
-            with open(no_adherent,'w') as no_adhe:
-                no_adhe.write(code)
-                print("carte non repertioriee")
+import modules.MFRC522 as MFRC522
+from modules.entree_sortie import (TXT_DERNIER_BADGE_CHEMIN, ajouter_entree,
+                                   detecter_deja_scanne, rechercher_rfid)
+from pyA20.gpio import gpio
+from redis import StrictRedis
 
 
-        if status == MIFAREReader.MI_OK:
-            MIFAREReader.MFRC522_StopCrypto1()
+class BadgeScanneur(object):
+    """docstring for BadgeScanneur."""
+    def __init__(self):
+        super(BadgeScanneur, self).__init__()
+        self.redis = StrictRedis(host='localhost', port=6379, db=0)
+        gpio.init()  # Initialize module. Always called first
+        self.continue_reading = True
+        signal.signal(signal.SIGINT, self.end_read)
+        self.MIFAREReader = MFRC522.MFRC522()
+        self.redis.publish("stream", "<success>Badgeuse initialisé, prête à scanner.")
+
+    def end_read(self, signal, frame):
+        """Fonction qui arrete la lecture proprement."""
+        self.redis.publish("stream", "<warning>Lecture terminée, badgeuse arrêtée.")
+        self.continue_reading = False
+        gpio.cleanup()
+
+    def rechercher_adherent(self, code):
+        result = rechercher_rfid(code)
+        if result:
+            return result
         else:
-            print ("Erreur d\'Authentification")
-            
-        time.sleep(3)
+            return (None, None, None)
+
+    def authentifier_rfid(self, nom, prenom, dateAdhesion):
+        ajouter_entree(nom, prenom, dateAdhesion)
+
+    def detecter_deja_scanne(self, refNom, refPrenom):
+        return detecter_deja_scanne(refNom, refPrenom)
+
+    def traiter_rfid(self, code):
+        nom, prenom, dateAdhesion = self.rechercher_adherent(code)
+        if nom is None:
+            # FIXME delete this file
+            with open(TXT_DERNIER_BADGE_CHEMIN, 'w') as no_adhe:
+                no_adhe.write(code)
+            self.redis.publish("stream",
+                               "<danger>Badge non repertorié: {}, voulez-vous l'associer?"
+                               .format(code))
+        elif self.detecter_deja_scanne(nom, prenom):
+            self.redis.publish("stream",
+                               "<warning>Bien tenté {} mais ton badge est déjà scanné!"
+                               .format(prenom))
+        else:
+            self.authentifier_rfid(nom, prenom, dateAdhesion)
+            self.redis.publish("stream",
+                               "<warning>Bonjour, {}! Bons projets!".format(prenom))
+
+        sleep(3)
+
+    def main(self):
+        print("lecture en cours")
+        while self.continue_reading:
+            sleep(.2)
+            # Detecter les tags
+            (status, TagType) = self.MIFAREReader.MFRC522_Request(self.MIFAREReader.PICC_REQIDL)
+            # Recuperation UID
+            (status, uid) = self.MIFAREReader.MFRC522_Anticoll()
+            if status == self.MIFAREReader.MI_OK:
+                # Clee d authentification par defaut
+                key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
+                # Selection du tag
+                self.MIFAREReader.MFRC522_SelectTag(uid)
+                # Authentification
+                status = self.MIFAREReader.MFRC522_Auth(self.MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
+                code = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
+                print("badge:{} detectee".format(code))
+                self.traiter_rfid(code)
+                self.MIFAREReader.MFRC522_StopCrypto1()
+            else:
+                # DEBUG POUR DEBUGGER SEULEMENT
+                # self.redis.publish("danger", "Erreur d'Authentification")
+                pass
+
+
+if __name__ == '__main__':
+    badgeScanneur = BadgeScanneur()
+    badgeScanneur.main()
