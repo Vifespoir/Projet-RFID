@@ -5,6 +5,10 @@
 <hr>
 
 * Rajouter "boite à idées" -- **Redondance possible avec "Bug/Suggestion"**
+* Utiliser werkzeug pour augmenter la securité
+* API
+* Graphiques
+* Convertir csv en base de donnée
 
 #### IMPOSSIBLE A RESOUDRE - DONNEE NON DISPONIBLE
 <hr>

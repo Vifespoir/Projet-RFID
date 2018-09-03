@@ -4,15 +4,17 @@
 </div>
 <div class="container">
   <h4>Statistique visiteurs</h4>
-  <table class="table">
-    <thead class="thead-light">
+  <table class="table table-bordered">
+    <tr class="table-default">
       <th>Aujourd'hui</th>
-      <th>7 jours</th>
-      <th>31 jours</th>
-    </thead>
-    <tr>
       <td>{{ g.visiteurCeJour }}</td>
+    </tr>
+    <tr class="table-default">
+      <th>7 derniers jours</th>
       <td>{{ g.visiteurCetteSemaine }}</td>
+    </tr>
+    <tr class="table-default">
+      <th>31 derniers jours</th>
       <td>{{ g.visiteurCeMois }}</td>
     </tr>
   </table>
