@@ -14,9 +14,11 @@ from flask_security import (RoleMixin, Security, SQLAlchemyUserDatastore,
 from flask_sqlalchemy import SQLAlchemy
 from modules.app_secrets import (SECRET_KEY, SECURITY_PASSWORD_SALT,
                                  TELEGRAM_API_CHAT_ID, TELEGRAM_API_TOKEN)
-from modules.entree_sortie import (FICHIER_DES_ENTREES_CHEMIN, ajouter_email,
+from modules.entree_sortie import (CHEMIN_CSV_ENTREES, ajouter_email,
                                    ajouter_entree, ajouter_rfid_adherent,
-                                   lire_dernier, rechercher_adherent,
+                                   lire_dernier,
+                                   obtenir_date_et_heure_actuelle,
+                                   rechercher_adherent,
                                    rechercher_date_adhesion,
                                    rechercher_entrees,
                                    reecrire_registre_des_entrees,
@@ -245,12 +247,15 @@ def changer_date():
     precedent = '/changer?date={}&delta=-1'.format(date)
 
     entreesDuJour = rechercher_entrees(jour=date)
+    ceJour = str(datetime.now().date())
+    ceJour = '/changer?date={}&delta=0'.format(ceJour)
 
     return render_template('historique.html',
                            active="historique",
                            precedent=precedent,
                            suivant=suivant,
                            date=date,
+                           ceJour=ceJour,
                            contenu=entreesDuJour,
                            **APP_PATHS)
 
@@ -272,11 +277,10 @@ def retourner_admin():
     elif request.method == 'POST' and request.form['bouton'] == "rechercher":
         nom = request.form['nom']
         # FIXME ajouter for associer? what to do with associer endpoint
-        uri = "/ajouter?nom={}&prenom={}"
+        uri = "/ajouter?nom={}&prenom={}&numero={}"
         texte, lignes = rechercher_adherent(nom, uri)
         for ligne in lignes:
-            ligne.insert(-1, dernier)
-            ligne[-1] += "&numero={}".format(dernier)
+            ligne["uri"] = uri.format(ligne["Nom"], ligne["Prenom"], dernier)
             print(ligne)
 
         return render_template('admin.html',
@@ -286,6 +290,19 @@ def retourner_admin():
                                active="admin",
                                contenu=lignes,
                                **APP_PATHS)
+    elif request.method == 'POST' and request.form['bouton'] == "entree":
+        nom = request.form["nom"]
+        prenom = request.form["prenom"]
+        texte, lignes = rechercher_entrees(nom, prenom)
+
+        return render_template('admin.html',
+                               dernier=dernier,
+                               texte=texte,
+                               nom=nom,
+                               active="admin",
+                               contenu=lignes,
+                               **APP_PATHS)
+
     elif request.method == 'POST' and request.form['bouton'] == "televerser":
         print(request.files, request.form)
         # check if the post request has the file part
@@ -387,22 +404,20 @@ def pagevisiteur():
         email = request.form["email"]
         if email:
             ajouter_email(nom, prenom, email)
-        maintenant = date.today()
-        heure = maintenant.strftime("%H:%M")
-        maintenant = str(maintenant)
-        entree = "\n{} {} {} {} visiteur".format(maintenant, heure, prenom, nom)
-        with open(FICHIER_DES_ENTREES_CHEMIN, 'a') as ecrireVisiteur:
+
+        date, heure = obtenir_date_et_heure_actuelle()
+        entree = "\n{} {} {} {} visiteur".format(date, heure, prenom, nom)
+        with open(CHEMIN_CSV_ENTREES, 'a') as ecrireVisiteur:
             ecrireVisiteur.write(entree)
         return redirect(url_for('retourner_accueil'))
 
     if request.method == 'POST' and request.form['bouton'] == "rechercher":
         nom = request.form['nom']
-        uri = "/simuler?nom={}&prenom={}"
+        uri = "/simuler?nom={}&prenom={}&numero={}"
         texte, lignes = rechercher_adherent(nom, uri)
         for ligne in lignes:
+            ligne["uri"] = uri.format(ligne["Nom"], ligne["Prenom"], dernier)
             print(ligne)
-            ligne[-1] += "&numero={}".format(dernier)
-            ligne.insert(-1, dernier)
 
         return render_template('visiteur.html',
                                dernier=dernier,

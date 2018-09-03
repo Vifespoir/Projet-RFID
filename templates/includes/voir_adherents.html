@@ -10,25 +10,23 @@
 			</tr>
 		</thead>
 		<tbody>
+			{% for ligne in contenu %}
 			<tr>
-				{% for ligne in contenu %}
-				{% for item in ligne %}
-				{% if loop.index is divisibleby(4) %}
+				<td>{{ ligne["Prenom"] }}</td>
+				<td>{{ ligne["Nom"] }}</td>
+				<td>{{ ligne["RFID"] }}</td>
 				<td>
 					{% if active == "visiteur" %}
-					<a class="btn btn-primary"  value = "simuler" href="{{item}}" role="button">Simuler badge</a>
+					<a class="btn btn-primary" value = "simuler" href="{{ ligne["uri"] }}" role="button">Simuler badge</a>
 					{% else %}
-					<a class="btn btn-primary"  name = "bouton" value = "ajouteer" href="{{item}}" role="button">Associer</a>  <a class="btn btn-success"  name = "bouton" value = "entree" href="{{item}}&action=entree" role="button">Voir les entrées</a>
+					<a class="btn btn-primary" name="bouton" value="ajouter" href="{{ ligne["uri"] }}" role="button">Associer</a>
+					<a class="btn btn-success" name="bouton" value="entree" href="{{ ligne["uri"] }}&action=entree" role="button">Voir les entrées</a>
 					{% endif %}
 				</td>
-				{% else %}
-				<td>{{ item }}</td>
-				{% endif %}
-				{% endfor %}
 			</tr>
 			<tr>
-				{% endfor %}
 			</tr>
+			{% endfor %}
 		</tbody>
 	</table>
 	{% endif %}

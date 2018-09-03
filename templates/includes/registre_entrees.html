@@ -11,15 +11,15 @@
       </tr>
     </thead>
     <tbody>
+    {% for item in contenu %}
   	<tr>
-  	{% for item in contenu %}
-      <td>{{ item }}</td>
-      {% if loop.index is divisibleby(5) %}
+      <td>{{ item["Date"] }}</td>
+      <td>{{ item["Heure"] }}</td>
+      <td>{{ item["Prenom"] }}</td>
+      <td>{{ item["Nom"] }}</td>
+      <td>{{ item["Status cotisation"] }}</td>
   	</tr>
-  	<tr>
-  	{% endif %}
-  	{% endfor %}
-  	</tr>
+    {% endfor %}
     </tbody>
   </table>
 </div>

@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 from time import sleep
 
 import modules.MFRC522 as MFRC522
-from modules.entree_sortie import (FICHIER_DERNIER_BADGE_SCANNE_CHEMIN,
-                                   FICHIER_DES_ENTREES_CHEMIN, ajouter_entree,
+from modules.entree_sortie import (TXT_DERNIER_BADGE_CHEMIN,
+                                   CHEMIN_CSV_ENTREES, ajouter_entree,
                                    lire_entrees_du_jour, rechercher_rfid)
 from pyA20.gpio import gpio
 from redis import StrictRedis
@@ -64,7 +64,7 @@ class BadgeScanneur(object):
         nom, prenom, dateAdhesion = self.rechercher_adherent(code)
         if nom is None:
             # FIXME delete this file
-            with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'w') as no_adhe:
+            with open(TXT_DERNIER_BADGE_CHEMIN, 'w') as no_adhe:
                 no_adhe.write(code)
             self.redis.publish("stream",
                                "<danger>Badge non repertorié: {}, voulez-vous l'associer?"

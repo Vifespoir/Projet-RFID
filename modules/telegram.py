@@ -3,7 +3,7 @@ import sys
 
 import telepot
 from app_secrets import TELEGRAM_API_TOKEN as TOKEN
-from entree_sortie import FICHIER_EMAILS_CHEMIN, supprimer_email
+from entree_sortie import CHEMIN_CSV_EMAILS, supprimer_email
 from telepot.aio.delegate import create_open, pave_event_space, per_chat_id
 from telepot.aio.loop import MessageLoop
 
@@ -17,7 +17,7 @@ class MessageCounter(telepot.aio.helper.ChatHandler):
         if "text" in msg.keys():
             print(msg["text"])
             if msg["text"] == "/emails" or "/emails" in msg["text"]:
-                with open(FICHIER_EMAILS_CHEMIN, "rb") as docFile:
+                with open(CHEMIN_CSV_EMAILS, "rb") as docFile:
                     print("Sending document to chat: {}".format(self.chat_id))
                     await self.sender.sendDocument(document=docFile)
             elif "/unsubscribe" in msg["text"]:

@@ -1,118 +1,150 @@
 #!/usr/bin/env python3
 # -*- coding: utf_8 -*-
-from csv import reader, writer
+from csv import DictReader, DictWriter
 from datetime import date, datetime
 from os import remove, rename
-from os.path import abspath, dirname, isdir, join, pardir
+from os.path import abspath, dirname, join, pardir
 from re import compile as re_compile
 
 DOSSIER_DONNEES = "data"
 CHEMIN_DONNEES = abspath(join(dirname(__file__), pardir, DOSSIER_DONNEES))
-if not isdir(CHEMIN_DONNEES):
-    DOSSIER_DONNEES = "data-test"
-    CHEMIN_DONNEES = abspath(join(dirname(__file__), pardir, DOSSIER_DONNEES))
 
-FICHIER_ADHERENTS = "adherents.csv"
-FICHIER_ADHERENTS_CHEMIN = join(CHEMIN_DONNEES, FICHIER_ADHERENTS)
-FICHIER_DES_ENTREES = "registre_des_entrees.txt"
-FICHIER_DES_ENTREES_CHEMIN = join(CHEMIN_DONNEES, FICHIER_DES_ENTREES)
-FICHIER_DERNIER_BADGE_SCANNE = "dernier_badge_scanne.txt"
-FICHIER_DERNIER_BADGE_SCANNE_CHEMIN = join(CHEMIN_DONNEES, FICHIER_DERNIER_BADGE_SCANNE)
-FICHIER_EMAILS = "emails.csv"
-FICHIER_EMAILS_CHEMIN = join(CHEMIN_DONNEES, FICHIER_EMAILS)
+CSV_ADHERENTS = "adherents.csv"
+CHEMIN_CSV_ADHERENTS = join(CHEMIN_DONNEES, CSV_ADHERENTS)
+CSV_ENTREES = "registre_des_entrees.txt"
+CHEMIN_CSV_ENTREES = join(CHEMIN_DONNEES, CSV_ENTREES)
+TXT_DERNIER_BADGE = "dernier_badge_scanne.txt"
+CHEMIN_TXT_DERNIER_BADGE = join(CHEMIN_DONNEES, TXT_DERNIER_BADGE)
+CSV_EMAILS = "emails.csv"
+CHEMIN_CSV_EMAILS = join(CHEMIN_DONNEES, CSV_EMAILS)
 # REGEXES
 TEST_MME_MR = re_compile(r"([M.|Mme])")
 TEST_NOM = re_compile(r"(\S+)")
 TEST_EMAIL = re_compile(r"(\S+)(@)(\S+)")
 TEST_DATE = re_compile(r"\d{2}\/\d{2}\/\d{4}")
 TEST_RFID = re_compile(r"\d+")
+# Paramètre de lecture pour obtenir les résultats sous forme de dictionnaire
+CSV_DATE = "Date"
+CSV_HEURE = "Heure"
+CSV_PRENOM = "Prenom"
+CSV_NOM = "Nom"
+CSV_EMAIL = "E-mail"
+CSV_COTISATION = "Date de cotisation"
+CSV_STATUS = "Status cotisation"
+CSV_RFID = "RFID"
+CSV_GENRE = "Genre"
+ENTETE_CSV_ADHERENTS = [CSV_GENRE, CSV_NOM, CSV_PRENOM, CSV_EMAIL, CSV_COTISATION, CSV_RFID]
+SEPARATEUR_CSV_ADHERENTS = ","
+PARAMETRE_CSV_ADHERENTS = {"fieldnames": ENTETE_CSV_ADHERENTS, "delimiter": SEPARATEUR_CSV_ADHERENTS}
+ENTETE_REGISTRE_DES_ENTREES = [CSV_DATE, CSV_HEURE, CSV_PRENOM, CSV_NOM, CSV_STATUS]
+SEPARATEUR_REGISTRE_DES_ENTREES = " "
+PARAMETRE_CSV_REGISTRE_DES_ENTREES = {"fieldnames": ENTETE_REGISTRE_DES_ENTREES,
+                                      "delimiter": SEPARATEUR_REGISTRE_DES_ENTREES}
+ENTETE_CSV_EMAILS = [CSV_PRENOM, CSV_NOM, CSV_EMAIL]
+SEPARATEUR_CSV_EMAILS = ","
+PARAMETRE_CSV_EMAILS = {"fieldnames": ENTETE_CSV_EMAILS, "delimiter": SEPARATEUR_CSV_EMAILS}
+
+
+def ecrire_fichier_csv(fichier, contenu, mode, parametres):
+    with open(fichier, mode=mode, newline="") as fichierEmail:
+        ecriture = DictWriter(fichierEmail, **parametres)
+        ecriture.writerows(contenu)
+
+
+def lire_fichier_csv(fichier, parametres):
+    with open(fichier, mode="r", newline="") as fichierLu:
+        csvLu = DictReader(fichierLu, **parametres)
+
+        contenu = list(csvLu)
+
+    return contenu
 
 
 def ajouter_ligne_csv(ligneCsv):
     """Permet d'écrire dans la base de donnée csv."""
-    with open(FICHIER_ADHERENTS_CHEMIN, 'a') as ecriture:
-        scribeCsv = writer(ecriture)
+    assert isinstance(ligneCsv, dict()), "La ligne n'est pas un dictionnaire..."
+    with open(CHEMIN_CSV_ADHERENTS, mode='a', newline="") as ecriture:
+        scribeCsv = DictWriter(ecriture, **PARAMETRE_CSV_ADHERENTS)
         scribeCsv.writerow(ligneCsv)
 
 
 def formatter_ligne_csv(nom, prenom, dateAdhesion):
     """Permet d'écrire dans le fichier des entrées."""
+    date, heure = obtenir_date_et_heure_actuelle()
+    nouvelleLigne = {CSV_NOM: nom, CSV_PRENOM: prenom, CSV_DATE: date, CSV_HEURE: heure}
     if dateAdhesion:
         date = datetime.strptime(dateAdhesion, '%d/%m/%Y')
         difference = datetime.today() - date
         if difference.days < 365:
-            texte = 'Oui'
+            nouvelleLigne[CSV_STATUS] = 'Oui'
         else:
-            texte = 'Date_de_cotisation_depassee'
+            nouvelleLigne[CSV_STATUS] = 'Date_de_cotisation_depassee'
     else:
-        texte = 'Visiteur'
+        nouvelleLigne[CSV_STATUS] = 'Visiteur'
+
+    return nouvelleLigne
+
+
+def obtenir_date_et_heure_actuelle():
     maintenant = datetime.today()
     heure = maintenant.strftime("%H:%M")
-    maintenant = str(maintenant.date())
-
-    return "\n{} {} {} {} {}".format(maintenant, heure, prenom, nom, texte)
+    date = str(maintenant.date())
+    return date, heure
 
 
 def supprimer_ligne_du_csv_adherent(ligneCsv):
     """Supprime une ligne donnée du fichier adhérent."""
-    contenu = []
-    print("deleting")
-    with open(FICHIER_ADHERENTS_CHEMIN, "r") as fichierOriginal:
-        lignes = reader(fichierOriginal)
-        for ligne in lignes:
-            if not(ligneCsv == ligne):
-                contenu.append(ligne)
-            else:
-                print("deleting")
+    csvLu = lire_fichier_csv(CHEMIN_CSV_ADHERENTS, parametres=PARAMETRE_CSV_ADHERENTS)
 
-    with open(FICHIER_ADHERENTS_CHEMIN, 'w') as nouveauFichier:
-        ecrireCsv = writer(nouveauFichier)
-        ecrireCsv.writerows(contenu)
+    for ligne in csvLu:
+        if ligneCsv == ligne:
+            print("Supression de la ligne: {}".format(ligne))
+            csvLu.remove(ligne)
+            break
+
+    ecrire_fichier_csv(CSV_ADHERENTS, csvLu, mode="w", parametres=PARAMETRE_CSV_ADHERENTS)
 
 
 def lire_dernier():
     """Permet de lire le dernier badge non repertorié qui a été badgé."""
-    with open(FICHIER_DERNIER_BADGE_SCANNE_CHEMIN, 'r') as fichierBadge:
+    with open(CHEMIN_TXT_DERNIER_BADGE, mode='r') as fichierBadge:
         contenu = fichierBadge.read()
 
-    return contenu
+    return contenu.strip()
 
 
 def supprimer_rfid_adherent(numero):
     """Ouvre le fichier adherent pour y chercher une cle et la supprimer."""
-    with open(FICHIER_ADHERENTS_CHEMIN, 'r') as fichierLu:
-        liseuseCsv = reader(fichierLu)
-        lignes = list(liseuseCsv)
-        for ligne in lignes:
-            nom = ligne[1]
-            prenom = ligne[2]
-            if ligne[5] == numero:
-                ligne[5] = ""
-                texte = "Vous avez supprimé l'ID de l'adhérent : " + nom + " " + prenom
-                break
-        else:
-            texte = "Pas d'adhérent associé à ce ID"
+    csvLu = lire_fichier_csv(CHEMIN_CSV_ADHERENTS, parametres=PARAMETRE_CSV_ADHERENTS)
 
-    with open(FICHIER_ADHERENTS_CHEMIN, 'w') as fichierEcriture:
-        ecrireCsv = writer(fichierEcriture)
-        ecrireCsv.writerows(lignes)
+    for ligne in csvLu:
+        if ligne[CSV_RFID] == numero:
+            ligne[CSV_RFID] = ""
+            texte = "Vous avez supprimé l'ID de l'adhérent : " + ligne[CSV_NOM] + " " + ligne[CSV_PRENOM]
+            break
+    else:
+        texte = "Pas d'adhérent associé à cet ID"
+
+    ecrire_fichier_csv(CHEMIN_CSV_ADHERENTS, csvLu, mode="w", parametres=PARAMETRE_CSV_ADHERENTS)
 
     return texte
 
 
 def ajouter_rfid_adherent(nom, prenom, numero):
     """Associe un adhérent à un ID rfid."""
-    with open(FICHIER_ADHERENTS_CHEMIN, 'r') as fichier_read:
-        liseuseCsv = reader(fichier_read)
-        for ligne in liseuseCsv:
-            if ligne[1].lower() == nom.lower() and ligne[2].lower() == prenom.lower():
-                chaine = ligne[0:5]
-                chaine.append(numero)
-                texte = "Vous avez associé l'adhérent {} {} au numéro {}".format(ligne[2], ligne[1], numero)
-                break
+    if rechercher_rfid(numero):
+        return "Numéro RFID déjà associer, merci de bien vouloir rapporter le bug."
 
-    supprimer_ligne_du_csv_adherent(ligne)
-    ajouter_ligne_csv(chaine)
+    csvLu = lire_fichier_csv(CHEMIN_CSV_ADHERENTS, parametres=PARAMETRE_CSV_ADHERENTS)
+    for ligne in csvLu:
+        if ligne[CSV_NOM].lower() == nom.lower() and ligne[CSV_PRENOM].lower() == prenom.lower():
+            ligne[CSV_RFID] = numero
+            texte = "Vous avez associé l'adhérent {} {} au numéro {}".format(
+                ligne[CSV_PRENOM], ligne[CSV_NOM], ligne[CSV_RFID])
+            break
+
+    ecrire_fichier_csv(CHEMIN_CSV_ADHERENTS, csvLu, mode="w", parametres=PARAMETRE_CSV_ADHERENTS)
+
     return texte
 
 
@@ -121,14 +153,13 @@ def rechercher_adherent(nom, uri):
     lignes = []
     texte = "Voici la liste des adhérents comportant : " + nom
 
-    for ligne in open(FICHIER_ADHERENTS_CHEMIN, "r"):
-        ligne = ligne.split(',')
-        baseNom = ", ".join(ligne[1:3])
+    csvLu = lire_fichier_csv(CHEMIN_CSV_ADHERENTS, parametres=PARAMETRE_CSV_ADHERENTS)
+
+    for ligne in csvLu:
+        baseNom = ligne[CSV_NOM] + " " + ligne[CSV_PRENOM]
         if nom.lower() in baseNom.lower():
-            # line[1]: Nom line[2]:Prénom line[5]:numero badge
-            nouvelleUri = uri.format(ligne[1], ligne[2])
-            nouvelleLigne = [ligne[2], ligne[1], nouvelleUri]
-            lignes.append(nouvelleLigne)
+            ligne["uri"] = ""
+            lignes.append(ligne)
 
     if not lignes:
         texte = "Pas d'adhérent au nom de : {}".format(nom)
@@ -138,35 +169,38 @@ def rechercher_adherent(nom, uri):
 
 def rechercher_date_adhesion(nom, prenom):
     dateAdhesion = None
-    with open(FICHIER_ADHERENTS_CHEMIN, "r") as fichierAdherents:
-        lignes = fichierAdherents.readlines()
-        for ligne in lignes:
-            ligne = ligne.split(",")
-            if nom in ligne and prenom in ligne:
-                dateAdhesion = ligne[4]
+    csvLu = lire_fichier_csv(CHEMIN_CSV_ADHERENTS, parametres=PARAMETRE_CSV_ADHERENTS)
+    for ligne in csvLu:
+        if nom == ligne[CSV_NOM] and prenom == ligne[CSV_PRENOM]:
+            dateAdhesion = ligne[CSV_COTISATION]
 
     return dateAdhesion
 
 
 def ajouter_entree(nom, prenom, dateAdhesion):
-    with open(FICHIER_DES_ENTREES_CHEMIN, 'a') as fichierEntrees:
-        entree = formatter_ligne_csv(nom, prenom, dateAdhesion)
-        fichierEntrees.write(entree)
+    entree = [formatter_ligne_csv(nom, prenom, dateAdhesion)]
+    ecrire_fichier_csv(CHEMIN_CSV_ENTREES, entree, mode="a", parametres=PARAMETRE_CSV_REGISTRE_DES_ENTREES)
 
 
 def rechercher_entrees(nom=None, prenom=None, jour=None):
     entrees = []
     if nom is None and prenom is None and jour is None:
         raise UserWarning("Aucune clé n'a été fourni pour la recherche...")
-    with open(FICHIER_DES_ENTREES_CHEMIN, "r") as fichierEntrees:
-        lignes = reader(fichierEntrees, delimiter=' ')
-        for ligne in lignes:
-            if prenom and nom:
-                if prenom in ligne and nom in ligne:
-                    entrees.extend(ligne[0:5])
+
+    csvLu = lire_fichier_csv(CHEMIN_CSV_ENTREES, parametres=PARAMETRE_CSV_REGISTRE_DES_ENTREES)
+    for ligne in csvLu:
+        if prenom and nom:
+            print(ligne)
+            if nom == ligne[CSV_NOM] and prenom == ligne[CSV_PRENOM]:
+                print("NAME")
+                entrees.append(ligne)
             else:
-                if jour in ligne:
-                    entrees.extend(ligne[0:5])
+                print("NO NAME")
+        else:
+            if jour in ligne[CSV_DATE]:
+                entrees.append(ligne)
+
+    print(entrees)
 
     return entrees
 
@@ -178,13 +212,12 @@ def lire_entrees_du_jour():
 
 
 def rechercher_rfid(numero):
-    with open(FICHIER_ADHERENTS_CHEMIN, "r") as fichierAdherents:
-        adherents = reader(fichierAdherents)
-        for ligne in adherents:
-            if numero in ligne:
-                return ligne[1], ligne[2], ligne[4]  # nom prenom date_adhesion
-        else:
-            return None
+    csvLu = lire_fichier_csv(CHEMIN_CSV_ADHERENTS, parametres=PARAMETRE_CSV_ADHERENTS)
+    for ligne in csvLu:
+        if numero in ligne:
+            return ligne[CSV_NOM], ligne[CSV_PRENOM], ligne[CSV_COTISATION]
+    else:
+        return None
 
 
 def test_fichier_csv(fichier):
@@ -192,72 +225,60 @@ def test_fichier_csv(fichier):
 
     Exemple de ligne: "M.,BÉLIÈRES,Denis,denibel@yahoo.fr,25/03/2018,19253157164"
     """
-    first = True
-    with open(fichier, "r") as fichierLu:
-        lignes = reader(fichierLu)
-        compteur = 0
-        for ligne in lignes:
-            if first:
-                first = False
-                compteur += 1
-                continue
-            compteur += 1
-            try:
-                assert TEST_MME_MR.match(ligne[0]), "Problem with prefix :" + ligne[0]
-                assert TEST_NOM.match(ligne[1]), "Problem with 1st name :" + ligne[1]
-                assert TEST_NOM.match(ligne[2]), "Problem with last name :" + ligne[2]
-                if ligne[3]:
-                    assert TEST_EMAIL.match(ligne[3]), "Problem with email :" + ligne[3]
-                else:
-                    print("ERREUR SUR LA LIGNE: {}".format(ligne))
-                assert TEST_DATE.match(ligne[4]), "Problem with date :" + ligne[4]
-                if ligne[5]:
-                    assert TEST_RFID.match(ligne[5]), "Problem with RFID :" + ligne[5]
-                else:
-                    print("ERREUR NO RFID")
-            except AssertionError as e:
-                print(e)
-                return "Erreur ligne: {}\n{}\n{}".format(compteur, ", ".join(ligne), e)
-        else:
-            return True
+    csvLu = lire_fichier_csv(fichier, parametres=PARAMETRE_CSV_ADHERENTS)
+    compteur = 1
+    for ligne in csvLu[1:]:  # ignore la première ligne du fichier csv
+        compteur += 1
+        try:
+            assert TEST_MME_MR.match(ligne[CSV_GENRE]), "Problem with prefix :" + ligne[CSV_GENRE]
+            assert TEST_NOM.match(ligne[CSV_PRENOM]), "Problem with 1st name :" + ligne[CSV_PRENOM]
+            assert TEST_NOM.match(ligne[CSV_NOM]), "Problem with last name :" + ligne[CSV_NOM]
+            if ligne[CSV_EMAIL]:
+                assert TEST_EMAIL.match(ligne[CSV_EMAIL]), "Problem with email :" + ligne[CSV_EMAIL]
+            else:
+                print("ERREUR SUR LA LIGNE: {}".format(ligne))
+            assert TEST_DATE.match(ligne[CSV_COTISATION]), "Problem with date :" + ligne[CSV_COTISATION]
+            if ligne[CSV_RFID]:
+                assert TEST_RFID.match(ligne[CSV_RFID]), "Problem with RFID :" + ligne[CSV_RFID]
+            else:
+                print("ERREUR NO RFID")
+        except AssertionError as e:
+            print(e)
+            return "Erreur ligne: {}\n{}\n{}".format(compteur, ", ".join(ligne), e)
+    else:
+        return True
 
 
 def reecrire_registre_des_entrees(fichier):
-    archive = "{}-{}.csv".format(FICHIER_ADHERENTS_CHEMIN[:-4] + str(datetime.today()))
-    rename(FICHIER_ADHERENTS_CHEMIN, archive)
-    with open(fichier, "r") as fichierLu:
-        contenu = fichierLu.read()
+    archive = "{}-{}.csv".format(CHEMIN_CSV_ADHERENTS[:-4] + str(datetime.today()))
+    rename(CHEMIN_CSV_ADHERENTS, archive)
 
-    with open(FICHIER_ADHERENTS_CHEMIN, "w") as fichierEcris:
-        fichierEcris.write(contenu)
+    csvLu = lire_fichier_csv(fichier, parametres=PARAMETRE_CSV_ADHERENTS)
+
+    ecrire_fichier_csv(CHEMIN_CSV_ADHERENTS, csvLu, mode="w", parametres=PARAMETRE_CSV_ADHERENTS)
 
     remove(fichier)
 
 
 def ajouter_email(nom, prenom, email):
-    with open(FICHIER_EMAILS_CHEMIN, "a") as fichierEmail:
-        nouvelleLigne = ",".join([nom, prenom, email])
-        nouvelleLigne += "\n"
-        fichierEmail.write(nouvelleLigne)
+    nouvelleLigne = [{CSV_NOM: nom, CSV_PRENOM: prenom, CSV_EMAIL: email}]
+    ecrire_fichier_csv(CHEMIN_CSV_EMAILS, nouvelleLigne, mode="a", parametres=PARAMETRE_CSV_EMAILS)
 
 
 def supprimer_email(email):
     newEmails = []
-    with open(FICHIER_EMAILS_CHEMIN, "r") as fichierEmail:
-        emails = reader(fichierEmail)
-        lignes = list(emails)
+    with open(CHEMIN_CSV_EMAILS, mode="r", newline="") as fichierEmail:
+        emails = DictReader(fichierEmail, **PARAMETRE_CSV_EMAILS)
+        nombreEmails = len(emails)
+        for ligne in emails:
+            print(ligne)
+            if ligne and email.lower() in ligne[CSV_EMAIL].lower():
+                continue
+            newEmails.append(ligne)
 
-    for ligne in lignes:
-        print(ligne)
-        if ligne and email.lower() in ligne[2].lower():
-            continue
-        newEmails.append(ligne)
-
-    if len(newEmails) == len(lignes):
+    if len(newEmails) == nombreEmails:
         return False
 
-    with open(FICHIER_EMAILS_CHEMIN, "w") as fichierEmail:
-        ecriture = writer(fichierEmail)
-        ecriture.writerows(newEmails)
+    ecrire_fichier_csv(CHEMIN_CSV_EMAILS, newEmails, mode="w", parametres=PARAMETRE_CSV_EMAILS)
 
     return True
