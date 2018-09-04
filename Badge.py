@@ -4,7 +4,7 @@ import signal
 from time import sleep
 
 import modules.MFRC522 as MFRC522
-from modules.entree_sortie import (TXT_DERNIER_BADGE_CHEMIN, ajouter_entree,
+from modules.entree_sortie import (CHEMIN_TXT_DERNIER_BADGE, ajouter_entree,
                                    detecter_deja_scanne, rechercher_rfid)
 from pyA20.gpio import gpio
 from redis import StrictRedis

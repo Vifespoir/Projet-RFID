@@ -10,6 +10,9 @@ from pyA20.gpio import gpio
 
 continue_reading = True
 
+gpio.init()
+MIFAREReader = MFRC522.MFRC522()
+
 
 def end_read(signal, frame):
     """Fonction qui arrete la lecture proprement."""
@@ -20,7 +23,6 @@ def end_read(signal, frame):
 
 
 signal.signal(signal.SIGINT, end_read)
-MIFAREReader = MFRC522.MFRC522()
 
 print ("Passer le tag RFID a lire")
 

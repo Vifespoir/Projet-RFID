@@ -236,9 +236,9 @@ def retourner_bug():
     """Telegram a bug."""
     if request.method == 'POST' and request.form['bouton'] == "envoyer":
         ligneCsv = {"Nom": request.form["nom"], "Prenom": request.form["prenom"],
-                    "Description": request.form["description"]}
+                    "Description": request.form["text"]}
         ajouter_bug(ligneCsv)
-        message = "Bug rapporté par {Nom} {Prenom}\n{Description}".format(ligneCsv)
+        message = "Bug rapporté par {} {}\n{}".format(ligneCsv["Prenom"], ligneCsv["Nom"], ligneCsv["Description"])
         TELEGRAM_API_MESSAGE_PAYLOAD["text"] = message
         r = get_url(TELEGRAM_API_URL, params=TELEGRAM_API_MESSAGE_PAYLOAD)
         if r.status_code == 200:
