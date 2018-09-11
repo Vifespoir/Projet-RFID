@@ -13,7 +13,7 @@
 			{% for ligne in contenu | reverse() %}
 			<tr>
 				<td>{{ ligne["Prenom"] }}</td>
-				<td>{{ ligne["Nom"] }}</td>
+				<td>{{ ligne["NOM"] }}</td>
 				<td>{{ ligne["RFID"] }}</td>
 				<td>
 					{% if active == "visiteur" %}

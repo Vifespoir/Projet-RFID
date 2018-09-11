@@ -32,6 +32,7 @@ from werkzeug.utils import secure_filename
 # TODO turn entree sortie into a class
 
 
+NOM = "NOM"
 APP_ACCUEIL = "accueil"
 APP_HISTORIQUE = "historique"
 APP_ADMIN = "admin"
@@ -210,7 +211,7 @@ def retourner_evenement():
         flash("Événement enregistré! Merci d'animer le FABLAB!")
         ligneCsv = {}
         ligneCsv["Evenement"] = request.form["evenement"]
-        ligneCsv["Nom"] = request.form["nom"]
+        ligneCsv[NOM] = request.form[NOM]
         ligneCsv["Prenom"] = request.form["prenom"]
         ligneCsv["Date"] = request.form["date"]
         ligneCsv["Heure"] = request.form["heure"]
@@ -235,10 +236,10 @@ def retourner_adhesion():
 def retourner_bug():
     """Telegram a bug."""
     if request.method == 'POST' and request.form['bouton'] == "envoyer":
-        ligneCsv = {"Nom": request.form["nom"], "Prenom": request.form["prenom"],
+        ligneCsv = {NOM: request.form[NOM], "Prenom": request.form["prenom"],
                     "Description": request.form["text"]}
         ajouter_bug(ligneCsv)
-        message = "Bug rapporté par {} {}\n{}".format(ligneCsv["Prenom"], ligneCsv["Nom"], ligneCsv["Description"])
+        message = "Bug rapporté par {} {}\n{}".format(ligneCsv["Prenom"], ligneCsv[NOM], ligneCsv["Description"])
         TELEGRAM_API_MESSAGE_PAYLOAD["text"] = message
         r = get_url(TELEGRAM_API_URL, params=TELEGRAM_API_MESSAGE_PAYLOAD)
         if r.status_code == 200:
@@ -313,18 +314,18 @@ def retourner_admin():
         texte = supprimer_rfid_adherent(numero)
         flash(texte)
     elif request.method == 'POST' and request.form['bouton'] == "rechercher":
-        nom = request.form['nom']
+        nom = request.form[NOM]
         # FIXME ajouter for associer? what to do with associer endpoint
-        uri = "/ajouter?nom={}&prenom={}&numero={}"
+        uri = "/ajouter?NOM={}&prenom={}&numero={}"
         texte, lignes = rechercher_adherent(nom, uri)
         for ligne in lignes:
-            ligne["uri"] = uri.format(ligne["Nom"], ligne["Prenom"], dernier)
-        newKwargs = {"texte": texte, "nom": nom, "contenu": lignes}
+            ligne["uri"] = uri.format(ligne[NOM], ligne["Prenom"], dernier)
+        newKwargs = {"texte": texte, NOM: nom, "contenu": lignes}
     elif request.method == 'POST' and request.form['bouton'] == "entree":
-        nom = request.form["nom"]
+        nom = request.form[NOM]
         prenom = request.form["prenom"]
         texte, lignes = rechercher_entrees(nom, prenom)
-        newKwargs = {"texte": texte, "nom": nom, "contenu": lignes}
+        newKwargs = {"texte": texte, NOM: nom, "contenu": lignes}
     elif request.method == 'POST' and request.form['bouton'] == "televerser":
         if 'file' not in request.files:  # check if the post request has the file part
             flash('Pas de fichier...')
@@ -347,17 +348,17 @@ def ajouter():
     kwargs = {"active": "accueil"}
     if request.method == "GET" and "action" in request.args.keys() and request.args['action'] == "entree":
         kwargs["prenom"] = request.args.get('prenom')
-        kwargs["nom"] = request.args.get('nom')
+        kwargs[NOM] = request.args.get(NOM)
         kwargs["numero"] = request.args.get('numero')
-        kwargs["cherche"] = "{} {}".format(kwargs["prenom"], kwargs["nom"])
-        kwargs["contenu"] = rechercher_entrees(nom=kwargs["nom"], prenom=kwargs["prenom"])
+        kwargs["cherche"] = "{} {}".format(kwargs["prenom"], kwargs[NOM])
+        kwargs["contenu"] = rechercher_entrees(nom=kwargs[NOM], prenom=kwargs["prenom"])
         kwargs.update(APP_PATHS)
 
         return render_template('accueil.html', **kwargs)
     elif request.method == "GET":
-        ajouter_rfid_adherent(kwargs["nom"], kwargs["prenom"], kwargs["numero"])
+        ajouter_rfid_adherent(kwargs[NOM], kwargs["prenom"], kwargs["numero"])
         flash("Association entre rfid '{}' et adhérent '{} {}' réussie.".format(
-            kwargs["numero"], kwargs["prenom"], kwargs["nom"]))
+            kwargs["numero"], kwargs["prenom"], kwargs[NOM]))
 
         return redirect(url_for('retourner_admin'))
 
@@ -365,19 +366,19 @@ def ajouter():
 @app.route('/simuler', methods=['GET', 'POST'])
 def simuler():
     kwargs = {"active": "accukwargseil"}
-    if request.method == "GET" and request.args["nom"] and request.args["prenom"] and request.args["numero"]:
+    if request.method == "GET" and request.args[NOM] and request.args["prenom"] and request.args["numero"]:
         kwargs["prenom"] = request.args.get('prenom')
-        kwargs["nom"] = request.args.get('nom')
-        kwargs["cherche"] = "{} {}".format(kwargs["prenom"], kwargs["nom"])
-        if not detecter_deja_scanne(kwargs["nom"], kwargs["prenom"]):
-            dateAdhesion = rechercher_date_adhesion(kwargs["nom"], kwargs["prenom"])
-            ajouter_entree(kwargs["nom"], kwargs["prenom"], dateAdhesion)
+        kwargs[NOM] = request.args.get(NOM)
+        kwargs["cherche"] = "{} {}".format(kwargs["prenom"], kwargs[NOM])
+        if not detecter_deja_scanne(kwargs[NOM], kwargs["prenom"]):
+            dateAdhesion = rechercher_date_adhesion(kwargs[NOM], kwargs["prenom"])
+            ajouter_entree(kwargs[NOM], kwargs["prenom"], dateAdhesion)
             flash("Bonjour, {}! Bons projets!".format(kwargs["prenom"]))
         else:
             flash("Bien tenté {} mais tu t'es déjà inscrit!".format(kwargs["prenom"]))
 
         kwargs.update(APP_PATHS)
-        kwargs["contenu"] = rechercher_entrees(nom=kwargs["nom"], prenom=kwargs["prenom"])
+        kwargs["contenu"] = rechercher_entrees(nom=kwargs[NOM], prenom=kwargs["prenom"])
         return render_template('accueil.html', **kwargs)
 
 
@@ -386,13 +387,13 @@ def pagevisiteur():
     dernier = lire_dernier()
     kwargs = {"active": "visiteur", "dernier": dernier}
     if request.method == "POST" and request.form["bouton"] == "visiteur":
-        ligneCsv = {"Prenom": request.form["prenom"], "Nom": request.form["nom"],
+        ligneCsv = {"Prenom": request.form["prenom"], NOM: request.form[NOM],
                     "Email": request.form["email"], "Organisme": request.form["organisme"]}
         if ligneCsv["Email"]:
-            ajouter_email(ligneCsv["Nom"], ligneCsv["Prenom"], ligneCsv["Email"])
+            ajouter_email(ligneCsv[NOM], ligneCsv["Prenom"], ligneCsv["Email"])
 
-        if not detecter_deja_scanne(ligneCsv["Nom"], ligneCsv["Prenom"]):
-            ajouter_entree(ligneCsv["Nom"], ligneCsv["Prenom"], "visiteur")
+        if not detecter_deja_scanne(ligneCsv[NOM], ligneCsv["Prenom"]):
+            ajouter_entree(ligneCsv[NOM], ligneCsv["Prenom"], "visiteur")
             flash("Bonjour, {}! Bons projets!".format(ligneCsv["Prenom"]))
         else:
             flash("Bien tenté {} mais tu t'es déjà inscrit!".format(ligneCsv["Prenom"]))
@@ -400,11 +401,11 @@ def pagevisiteur():
         return redirect(url_for('retourner_accueil'))
 
     if request.method == 'POST' and request.form['bouton'] == "rechercher":
-        kwargs["nom"] = request.form['nom']
-        uri = "/simuler?nom={}&prenom={}&numero={}"
-        kwargs["texte"], kwargs["contenu"] = rechercher_adherent(kwargs["nom"], uri)
+        kwargs[NOM] = request.form[NOM]
+        uri = "/simuler?NOM={}&prenom={}&numero={}"
+        kwargs["texte"], kwargs["contenu"] = rechercher_adherent(kwargs[NOM], uri)
         for ligne in kwargs["contenu"]:
-            ligne["uri"] = uri.format(ligne["Nom"], ligne["Prenom"], dernier)
+            ligne["uri"] = uri.format(ligne[NOM], ligne["Prenom"], dernier)
 
     kwargs.update(APP_PATHS)
 

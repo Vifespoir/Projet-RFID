@@ -25,15 +25,15 @@ CHEMIN_CSV_BUGS = join(CHEMIN_DONNEES, CSV_BUGS)
 TEST_MME_MR = re_compile(r"([M.|Mme])")
 TEST_NOM = re_compile(r"(\S+)")
 TEST_EMAIL = re_compile(r"(\S+)(@)(\S+)")
-TEST_DATE = re_compile(r"\d{2}\/\d{2}\/\d{4}")
+TEST_DATE = re_compile(r"\d{2}\/\d{2}\/\d{2,4}")
 TEST_RFID = re_compile(r"\d+")
 # Paramètre de lecture pour obtenir les résultats sous forme de dictionnaire
 CSV_DATE = "Date"
 CSV_HEURE = "Heure"
 CSV_PRENOM = "Prenom"
-CSV_NOM = "Nom"
+CSV_NOM = "NOM"
 CSV_EMAIL = "E-mail"
-CSV_COTISATION = "Date de cotisation"
+CSV_COTISATION = "DateAnnivCotisation"
 CSV_STATUS = "Status cotisation"
 CSV_RFID = "RFID"
 CSV_GENRE = "Genre"
@@ -41,7 +41,10 @@ CSV_ORGANISME = "Organisme"
 CSV_EVENEMENT = "Evenement"
 CSV_PARTICIPANTS = "Participants"
 CSV_DESCRIPTION = "Description"
-ENTETE_CSV_ADHERENTS = [CSV_GENRE, CSV_NOM, CSV_PRENOM, CSV_EMAIL, CSV_COTISATION, CSV_RFID]
+CSV_ETAT = "ETAT"
+CSV_OUI = "Oui"
+
+ENTETE_CSV_ADHERENTS = [CSV_GENRE, CSV_NOM, CSV_PRENOM, CSV_EMAIL, CSV_COTISATION, CSV_ETAT, CSV_OUI, CSV_RFID]
 SEPARATEUR_CSV_ADHERENTS = ","
 PARAMETRE_CSV_ADHERENTS = {"fieldnames": ENTETE_CSV_ADHERENTS, "delimiter": SEPARATEUR_CSV_ADHERENTS}
 ENTETE_REGISTRE_DES_ENTREES = [CSV_DATE, CSV_HEURE, CSV_PRENOM, CSV_NOM, CSV_STATUS, CSV_ORGANISME]
@@ -107,8 +110,9 @@ def formatter_ligne_csv(nom, prenom, dateAdhesion):
     """Permet d'écrire dans le fichier des entrées."""
     date, heure = obtenir_date_et_heure_actuelle()
     nouvelleLigne = {CSV_NOM: nom, CSV_PRENOM: prenom, CSV_DATE: date, CSV_HEURE: heure}
-    if dateAdhesion:
-        date = datetime.strptime(dateAdhesion, '%d/%m/%Y')
+    if dateAdhesion and "visiteur" not in dateAdhesion.lower():
+		# FIXME try catch with %Y
+        date = datetime.strptime(dateAdhesion, '%d/%m/%y')
         difference = datetime.today() - date
         if difference.days < 365:
             nouvelleLigne[CSV_STATUS] = 'Oui'
@@ -285,7 +289,7 @@ def test_fichier_csv(fichier):
 
 
 def reecrire_registre_des_entrees(fichier):
-    archive = "{}-{}.csv".format(CHEMIN_CSV_ADHERENTS[:-4] + str(datetime.today()))
+    archive = "{}-{}.csv".format(CHEMIN_CSV_ADHERENTS[:-4], str(datetime.today()))
     rename(CHEMIN_CSV_ADHERENTS, archive)
 
     csvLu = lire_fichier_csv(fichier, parametres=PARAMETRE_CSV_ADHERENTS)
