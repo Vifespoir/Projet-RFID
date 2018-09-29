@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf_8 -*-
+import logging
 from datetime import datetime, timedelta
 from os import path
 from re import compile as re_compile
@@ -34,6 +35,8 @@ from modules.entree_sortie import (CSV_ADHERENTS, CSV_BUGS, CSV_COTISATION,
                                    update_stats)
 from redis import StrictRedis
 from werkzeug.utils import secure_filename
+
+logging.basicConfig(filename='Web_app.log', level=logging.DEBUG)
 
 APP_ROOT = ""
 APP_ACCUEIL = "accueil"
@@ -88,7 +91,8 @@ APP_PATHS = {
     APP_CHANGELOG: "/" + APP_CHANGELOG,
     APP_EVENEMENT: "/" + APP_EVENEMENT,
     APP_BUGS: "/" + APP_BUGS,
-    APP_ROOT: "/"
+    APP_ROOT: "/",
+    APP_STREAM: "/" + APP_STREAM
 }
 
 HTML_WRAPPER = [
@@ -133,7 +137,7 @@ def event_stream():
     pubsub.subscribe(APP_STREAM)
     # TODO: handle client disconnection.
     for message in pubsub.listen():
-        print("Nouvelle entrée: {}".format(message))
+        logging.info("Nouvelle entrée: {}\n".format(message))
         jsMessage = message[WEB_DATA]
         if isinstance(jsMessage, int):
             continue
@@ -144,6 +148,7 @@ def event_stream():
         if "non repertorié" in jsMessage:
             jsMessage += BOUTON_AJOUT_BADGE.format(APP_PATHS[APP_ADMIN])
         jsMessage = HTML_FLASH.format(type, jsMessage)
+        logging.info("Output message: {}".format(jsMessage))
         yield "{}: {}\n\n".format(WEB_DATA, jsMessage)
 
 
@@ -202,6 +207,7 @@ def security_context_processor():
 
 @app.route(APP_PATHS[APP_ROOT])
 def redirgiger_accueil():
+    logging.info("Redirection à la racine: '/'")
     return redirect(url_for("retourner_accueil"))
 
 
@@ -213,6 +219,9 @@ def stream():
 @app.route(APP_PATHS[APP_ACCUEIL], methods=[WEB_POST, WEB_GET])
 def retourner_accueil():
     """Affiche les entrées du jour sur la page d'accueil."""
+    logging.info("Page de {}".format(APP_ACCUEIL))
+    if request.method:
+        logging.info("Requête reçue:\nForm: {}\nArgs: {}".format(str(request.form), str(request.args)))
     dernier = lire_dernier()
     kwargs = {WEB_ACTIVE: WEB_VISITEUR, WEB_DERNIER: dernier}
     if request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_VISITEUR:
@@ -245,6 +254,7 @@ def retourner_accueil():
 @app.route(APP_PATHS[APP_CHANGELOG])
 def retourner_changelog():
     """Affiche les derniers changement sur le logiciel."""
+    logging.info("Page de {}".format(APP_CHANGELOG))
     with open(CHEMIN_CHANGELOG, mode="r") as changelog:
         html = markdown(changelog.read())
 
@@ -256,6 +266,10 @@ def retourner_changelog():
 @app.route(APP_PATHS[APP_EVENEMENT], methods=[WEB_GET, WEB_POST])
 def retourner_evenement():
     """Enregistre un événement."""
+    logging.info("Page de {}".format(APP_EVENEMENT))
+    if request.method:
+        logging.info("Requête reçue:\nForm: {}\nArgs: {}".format(str(request.form), str(request.args)))
+
     kwargs = {WEB_ACTIVE: APP_EVENEMENT}
     if request.method == WEB_POST and CSV_PARTICIPANTS not in request.form.keys():
         print(request.form)
@@ -281,12 +295,18 @@ def retourner_evenement():
 # TODO add the new adherent signup page
 @app.route(APP_PATHS[APP_ADHESION])
 def retourner_adhesion():
+    logging.info("Page de {}".format(APP_ADHESION))
+
     return render_template("501.html", active=APP_ADHESION, **APP_PATHS)
 
 
 @app.route(APP_PATHS[APP_BUG], methods=[WEB_GET, WEB_POST])
 def retourner_bug():
     """Telegram a bug."""
+    logging.info("Page de {}".format(APP_BUG))
+    if request.method:
+        logging.info("Requête reçue:\nForm: {}\nArgs: {}".format(str(request.form), str(request.args)))
+
     if request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_ENVOYER:
         ligneCsv = {CSV_NOM: request.form[CSV_NOM], CSV_PRENOM: request.form[CSV_PRENOM],
                     CSV_DESCRIPTION: request.form[WEB_TEXTE]}
@@ -307,6 +327,8 @@ def retourner_bug():
 @app.route(APP_PATHS[APP_BUGS])
 @login_required
 def retourner_bugs():
+    logging.info("Page de {}".format(APP_BUGS))
+
     kwargs = {WEB_ACTIVE: APP_BUGS, WEB_CONTENU: obtenir_bugs()}
     kwargs.update(APP_PATHS)
     return render_template("{}.html".format(APP_BUGS), **kwargs)
@@ -314,6 +336,10 @@ def retourner_bugs():
 
 @app.route(APP_PATHS[APP_HISTORIQUE], methods=[WEB_GET, WEB_POST])
 def retourner_historique():
+    logging.info("Page de {}".format(APP_HISTORIQUE))
+    if request.method:
+        logging.info("Requête reçue:\nForm: {}\nArgs: {}".format(str(request.form), str(request.args)))
+
     kwargs = {}
     if request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_RECHERCHER:
         jour = request.form[WEB_JOUR]
@@ -340,6 +366,7 @@ def retourner_historique():
 
 
 def mise_a_jour_adherents(fichier):
+    logging.info("Mise à jour adhérent")
     if fichier and allowed_file(fichier.filename):
         nomDuFichier = secure_filename(fichier.filename)
         cheminFichier = path.join(app.config["UPLOAD_FOLDER"], nomDuFichier)
@@ -354,9 +381,13 @@ def mise_a_jour_adherents(fichier):
                 flash(text)
 
 
-@app.route("/admin", methods=[WEB_POST])
+@app.route(APP_PATHS[APP_ADMIN], methods=[WEB_POST])
 @login_required
 def retourner_admin():
+    logging.info("Page de {}".format(APP_ADMIN))
+    if request.method:
+        logging.info("Requête reçue:\nForm: {}\nArgs: {}".format(str(request.form), str(request.args)))
+
     texte = "Espace Admin"
     dernier = lire_dernier()
     kwargs = {WEB_ACTIVE: APP_ADMIN, WEB_DERNIER: dernier}
@@ -397,6 +428,10 @@ def retourner_admin():
 @app.route("/{}".format(WEB_AJOUTER), methods=[WEB_GET, WEB_POST])
 @login_required
 def ajouter():
+    logging.info("Page de {}".format(WEB_AJOUTER))
+    if request.method:
+        logging.info("Requête reçue:\nForm: {}\nArgs: {}".format(str(request.form), str(request.args)))
+
     kwargs = {WEB_ACTIVE: APP_ACCUEIL}
 
     if request.method == WEB_GET:
@@ -420,6 +455,10 @@ def ajouter():
 
 @app.route("/{}".format(WEB_SIMULER), methods=[WEB_GET, WEB_POST])
 def simuler():
+    logging.info("Page de {}".format(WEB_SIMULER))
+    if request.method:
+        logging.info("Requête reçue:\nForm: {}\nArgs: {}".format(str(request.form), str(request.args)))
+
     kwargs = {WEB_ACTIVE: APP_ACCUEIL}
     if request.method == WEB_GET and request.args[CSV_NOM] and request.args[CSV_PRENOM] and request.args[WEB_NUMERO]:
         kwargs[CSV_PRENOM] = request.args.get(CSV_PRENOM)
@@ -438,6 +477,7 @@ def simuler():
 
 
 def allowed_file(filename):
+    logging.info("Fichiers authorisés")
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 

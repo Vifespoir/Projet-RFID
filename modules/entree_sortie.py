@@ -131,17 +131,17 @@ def obtenir_date_et_heure_actuelle():
     return date, heure
 
 
-def supprimer_ligne_du_csv_adherent(ligneCsv):
-    """Supprime une ligne donnée du fichier adhérent."""
-    csvLu = lire_fichier_csv(CHEMIN_CSV_ADHERENTS, parametres=PARAMETRE_CSV_ADHERENTS)
-
-    for ligne in csvLu:
-        if ligneCsv == ligne:
-            print("Supression de la ligne: {}".format(ligne))
-            csvLu.remove(ligne)
-            break
-
-    ecrire_fichier_csv(CSV_ADHERENTS, csvLu, mode="w", parametres=PARAMETRE_CSV_ADHERENTS)
+# def supprimer_ligne_du_csv_adherent(ligneCsv):
+#     """Supprime une ligne donnée du fichier adhérent."""
+#     csvLu = lire_fichier_csv(CHEMIN_CSV_ADHERENTS, parametres=PARAMETRE_CSV_ADHERENTS)
+#
+#     for ligne in csvLu:
+#         if ligneCsv == ligne:
+#             print("Supression de la ligne: {}".format(ligne))
+#             csvLu.remove(ligne)
+#             break
+#
+#     ecrire_fichier_csv(CSV_ADHERENTS, csvLu, mode="w", parametres=PARAMETRE_CSV_ADHERENTS)
 
 
 def lire_dernier():
@@ -337,7 +337,7 @@ def update_stats():
     ceJour = datetime.today().date()
     visiteurCeJour, visiteurCetteSemaine, visiteurCeMois = 0, 0, 0
     for ligne in csvLu:
-        date = datetime.strptime(ligne["Date"], '%Y-%m-%d').date()
+        date = datetime.strptime(ligne[CSV_DATE], '%Y-%m-%d').date()
         if (ceJour - date).days < 1:
             visiteurCeJour += 1
             visiteurCetteSemaine += 1

@@ -1,0 +1,92 @@
+DEBUG:passlib.registry:registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+DEBUG:passlib.registry:registered 'des_crypt' handler: <class 'passlib.handlers.des_crypt.des_crypt'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha256' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha256'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha512' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha512'>
+DEBUG:passlib.registry:registered 'sha256_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha256_crypt'>
+DEBUG:passlib.registry:registered 'sha512_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha512_crypt'>
+DEBUG:passlib.registry:registered 'plaintext' handler: <class 'passlib.handlers.misc.plaintext'>
+DEBUG:passlib.registry:registered 'hex_md5' handler: <class 'passlib.handlers.digests.hex_md5'>
+INFO:werkzeug: * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+INFO:root:Redirection à la racine: '/'
+INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:21:27] "GET / HTTP/1.1" 302 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:21:27] "GET /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:21:27] "GET /stream HTTP/1.1" 500 -
+ERROR:werkzeug:Error on request:
+Traceback (most recent call last):
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/serving.py", line 270, in run_wsgi
+    execute(self.server.app)
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/serving.py", line 260, in execute
+    for data in application_iter:
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/wsgi.py", line 870, in __next__
+    return self._next()
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/wrappers.py", line 82, in _iter_encoded
+    for item in iterable:
+  File "/home/etienne/projects/fablab/Projet-RFID/Web_app.py", line 137, in event_stream
+    pubsub.subscribe(APP_STREAM)
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2482, in subscribe
+    ret_val = self.execute_command('SUBSCRIBE', *iterkeys(new_channels))
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2404, in execute_command
+    self._execute(connection, connection.send_command, *args)
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2415, in _execute
+    connection.connect()
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/connection.py", line 489, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'POUGET'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:21:31] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:21:32] "GET /stream HTTP/1.1" 500 -
+ERROR:werkzeug:Error on request:
+Traceback (most recent call last):
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/serving.py", line 270, in run_wsgi
+    execute(self.server.app)
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/serving.py", line 260, in execute
+    for data in application_iter:
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/wsgi.py", line 870, in __next__
+    return self._next()
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/wrappers.py", line 82, in _iter_encoded
+    for item in iterable:
+  File "/home/etienne/projects/fablab/Projet-RFID/Web_app.py", line 137, in event_stream
+    pubsub.subscribe(APP_STREAM)
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2482, in subscribe
+    ret_val = self.execute_command('SUBSCRIBE', *iterkeys(new_channels))
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2404, in execute_command
+    self._execute(connection, connection.send_command, *args)
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2415, in _execute
+    connection.connect()
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/connection.py", line 489, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'POUGET'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:22:03] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:22:03] "GET /stream HTTP/1.1" 500 -
+ERROR:werkzeug:Error on request:
+Traceback (most recent call last):
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/serving.py", line 270, in run_wsgi
+    execute(self.server.app)
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/serving.py", line 260, in execute
+    for data in application_iter:
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/wsgi.py", line 870, in __next__
+    return self._next()
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/wrappers.py", line 82, in _iter_encoded
+    for item in iterable:
+  File "/home/etienne/projects/fablab/Projet-RFID/Web_app.py", line 137, in event_stream
+    pubsub.subscribe(APP_STREAM)
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2482, in subscribe
+    ret_val = self.execute_command('SUBSCRIBE', *iterkeys(new_channels))
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2404, in execute_command
+    self._execute(connection, connection.send_command, *args)
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2415, in _execute
+    connection.connect()
+  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/connection.py", line 489, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
