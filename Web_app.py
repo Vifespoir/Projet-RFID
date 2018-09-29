@@ -346,21 +346,24 @@ def retourner_admin():
 @login_required
 def ajouter():
     kwargs = {"active": "accueil"}
-    if request.method == "GET" and "action" in request.args.keys() and request.args['action'] == "entree":
+
+    if request.method == "GET":
         kwargs["prenom"] = request.args.get('prenom')
         kwargs[NOM] = request.args.get(NOM)
         kwargs["numero"] = request.args.get('numero')
         kwargs["cherche"] = "{} {}".format(kwargs["prenom"], kwargs[NOM])
         kwargs["contenu"] = rechercher_entrees(nom=kwargs[NOM], prenom=kwargs["prenom"])
-        kwargs.update(APP_PATHS)
 
-        return render_template('accueil.html', **kwargs)
-    elif request.method == "GET":
-        ajouter_rfid_adherent(kwargs[NOM], kwargs["prenom"], kwargs["numero"])
-        flash("Association entre rfid '{}' et adhérent '{} {}' réussie.".format(
-            kwargs["numero"], kwargs["prenom"], kwargs[NOM]))
+        if "action" in request.args.keys() and request.args['action'] == "entree":
+            kwargs.update(APP_PATHS)
 
-        return redirect(url_for('retourner_admin'))
+            return render_template('accueil.html', **kwargs)
+        else:
+            ajouter_rfid_adherent(kwargs[NOM], kwargs["prenom"], kwargs["numero"])
+            flash("Association entre rfid '{}' et adhérent '{} {}' réussie.".format(
+                kwargs["numero"], kwargs["prenom"], kwargs[NOM]))
+
+            return redirect(url_for('retourner_admin'))
 
 
 @app.route('/simuler', methods=['GET', 'POST'])
