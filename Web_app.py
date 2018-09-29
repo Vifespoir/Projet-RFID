@@ -181,14 +181,35 @@ def stream():
     return Response(event_stream(), mimetype="text/event-stream")
 
 
-@app.route('/accueil')
+@app.route('/accueil', methods=["GET", "POST"])
 def retourner_accueil():
     """Affiche les entrées du jour sur la page d'accueil."""
-    jour = str(date.today())
+    dernier = lire_dernier()
+    kwargs = {"active": "visiteur", "dernier": dernier}
+    if request.method == "POST" and request.form["bouton"] == "visiteur":
+        ligneCsv = {"Prenom": request.form["prenom"], NOM: request.form[NOM],
+                    "Email": request.form["email"], "Organisme": request.form["organisme"]}
+        if ligneCsv["Email"]:
+            ajouter_email(ligneCsv[NOM], ligneCsv["Prenom"], ligneCsv["Email"])
 
-    entreesDuJour = rechercher_entrees(jour=jour)
+        if not detecter_deja_scanne(ligneCsv[NOM], ligneCsv["Prenom"]):
+            ajouter_entree(ligneCsv[NOM], ligneCsv["Prenom"], "visiteur")
+            flash("Bonjour, {}! Bons projets!".format(ligneCsv["Prenom"]))
+        else:
+            flash("Bien tenté {} mais tu t'es déjà inscrit!".format(ligneCsv["Prenom"]))
 
-    return render_template('accueil.html', contenu=entreesDuJour, cherche=jour, active="accueil", **APP_PATHS)
+        return redirect(url_for('retourner_accueil'))
+
+    if request.method == 'POST' and request.form['bouton'] == "rechercher":
+        kwargs[NOM] = request.form[NOM]
+        uri = "/simuler?NOM={}&prenom={}&numero={}"
+        kwargs["texte"], kwargs["contenu"] = rechercher_adherent(kwargs[NOM], uri)
+        for ligne in kwargs["contenu"]:
+            ligne["uri"] = uri.format(ligne[NOM], ligne["Prenom"], dernier)
+
+    kwargs.update(APP_PATHS)
+
+    return render_template('visiteur.html', **kwargs)
 
 
 @app.route("/changelog")
@@ -383,36 +404,6 @@ def simuler():
         kwargs.update(APP_PATHS)
         kwargs["contenu"] = rechercher_entrees(nom=kwargs[NOM], prenom=kwargs["prenom"])
         return render_template('accueil.html', **kwargs)
-
-
-@app.route("/visiteur", methods=["GET", "POST"])
-def pagevisiteur():
-    dernier = lire_dernier()
-    kwargs = {"active": "visiteur", "dernier": dernier}
-    if request.method == "POST" and request.form["bouton"] == "visiteur":
-        ligneCsv = {"Prenom": request.form["prenom"], NOM: request.form[NOM],
-                    "Email": request.form["email"], "Organisme": request.form["organisme"]}
-        if ligneCsv["Email"]:
-            ajouter_email(ligneCsv[NOM], ligneCsv["Prenom"], ligneCsv["Email"])
-
-        if not detecter_deja_scanne(ligneCsv[NOM], ligneCsv["Prenom"]):
-            ajouter_entree(ligneCsv[NOM], ligneCsv["Prenom"], "visiteur")
-            flash("Bonjour, {}! Bons projets!".format(ligneCsv["Prenom"]))
-        else:
-            flash("Bien tenté {} mais tu t'es déjà inscrit!".format(ligneCsv["Prenom"]))
-
-        return redirect(url_for('retourner_accueil'))
-
-    if request.method == 'POST' and request.form['bouton'] == "rechercher":
-        kwargs[NOM] = request.form[NOM]
-        uri = "/simuler?NOM={}&prenom={}&numero={}"
-        kwargs["texte"], kwargs["contenu"] = rechercher_adherent(kwargs[NOM], uri)
-        for ligne in kwargs["contenu"]:
-            ligne["uri"] = uri.format(ligne[NOM], ligne["Prenom"], dernier)
-
-    kwargs.update(APP_PATHS)
-
-    return render_template('visiteur.html', **kwargs)
 
 
 def allowed_file(filename):
