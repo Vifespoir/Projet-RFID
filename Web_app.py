@@ -352,9 +352,9 @@ def ajouter():
         kwargs[NOM] = request.args.get(NOM)
         kwargs["numero"] = request.args.get('numero')
         kwargs["cherche"] = "{} {}".format(kwargs["prenom"], kwargs[NOM])
-        kwargs["contenu"] = rechercher_entrees(nom=kwargs[NOM], prenom=kwargs["prenom"])
 
         if "action" in request.args.keys() and request.args['action'] == "entree":
+            kwargs["contenu"] = rechercher_entrees(nom=kwargs[NOM], prenom=kwargs["prenom"])
             kwargs.update(APP_PATHS)
 
             return render_template('accueil.html', **kwargs)
