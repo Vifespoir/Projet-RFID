@@ -209,7 +209,7 @@ def retourner_accueil():
 
     kwargs.update(APP_PATHS)
 
-    return render_template('visiteur.html', **kwargs)
+    return render_template('accueil.html', **kwargs)
 
 
 @app.route("/changelog")
