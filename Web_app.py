@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf_8 -*-
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from os import path
 from re import compile as re_compile
 
@@ -15,7 +15,13 @@ from flask_sqlalchemy import SQLAlchemy
 from markdown import markdown
 from modules.app_secrets import (SECRET_KEY, SECURITY_PASSWORD_SALT,
                                  TELEGRAM_API_CHAT_ID, TELEGRAM_API_TOKEN)
-from modules.entree_sortie import (ajouter_bug, ajouter_email, ajouter_entree,
+from modules.entree_sortie import (CSV_ADHERENTS, CSV_BUGS, CSV_COTISATION,
+                                   CSV_DATE, CSV_DESCRIPTION, CSV_EMAIL,
+                                   CSV_EMAILS, CSV_ENTREES, CSV_ETAT,
+                                   CSV_EVENEMENT, CSV_EVENEMENTS, CSV_GENRE,
+                                   CSV_HEURE, CSV_NOM, CSV_ORGANISME, CSV_OUI,
+                                   CSV_PARTICIPANTS, CSV_PRENOM, ajouter_bug,
+                                   ajouter_email, ajouter_entree,
                                    ajouter_evenement, ajouter_rfid_adherent,
                                    detecter_deja_scanne, editer_evenement,
                                    lire_dernier, obtenir_bugs,
@@ -29,10 +35,7 @@ from modules.entree_sortie import (ajouter_bug, ajouter_email, ajouter_entree,
 from redis import StrictRedis
 from werkzeug.utils import secure_filename
 
-# TODO turn entree sortie into a class
-
-
-NOM = "NOM"
+APP_ROOT = ""
 APP_ACCUEIL = "accueil"
 APP_HISTORIQUE = "historique"
 APP_ADMIN = "admin"
@@ -46,6 +49,31 @@ APP_CHANGELOG = "changelog"
 APP_EVENEMENT = "evenement"
 APP_BUGS = "bugs"
 APP_EMAIL = "etienne.pouget@outlook.com"
+APP_STREAM = "stream"
+
+WEB_SIMULER = "simuler"
+WEB_ENVOYER = "envoyer"
+WEB_SUPPRIMER = "supprimer"
+WEB_ENTREE = "entree"
+WEB_TELEVERSER = "televerser"
+WEB_AJOUTER = "ajouter"
+WEB_ACTION = "action"
+WEB_DATA = "data"
+WEB_ACTIVE = "active"
+WEB_DERNIER = "dernier"
+WEB_VISITEUR = "visiteur"
+WEB_POST = "POST"
+WEB_GET = "GET"
+WEB_BOUTON = "bouton"
+WEB_NUMERO = "numero"
+WEB_TEXTE = "texte"
+WEB_CONTENU = "contenu"
+WEB_URI = "uri"
+WEB_RECHERCHER = "rechercher"
+WEB_JOUR = "jour"
+WEB_MOIS = "mois"
+WEB_ANNEE = "annee"
+CHEMIN_CHANGELOG = "CHANGELOG.md"
 
 APP_PATHS = {
     APP_ACCUEIL: "/" + APP_ACCUEIL,
@@ -59,7 +87,8 @@ APP_PATHS = {
     APP_ADHESION: "/" + APP_ADHESION,
     APP_CHANGELOG: "/" + APP_CHANGELOG,
     APP_EVENEMENT: "/" + APP_EVENEMENT,
-    APP_BUGS: "/" + APP_BUGS
+    APP_BUGS: "/" + APP_BUGS,
+    APP_ROOT: "/"
 }
 
 HTML_WRAPPER = [
@@ -79,21 +108,21 @@ BOUTON_AJOUT_BADGE = '<a class="btn btn-primary " name="bouton" value="ajouter" 
 TELEGRAM_API_URL = "https://api.telegram.org/bot{}/sendMessage".format(TELEGRAM_API_TOKEN)
 TELEGRAM_API_MESSAGE_PAYLOAD = {"chat_id": TELEGRAM_API_CHAT_ID, "text": "HELLO FROM PYTHON"}
 # Upload
-UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = set(['csv', 'txt'])
+UPLOAD_FOLDER = "uploads"
+ALLOWED_EXTENSIONS = set(["csv", "txt"])
 
 
 # Ne pas ajouter d'extensions au dessus
 app = Flask(__name__)
 # Extensions:
 Bootstrap(app)
-app.config['SECRET_KEY'] = SECRET_KEY
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
-app.config['SECURITY_PASSWORD_SALT'] = SECURITY_PASSWORD_SALT
-app.config['SECURITY_POST_LOGIN_VIEW'] = APP_ADMIN
-app.config['SECURITY_LOGIN_USER_TEMPLATE'] = 'login_user.html'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config["SECRET_KEY"] = SECRET_KEY
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://"
+app.config["SECURITY_PASSWORD_SALT"] = SECURITY_PASSWORD_SALT
+app.config["SECURITY_POST_LOGIN_VIEW"] = APP_ADMIN
+app.config["SECURITY_LOGIN_USER_TEMPLATE"] = "login_user.html"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
 redis = StrictRedis(host='localhost', port=6379, db=0)
@@ -101,21 +130,21 @@ redis = StrictRedis(host='localhost', port=6379, db=0)
 
 def event_stream():
     pubsub = redis.pubsub()
-    pubsub.subscribe("stream")
+    pubsub.subscribe(APP_STREAM)
     # TODO: handle client disconnection.
     for message in pubsub.listen():
         print("Nouvelle entrée: {}".format(message))
-        jsMessage = message["data"]
+        jsMessage = message[WEB_DATA]
         if isinstance(jsMessage, int):
             continue
-        message = message["data"].decode()
+        message = message[WEB_DATA].decode()
         match = STREAM_TYPE.match(message)
         type = match.group(1)
         jsMessage = match.group(2)
         if "non repertorié" in jsMessage:
             jsMessage += BOUTON_AJOUT_BADGE.format(APP_PATHS[APP_ADMIN])
         jsMessage = HTML_FLASH.format(type, jsMessage)
-        yield "data: {}\n\n".format(jsMessage)
+        yield "{}: {}\n\n".format(WEB_DATA, jsMessage)
 
 
 # Create database connection object
@@ -161,7 +190,7 @@ app.before_request(flask_update_stats)
 def create_user():
     """Create a user to test with."""
     db.create_all()
-    user_datastore.create_user(email='hatlab', password='hatlab')
+    user_datastore.create_user(email="hatlab", password="hatlab")
     db.session.commit()
 
 
@@ -171,96 +200,99 @@ def security_context_processor():
     return APP_PATHS
 
 
-@app.route('/')
+@app.route(APP_PATHS[APP_ROOT])
 def redirgiger_accueil():
     return redirect(url_for("retourner_accueil"))
 
 
-@app.route('/stream')
+@app.route(APP_PATHS[APP_STREAM])
 def stream():
     return Response(event_stream(), mimetype="text/event-stream")
 
 
-@app.route('/accueil', methods=["GET", "POST"])
+@app.route(APP_PATHS[APP_ACCUEIL], methods=[WEB_POST, WEB_GET])
 def retourner_accueil():
     """Affiche les entrées du jour sur la page d'accueil."""
     dernier = lire_dernier()
-    kwargs = {"active": "visiteur", "dernier": dernier}
-    if request.method == "POST" and request.form["bouton"] == "visiteur":
-        ligneCsv = {"Prenom": request.form["prenom"], NOM: request.form[NOM],
-                    "Email": request.form["email"], "Organisme": request.form["organisme"]}
-        if ligneCsv["Email"]:
-            ajouter_email(ligneCsv[NOM], ligneCsv["Prenom"], ligneCsv["Email"])
+    kwargs = {WEB_ACTIVE: WEB_VISITEUR, WEB_DERNIER: dernier}
+    if request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_VISITEUR:
+        ligneCsv = {CSV_PRENOM: request.form[CSV_PRENOM], CSV_NOM: request.form[CSV_NOM],
+                    CSV_EMAIL: request.form[CSV_EMAIL], CSV_ORGANISME: request.form[CSV_ORGANISME]}
+        if ligneCsv[CSV_EMAIL]:
+            ajouter_email(ligneCsv[CSV_NOM], ligneCsv[CSV_PRENOM], ligneCsv[CSV_EMAIL])
 
-        if not detecter_deja_scanne(ligneCsv[NOM], ligneCsv["Prenom"]):
-            ajouter_entree(ligneCsv[NOM], ligneCsv["Prenom"], "visiteur")
-            flash("Bonjour, {}! Bons projets!".format(ligneCsv["Prenom"]))
+        if not detecter_deja_scanne(ligneCsv[CSV_NOM], ligneCsv[CSV_PRENOM]):
+            ajouter_entree(ligneCsv[CSV_NOM], ligneCsv[CSV_PRENOM], WEB_VISITEUR)
+            flash("Bonjour, {}! Bons projets!".format(ligneCsv[CSV_PRENOM]))
         else:
-            flash("Bien tenté {} mais tu t'es déjà inscrit!".format(ligneCsv["Prenom"]))
+            flash("Bien tenté {} mais tu t'es déjà inscrit!".format(ligneCsv[CSV_PRENOM]))
 
-        return redirect(url_for('retourner_accueil'))
+        return redirect(url_for("retourner_accueil"))
 
-    if request.method == 'POST' and request.form['bouton'] == "rechercher":
-        kwargs[NOM] = request.form[NOM]
-        uri = "/simuler?NOM={}&prenom={}&numero={}"
-        kwargs["texte"], kwargs["contenu"] = rechercher_adherent(kwargs[NOM], uri)
-        for ligne in kwargs["contenu"]:
-            ligne["uri"] = uri.format(ligne[NOM], ligne["Prenom"], dernier)
+    if request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_RECHERCHER:
+        kwargs[CSV_NOM] = request.form[CSV_NOM]
+        uri = "/simuler?{CSV_NOM}={nom}&{CSV_PRENOM}={prenom}&{WEB_NUMERO}={numero}"
+        kwargs[WEB_TEXTE], kwargs[WEB_CONTENU] = rechercher_adherent(kwargs[CSV_NOM], uri)
+        for ligne in kwargs[WEB_CONTENU]:
+            ligne[WEB_URI] = uri.format(CSV_NOM=CSV_NOM, CSV_PRENOM=CSV_PRENOM, WEB_NUMERO=WEB_NUMERO,
+                                        nom=ligne[CSV_NOM], prenom=ligne[CSV_PRENOM], numero=dernier)
 
     kwargs.update(APP_PATHS)
 
-    return render_template('accueil.html', **kwargs)
+    return render_template('{}.html'.format(APP_ACCUEIL), **kwargs)
 
 
-@app.route("/changelog")
+@app.route(APP_PATHS[APP_CHANGELOG])
 def retourner_changelog():
     """Affiche les derniers changement sur le logiciel."""
-    with open("CHANGELOG.md", mode='r') as changelog:
+    with open(CHEMIN_CHANGELOG, mode="r") as changelog:
         html = markdown(changelog.read())
 
-    kwargs = {"content": html, "active": "changelog"}
+    kwargs = {WEB_CONTENU: html, WEB_ACTIVE: APP_CHANGELOG}
     kwargs.update(APP_PATHS)
-    return render_template("changelog.html", **kwargs)
+    return render_template("{}.html".format(APP_CHANGELOG), **kwargs)
 
 
-@app.route("/evenement", methods=["GET", "POST"])
+@app.route(APP_PATHS[APP_EVENEMENT], methods=[WEB_GET, WEB_POST])
 def retourner_evenement():
     """Enregistre un événement."""
-    kwargs = {"active": "evenement"}
-    if request.method == "POST" and "participants" not in request.form.keys():
+    kwargs = {WEB_ACTIVE: APP_EVENEMENT}
+    if request.method == WEB_POST and CSV_PARTICIPANTS not in request.form.keys():
         print(request.form)
         flash("Événement enregistré! Merci d'animer le FABLAB!")
         ligneCsv = {}
-        ligneCsv["Evenement"] = request.form["evenement"]
-        ligneCsv[NOM] = request.form[NOM]
-        ligneCsv["Prenom"] = request.form["prenom"]
-        ligneCsv["Date"] = request.form["date"]
-        ligneCsv["Heure"] = request.form["heure"]
+        # TODO continue from here
+        ligneCsv[CSV_EVENEMENT] = request.form[CSV_EVENEMENT]
+        ligneCsv[CSV_NOM] = request.form[CSV_NOM]
+        ligneCsv[CSV_PRENOM] = request.form[CSV_PRENOM]
+        ligneCsv[CSV_PRENOM] = request.form[CSV_PRENOM]
+        ligneCsv[CSV_HEURE] = request.form[CSV_HEURE]
         ajouter_evenement(ligneCsv)
-    if request.method == "POST" and "participants" in request.form.keys():
-        editer_evenement(request.form["evenement"], request.form["date"], int(request.form["participants"]))
+    if request.method == WEB_POST and CSV_PARTICIPANTS in request.form.keys():
+        editer_evenement(request.form[CSV_EVENEMENT], request.form[CSV_DATE], int(request.form[CSV_PARTICIPANTS]))
 
     contenu = obtenir_derniers_evenements(10)
     print(contenu)
-    kwargs["contenu"] = contenu
+    kwargs[WEB_CONTENU] = contenu
     kwargs.update(APP_PATHS)
-    return render_template("evenement.html", **kwargs)
+    return render_template("{}.html".format(APP_EVENEMENT), **kwargs)
 
 
 # TODO add the new adherent signup page
-@app.route("/adhesion")
+@app.route(APP_PATHS[APP_ADHESION])
 def retourner_adhesion():
-    return render_template("501.html", active="adhesion", **APP_PATHS)
+    return render_template("501.html", active=APP_ADHESION, **APP_PATHS)
 
 
-@app.route("/bug", methods=['GET', 'POST'])
+@app.route(APP_PATHS[APP_BUG], methods=[WEB_GET, WEB_POST])
 def retourner_bug():
     """Telegram a bug."""
-    if request.method == 'POST' and request.form['bouton'] == "envoyer":
-        ligneCsv = {NOM: request.form[NOM], "Prenom": request.form["prenom"],
-                    "Description": request.form["text"]}
+    if request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_ENVOYER:
+        ligneCsv = {CSV_NOM: request.form[CSV_NOM], CSV_PRENOM: request.form[CSV_PRENOM],
+                    CSV_DESCRIPTION: request.form[WEB_TEXTE]}
         ajouter_bug(ligneCsv)
-        message = "Bug rapporté par {} {}\n{}".format(ligneCsv["Prenom"], ligneCsv[NOM], ligneCsv["Description"])
+        message = "Bug rapporté par {} {}\n{}".format(ligneCsv[CSV_PRENOM], ligneCsv[CSV_NOM],
+                                                      ligneCsv[CSV_DESCRIPTION])
         TELEGRAM_API_MESSAGE_PAYLOAD["text"] = message
         r = get_url(TELEGRAM_API_URL, params=TELEGRAM_API_MESSAGE_PAYLOAD)
         if r.status_code == 200:
@@ -269,49 +301,48 @@ def retourner_bug():
             flash("Telegram non envoyé!")
         return redirect(url_for("retourner_accueil"))
 
-    return render_template("bug.html", active="bug", **APP_PATHS)
+    return render_template("{}.html".format(APP_BUG), active=APP_BUG, **APP_PATHS)
 
 
-@app.route('/bugs')
+@app.route(APP_PATHS[APP_BUGS])
 @login_required
 def retourner_bugs():
-    kwargs = {"active": "bugs", "contenu": obtenir_bugs()}
+    kwargs = {WEB_ACTIVE: APP_BUGS, WEB_CONTENU: obtenir_bugs()}
     kwargs.update(APP_PATHS)
-    return render_template("bugs.html", **kwargs)
+    return render_template("{}.html".format(APP_BUGS), **kwargs)
 
 
-@app.route('/historique', methods=['GET', 'POST'])
+@app.route(APP_PATHS[APP_HISTORIQUE], methods=[WEB_GET, WEB_POST])
 def retourner_historique():
     kwargs = {}
-    if request.method == 'POST' and request.form['bouton'] == "rechercher":
-        jour = request.form['jour']
-        mois = request.form['mois']
-        annee = request.form['annee']
-        kwargs["date"] = "{}-{}-{}".format(annee, mois, jour)
-    elif request.method == "GET" and request.args:
-        date = request.args.get('date')
+    if request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_RECHERCHER:
+        jour = request.form[WEB_JOUR]
+        mois = request.form[WEB_MOIS]
+        annee = request.form[WEB_ANNEE]
+        kwargs[CSV_DATE] = "{}-{}-{}".format(annee, mois, jour)
+    elif request.method == WEB_GET and request.args:
+        date = request.args[CSV_DATE]
         dateTemporaire = datetime.strptime(date, '%Y-%m-%d').date()
         jourActuel = timedelta(days=int(request.args["delta"]))
-        kwargs["date"] = str(dateTemporaire + jourActuel)
+        kwargs[CSV_DATE] = str(dateTemporaire + jourActuel)
     else:
-        kwargs["date"] = str(datetime.today().date())
-        print("HELLO")
+        kwargs[CSV_DATE] = str(datetime.today().date())
 
-    kwargs["contenu"] = rechercher_entrees(jour=kwargs["date"])
+    kwargs[WEB_CONTENU] = rechercher_entrees(jour=kwargs[CSV_DATE])
 
     kwargs["ceJour"] = str(datetime.now().date())
-    kwargs["ceJour"] = '/historique?date={}&delta=0'.format(kwargs["ceJour"])
-    kwargs["suivant"] = '/historique?date={}&delta=1'.format(kwargs["date"])
-    kwargs["precedent"] = '/historique?date={}&delta=-1'.format(kwargs["date"])
-    kwargs["active"] = "historique"
+    kwargs["ceJour"] = "/historique?date={}&delta=0".format(kwargs["ceJour"])
+    kwargs["suivant"] = "/{}?{}={}&delta=1".format(APP_HISTORIQUE, CSV_DATE, kwargs[CSV_DATE])
+    kwargs["precedent"] = "/{}?{}={}&delta=-1".format(APP_HISTORIQUE, CSV_DATE, kwargs[CSV_DATE])
+    kwargs[WEB_ACTIVE] = APP_HISTORIQUE
     kwargs.update(APP_PATHS)
-    return render_template('historique.html', **kwargs)
+    return render_template("{}.html".format(APP_HISTORIQUE), **kwargs)
 
 
 def mise_a_jour_adherents(fichier):
     if fichier and allowed_file(fichier.filename):
         nomDuFichier = secure_filename(fichier.filename)
-        cheminFichier = path.join(app.config['UPLOAD_FOLDER'], nomDuFichier)
+        cheminFichier = path.join(app.config["UPLOAD_FOLDER"], nomDuFichier)
         fichier.save(cheminFichier)
         test = test_fichier_csv(cheminFichier)
         if test is True:
@@ -323,92 +354,92 @@ def mise_a_jour_adherents(fichier):
                 flash(text)
 
 
-@app.route('/admin', methods=['GET', 'POST'])
+@app.route("/admin", methods=[WEB_POST])
 @login_required
 def retourner_admin():
-    texte = 'Espace Admin'
+    texte = "Espace Admin"
     dernier = lire_dernier()
-    kwargs = {"active": "admin", "dernier": dernier}
+    kwargs = {WEB_ACTIVE: APP_ADMIN, WEB_DERNIER: dernier}
     newKwargs = {}
-    if request.method == 'POST' and request.form['bouton'] == "supprimer":
-        numero = request.form['numero']
+    if request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_SUPPRIMER:
+        numero = request.form[WEB_NUMERO]
         texte = supprimer_rfid_adherent(numero)
         flash(texte)
-    elif request.method == 'POST' and request.form['bouton'] == "rechercher":
-        nom = request.form[NOM]
+    elif request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_RECHERCHER:
+        nom = request.form[CSV_NOM]
         # FIXME ajouter for associer? what to do with associer endpoint
-        uri = "/ajouter?NOM={}&prenom={}&numero={}"
+        uri = "/{WEB_AJOUTER}?{CSV_NOM}={nom}&{CSV_PRENOM}={prenom}&{WEB_NUMERO}={numero}"
         texte, lignes = rechercher_adherent(nom, uri)
         for ligne in lignes:
-            ligne["uri"] = uri.format(ligne[NOM], ligne["Prenom"], dernier)
-        newKwargs = {"texte": texte, NOM: nom, "contenu": lignes}
-    elif request.method == 'POST' and request.form['bouton'] == "entree":
-        nom = request.form[NOM]
-        prenom = request.form["prenom"]
+            ligne[WEB_URI] = uri.format(ligne[CSV_NOM], ligne[CSV_PRENOM], dernier)
+        newKwargs = {WEB_TEXTE: texte, CSV_NOM: nom, WEB_CONTENU: lignes}
+    elif request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_ENTREE:
+        nom = request.form[CSV_NOM]
+        prenom = request.form[CSV_PRENOM]
         texte, lignes = rechercher_entrees(nom, prenom)
-        newKwargs = {"texte": texte, NOM: nom, "contenu": lignes}
-    elif request.method == 'POST' and request.form['bouton'] == "televerser":
-        if 'file' not in request.files:  # check if the post request has the file part
-            flash('Pas de fichier...')
+        newKwargs = {WEB_TEXTE: texte, CSV_NOM: nom, WEB_CONTENU: lignes}
+    elif request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_TELEVERSER:
+        if "file" not in request.files:  # check if the post request has the file part
+            flash("Pas de fichier...")
             return redirect(request.url)
-        fichier = request.files['file']
-        if fichier.filename == '':  # if user does not select file, browser also submit an empty part without filename
-            flash('Aucun fichier séléctionné')
+        fichier = request.files["file"]
+        if fichier.filename == "":  # if user does not select file, browser also submit an empty part without filename
+            flash("Aucun fichier séléctionné")
             return redirect(request.url)
 
         mise_a_jour_adherents(fichier)
 
     kwargs.update(newKwargs)
     kwargs.update(APP_PATHS)
-    return render_template('admin.html', **kwargs)
+    return render_template("{}.html".format(APP_ADMIN), **kwargs)
 
 
-@app.route('/ajouter', methods=['GET', 'POST'])
+@app.route("/{}".format(WEB_AJOUTER), methods=[WEB_GET, WEB_POST])
 @login_required
 def ajouter():
-    kwargs = {"active": "accueil"}
+    kwargs = {WEB_ACTIVE: APP_ACCUEIL}
 
-    if request.method == "GET":
-        kwargs["prenom"] = request.args.get('prenom')
-        kwargs[NOM] = request.args.get(NOM)
-        kwargs["numero"] = request.args.get('numero')
-        kwargs["cherche"] = "{} {}".format(kwargs["prenom"], kwargs[NOM])
+    if request.method == WEB_GET:
+        kwargs[CSV_PRENOM] = request.args.get(CSV_PRENOM)
+        kwargs[CSV_NOM] = request.args.get(CSV_NOM)
+        kwargs[WEB_NUMERO] = request.args.get(WEB_NUMERO)
+        kwargs[WEB_RECHERCHER] = "{} {}".format(kwargs[CSV_PRENOM], kwargs[CSV_NOM])
 
-        if "action" in request.args.keys() and request.args['action'] == "entree":
-            kwargs["contenu"] = rechercher_entrees(nom=kwargs[NOM], prenom=kwargs["prenom"])
+        if WEB_ACTION in request.args.keys() and request.args[WEB_ACTION] == WEB_ENTREE:
+            kwargs[WEB_CONTENU] = rechercher_entrees(nom=kwargs[CSV_NOM], prenom=kwargs[CSV_PRENOM])
             kwargs.update(APP_PATHS)
 
-            return render_template('accueil.html', **kwargs)
+            return render_template("{}.html".format(APP_ACCUEIL), **kwargs)
         else:
-            ajouter_rfid_adherent(kwargs[NOM], kwargs["prenom"], kwargs["numero"])
+            ajouter_rfid_adherent(kwargs[CSV_NOM], kwargs[CSV_PRENOM], kwargs[WEB_NUMERO])
             flash("Association entre rfid '{}' et adhérent '{} {}' réussie.".format(
-                kwargs["numero"], kwargs["prenom"], kwargs[NOM]))
+                kwargs[WEB_NUMERO], kwargs[CSV_PRENOM], kwargs[CSV_NOM]))
 
-            return redirect(url_for('retourner_admin'))
+            return redirect(url_for("retourner_admin"))
 
 
-@app.route('/simuler', methods=['GET', 'POST'])
+@app.route("/{}".format(WEB_SIMULER), methods=[WEB_GET, WEB_POST])
 def simuler():
-    kwargs = {"active": "accukwargseil"}
-    if request.method == "GET" and request.args[NOM] and request.args["prenom"] and request.args["numero"]:
-        kwargs["prenom"] = request.args.get('prenom')
-        kwargs[NOM] = request.args.get(NOM)
-        kwargs["cherche"] = "{} {}".format(kwargs["prenom"], kwargs[NOM])
-        if not detecter_deja_scanne(kwargs[NOM], kwargs["prenom"]):
-            dateAdhesion = rechercher_date_adhesion(kwargs[NOM], kwargs["prenom"])
-            ajouter_entree(kwargs[NOM], kwargs["prenom"], dateAdhesion)
-            flash("Bonjour, {}! Bons projets!".format(kwargs["prenom"]))
+    kwargs = {WEB_ACTIVE: APP_ACCUEIL}
+    if request.method == WEB_GET and request.args[CSV_NOM] and request.args[CSV_PRENOM] and request.args[WEB_NUMERO]:
+        kwargs[CSV_PRENOM] = request.args.get(CSV_PRENOM)
+        kwargs[CSV_NOM] = request.args.get(CSV_NOM)
+        kwargs[WEB_RECHERCHER] = "{} {}".format(kwargs[CSV_PRENOM], kwargs[CSV_NOM])
+        if not detecter_deja_scanne(kwargs[CSV_NOM], kwargs[CSV_PRENOM]):
+            dateAdhesion = rechercher_date_adhesion(kwargs[CSV_NOM], kwargs[CSV_PRENOM])
+            ajouter_entree(kwargs[CSV_NOM], kwargs[CSV_PRENOM], dateAdhesion)
+            flash("Bonjour, {}! Bons projets!".format(kwargs[CSV_PRENOM]))
         else:
-            flash("Bien tenté {} mais tu t'es déjà inscrit!".format(kwargs["prenom"]))
+            flash("Bien tenté {} mais tu t'es déjà inscrit!".format(kwargs[CSV_PRENOM]))
 
         kwargs.update(APP_PATHS)
-        kwargs["contenu"] = rechercher_entrees(nom=kwargs[NOM], prenom=kwargs["prenom"])
-        return render_template('accueil.html', **kwargs)
+        kwargs[WEB_CONTENU] = rechercher_entrees(nom=kwargs[CSV_NOM], prenom=kwargs[CSV_PRENOM])
+        return render_template("{}.html".format(APP_ACCUEIL), **kwargs)
 
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=0)

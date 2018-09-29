@@ -8,6 +8,7 @@ from modules.entree_sortie import (CHEMIN_TXT_DERNIER_BADGE, ajouter_entree,
                                    detecter_deja_scanne, rechercher_rfid)
 from pyA20.gpio import gpio
 from redis import StrictRedis
+from Web_app import APP_STREAM
 
 
 class BadgeScanneur(object):
@@ -19,11 +20,11 @@ class BadgeScanneur(object):
         self.continue_reading = True
         signal.signal(signal.SIGINT, self.end_read)
         self.MIFAREReader = MFRC522.MFRC522()
-        self.redis.publish("stream", "<success>Badgeuse initialisé, prête à scanner.")
+        self.redis.publish(APP_STREAM, "<success>Badgeuse initialisé, prête à scanner.")
 
     def end_read(self, signal, frame):
         """Fonction qui arrete la lecture proprement."""
-        self.redis.publish("stream", "<warning>Lecture terminée, badgeuse arrêtée.")
+        self.redis.publish(APP_STREAM, "<warning>Lecture terminée, badgeuse arrêtée.")
         self.continue_reading = False
         gpio.cleanup()
 
@@ -44,18 +45,18 @@ class BadgeScanneur(object):
         nom, prenom, dateAdhesion = self.rechercher_adherent(code)
         if nom is None:
             # FIXME delete this file
-            with open(TXT_DERNIER_BADGE_CHEMIN, 'w') as no_adhe:
+            with open(CHEMIN_TXT_DERNIER_BADGE, 'w') as no_adhe:
                 no_adhe.write(code)
-            self.redis.publish("stream",
+            self.redis.publish(APP_STREAM,
                                "<danger>Badge non repertorié: {}, voulez-vous l'associer?"
                                .format(code))
         elif self.detecter_deja_scanne(nom, prenom):
-            self.redis.publish("stream",
+            self.redis.publish(APP_STREAM,
                                "<warning>Bien tenté {} mais ton badge est déjà scanné!"
                                .format(prenom))
         else:
             self.authentifier_rfid(nom, prenom, dateAdhesion)
-            self.redis.publish("stream",
+            self.redis.publish(APP_STREAM,
                                "<warning>Bonjour, {}! Bons projets!".format(prenom))
 
         sleep(3)
