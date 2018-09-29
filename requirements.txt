@@ -8,4 +8,6 @@ redis==2.10.6
 requests==2.12.4
 telepot==12.7
 Markdown==2.6.11
+
 -e git+https://github.com/duxingkei33/orangepi_PC_gpio_pyH3.git#egg=pyA20
+-e git+https://github.com/lthiery/SPI-Py.git#egg=SPI-Py

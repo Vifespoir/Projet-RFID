@@ -1,0 +1,10 @@
+[Unit]
+Description=Badgeus telegram client
+[Service]
+ExecStart=/usr/bin/python3 /home/michel/Projet-RFID/modules/telegram.py
+Restart=on-failure
+User=root
+Group=root
+[Install]
+WantedBy=multi-user.target
+Alias=badgeuse.service

@@ -1,9 +1,10 @@
 [Unit]
 Description=Badgeuse
 [Service]
-ExecStart=/bin/bash /home/michel/Projet-RFID/start_jobs.sh
-ExecStop=/bin/bash /home/michel/Projet-RFID/stop_jobs.sh
+ExecStart=/usr/bin/python3 /home/sqylab/Projet-RFID/Badge.py
 Restart=on-failure
+User=root
+Group=root
 [Install]
 WantedBy=multi-user.target
 Alias=badgeuse.service
