@@ -1,13 +1,14 @@
 {% extends "web_base.html" %}
-{% block title %}Registre des entrées du SQYLAB{% endblock %}
 
 {% block content %}
-<div class="container">
-	<div class="card card-body">
-    <h2>Registre des entrées</h2>
-	</div>
-	<br>
+
+<div class="container card card-body">
+	<h2>Adhérents / invités</h2>
+	{% if dernier %}
+	<h2>ID du dernier badge : {{ dernier }} </h2>
+	{% endif %}
 </div>
 <br>
-{% include "includes/registre_entrees.html" %}
+{% include "includes/voir_adherents.html" %}
+{% include "includes/boutons_visiteur.html" %}
 {% endblock %}

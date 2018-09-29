@@ -4,21 +4,33 @@
 #### EN COURS DE RESOLUTION
 <hr>
 
-* Rajouter "boite à idées" -- **Redondance possible avec "Bug/Suggestion"**
 * Utiliser werkzeug pour augmenter la securité
 * API
 * Graphiques
 * Convertir csv en base de donnée
-* Ajouter un cronjob pour se mettre à jour à distance
+* Heure de fermeture - bouton shutdown
+* Adhérent en cours de traitement
 
-#### IMPOSSIBLE A RESOUDRE - DONNEE NON DISPONIBLE
+#### IMPOSSIBLE A RESOUDRE
 <hr>
+Données manquante:
 
 * Rajouter numero adherent dans le fichier historique
 * Rajouter les logo HATLAB et SQYLAB
 
+Non nécessaire:
+
+* Rajouter "boite à idées" -- **Redondance possible avec "Bug/Suggestion"**
+* Ajouter un cronjob pour se mettre à jour à distance
+
 #### RESOLU
 <hr>
+
+Date 29 septembre 2018
+
+* Ajouter un fichier README.md avec les instructions de debuggage et d'Installation
+* Corriger le bug du @ (voir README.md)
+* Changer
 
 Date: 4 septembre 2018
 
