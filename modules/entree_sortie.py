@@ -253,10 +253,11 @@ def lire_entrees_du_jour():
 def rechercher_rfid(numero):
     csvLu = lire_fichier_csv(CHEMIN_CSV_ADHERENTS, parametres=PARAMETRE_CSV_ADHERENTS)
     for ligne in csvLu:
+        print("RFID is : "+ligne[CSV_RFID])
         if numero in ligne[CSV_RFID]:
             return ligne[CSV_NOM], ligne[CSV_PRENOM], ligne[CSV_COTISATION]
-    else:
-        return None
+
+    return None
 
 
 def test_fichier_csv(fichier):
