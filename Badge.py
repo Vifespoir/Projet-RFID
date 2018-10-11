@@ -44,7 +44,7 @@ class BadgeScanneur(object):
         nom, prenom, dateAdhesion = self.rechercher_adherent(code)
         if nom is None:
             # FIXME delete this file
-            with open(TXT_DERNIER_BADGE_CHEMIN, 'w') as no_adhe:
+            with open(CHEMIN_TXT_DERNIER_BADGE, 'w') as no_adhe:
                 no_adhe.write(code)
             self.redis.publish("stream",
                                "<danger>Badge non repertorié: {}, voulez-vous l'associer?"
