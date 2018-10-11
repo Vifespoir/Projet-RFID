@@ -111,7 +111,7 @@ def formatter_ligne_csv(nom, prenom, dateAdhesion):
     date, heure = obtenir_date_et_heure_actuelle()
     nouvelleLigne = {CSV_NOM: nom, CSV_PRENOM: prenom, CSV_DATE: date, CSV_HEURE: heure}
     if dateAdhesion and "visiteur" not in dateAdhesion.lower():
-		# FIXME try catch with %Y
+        # FIXME try catch with %Y
         date = datetime.strptime(dateAdhesion, '%d/%m/%y')
         difference = datetime.today() - date
         if difference.days < 365:
