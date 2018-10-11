@@ -34,6 +34,7 @@ from modules.entree_sortie import (CSV_ADHERENTS, CSV_BUGS, CSV_COTISATION,
                                    supprimer_rfid_adherent, test_fichier_csv,
                                    update_stats)
 from redis import StrictRedis
+from redis import exceptions as redisExceptions
 from werkzeug.utils import secure_filename
 
 logging.basicConfig(filename='Web_app.log', level=logging.DEBUG)
@@ -115,6 +116,9 @@ TELEGRAM_API_MESSAGE_PAYLOAD = {"chat_id": TELEGRAM_API_CHAT_ID, "text": "HELLO 
 UPLOAD_FOLDER = "uploads"
 ALLOWED_EXTENSIONS = set(["csv", "txt"])
 
+# TODO:
+# decouper if else en utilisant @app.route('/post/<int:post_id>')
+# sortir db
 
 # Ne pas ajouter d'extensions au dessus
 app = Flask(__name__)
@@ -130,6 +134,11 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
 redis = StrictRedis(host='localhost', port=6379, db=0)
+try:
+    redis.pubsub().subscribe(APP_STREAM)
+    redis_status = True
+except redisExceptions.ConnectionError:
+    redis_status = False
 
 
 def event_stream():
@@ -213,7 +222,10 @@ def redirgiger_accueil():
 
 @app.route(APP_PATHS[APP_STREAM])
 def stream():
-    return Response(event_stream(), mimetype="text/event-stream")
+    if redis_status:
+        return Response(event_stream(), mimetype="text/event-stream")
+    else:
+        return Response(None, mimetype="text/event-stream")
 
 
 @app.route(APP_PATHS[APP_ACCUEIL], methods=[WEB_POST, WEB_GET])
@@ -227,6 +239,7 @@ def retourner_accueil():
     if request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_VISITEUR:
         ligneCsv = {CSV_PRENOM: request.form[CSV_PRENOM], CSV_NOM: request.form[CSV_NOM],
                     CSV_EMAIL: request.form[CSV_EMAIL], CSV_ORGANISME: request.form[CSV_ORGANISME]}
+        logging.info("Visiteur: {}".format(ligneCsv))
         if ligneCsv[CSV_EMAIL]:
             ajouter_email(ligneCsv[CSV_NOM], ligneCsv[CSV_PRENOM], ligneCsv[CSV_EMAIL])
 
@@ -245,6 +258,8 @@ def retourner_accueil():
         for ligne in kwargs[WEB_CONTENU]:
             ligne[WEB_URI] = uri.format(CSV_NOM=CSV_NOM, CSV_PRENOM=CSV_PRENOM, WEB_NUMERO=WEB_NUMERO,
                                         nom=ligne[CSV_NOM], prenom=ligne[CSV_PRENOM], numero=dernier)
+
+        logging.info("Resultat de la recherche: {}".format(kwargs[WEB_CONTENU]))
 
     kwargs.update(APP_PATHS)
 
@@ -296,7 +311,7 @@ def retourner_evenement():
 @app.route(APP_PATHS[APP_ADHESION])
 def retourner_adhesion():
     logging.info("Page de {}".format(APP_ADHESION))
-
+    # /adhesions/adhesions.php
     return render_template("501.html", active=APP_ADHESION, **APP_PATHS)
 
 
@@ -428,6 +443,7 @@ def retourner_admin():
 @app.route("/{}".format(WEB_AJOUTER), methods=[WEB_GET, WEB_POST])
 @login_required
 def ajouter():
+    """Associer un numero de badge RFID a un adherent"""
     logging.info("Page de {}".format(WEB_AJOUTER))
     if request.method:
         logging.info("Requête reçue:\nForm: {}\nArgs: {}".format(str(request.form), str(request.args)))
@@ -471,9 +487,10 @@ def simuler():
         else:
             flash("Bien tenté {} mais tu t'es déjà inscrit!".format(kwargs[CSV_PRENOM]))
 
-        kwargs.update(APP_PATHS)
-        kwargs[WEB_CONTENU] = rechercher_entrees(nom=kwargs[CSV_NOM], prenom=kwargs[CSV_PRENOM])
-        return render_template("{}.html".format(APP_ACCUEIL), **kwargs)
+        # kwargs.update(APP_PATHS)
+        # kwargs[WEB_CONTENU] = rechercher_entrees(nom=kwargs[CSV_NOM], prenom=kwargs[CSV_PRENOM])
+        logging.info("Redirection vers laccueil")
+        return redirect(url_for("retourner_accueil"))
 
 
 def allowed_file(filename):
@@ -482,4 +499,4 @@ def allowed_file(filename):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=0)
+    app.run(host="0.0.0.0", debug=1)

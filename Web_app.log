@@ -7,86 +7,235 @@ DEBUG:passlib.registry:registered 'sha512_crypt' handler: <class 'passlib.handle
 DEBUG:passlib.registry:registered 'plaintext' handler: <class 'passlib.handlers.misc.plaintext'>
 DEBUG:passlib.registry:registered 'hex_md5' handler: <class 'passlib.handlers.digests.hex_md5'>
 INFO:werkzeug: * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
-INFO:root:Redirection à la racine: '/'
-INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:21:27] "GET / HTTP/1.1" 302 -
+INFO:werkzeug: * Restarting with stat
+DEBUG:passlib.registry:registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+DEBUG:passlib.registry:registered 'des_crypt' handler: <class 'passlib.handlers.des_crypt.des_crypt'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha256' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha256'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha512' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha512'>
+DEBUG:passlib.registry:registered 'sha256_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha256_crypt'>
+DEBUG:passlib.registry:registered 'sha512_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha512_crypt'>
+DEBUG:passlib.registry:registered 'plaintext' handler: <class 'passlib.handlers.misc.plaintext'>
+DEBUG:passlib.registry:registered 'hex_md5' handler: <class 'passlib.handlers.digests.hex_md5'>
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 780-279-297
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'po'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:05:11] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:05:11] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:05:16] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:05:21] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:05:26] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:05:31] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:05:36] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:05:41] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:05:46] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:05:51] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:05:56] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:06:02] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:06:07] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:06:12] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:06:17] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/home/etienne/projects/fablab/Projet-RFID/Web_app.py', reloading
+INFO:werkzeug: * Restarting with stat
+DEBUG:passlib.registry:registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+DEBUG:passlib.registry:registered 'des_crypt' handler: <class 'passlib.handlers.des_crypt.des_crypt'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha256' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha256'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha512' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha512'>
+DEBUG:passlib.registry:registered 'sha256_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha256_crypt'>
+DEBUG:passlib.registry:registered 'sha512_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha512_crypt'>
+DEBUG:passlib.registry:registered 'plaintext' handler: <class 'passlib.handlers.misc.plaintext'>
+DEBUG:passlib.registry:registered 'hex_md5' handler: <class 'passlib.handlers.digests.hex_md5'>
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 780-279-297
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:06:22] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:06:27] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:06:32] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:06:37] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:06:42] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:06:47] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/home/etienne/projects/fablab/Projet-RFID/Web_app.py', reloading
+INFO:werkzeug: * Restarting with stat
+DEBUG:passlib.registry:registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+DEBUG:passlib.registry:registered 'des_crypt' handler: <class 'passlib.handlers.des_crypt.des_crypt'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha256' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha256'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha512' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha512'>
+DEBUG:passlib.registry:registered 'sha256_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha256_crypt'>
+DEBUG:passlib.registry:registered 'sha512_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha512_crypt'>
+DEBUG:passlib.registry:registered 'plaintext' handler: <class 'passlib.handlers.misc.plaintext'>
+DEBUG:passlib.registry:registered 'hex_md5' handler: <class 'passlib.handlers.digests.hex_md5'>
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 780-279-297
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:06:52] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:06:57] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:02] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:07] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:12] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:17] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:22] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:27] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:32] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/home/etienne/projects/fablab/Projet-RFID/Web_app.py', reloading
+INFO:werkzeug: * Restarting with stat
+DEBUG:passlib.registry:registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+DEBUG:passlib.registry:registered 'des_crypt' handler: <class 'passlib.handlers.des_crypt.des_crypt'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha256' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha256'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha512' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha512'>
+DEBUG:passlib.registry:registered 'sha256_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha256_crypt'>
+DEBUG:passlib.registry:registered 'sha512_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha512_crypt'>
+DEBUG:passlib.registry:registered 'plaintext' handler: <class 'passlib.handlers.misc.plaintext'>
+DEBUG:passlib.registry:registered 'hex_md5' handler: <class 'passlib.handlers.digests.hex_md5'>
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 780-279-297
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:37] "GET /stream HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'po'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Resultat de la recherche: [OrderedDict([('Genre', 'M.'), ('NOM', 'POIROT'), ('Prenom', 'Nicolas'), ('E-mail', 'ni.poirot@laposte.net'), ('DateAnnivCotisation', '12/09/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POIROT&Prenom=Nicolas&numero=19253157164')]), OrderedDict([('Genre', 'M.'), ('NOM', 'POLLET'), ('Prenom', 'Thomas'), ('E-mail', 'ehpollet@gmail.com'), ('DateAnnivCotisation', '17/04/2018'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POLLET&Prenom=Thomas&numero=19253157164')]), OrderedDict([('Genre', 'Mme'), ('NOM', 'POUILLART'), ('Prenom', 'Brigitte'), ('E-mail', 'bpouillart@gmail.com'), ('DateAnnivCotisation', '05/12/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POUILLART&Prenom=Brigitte&numero=19253157164')])]
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:41] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:41] "GET /stream HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'po'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Resultat de la recherche: [OrderedDict([('Genre', 'M.'), ('NOM', 'POIROT'), ('Prenom', 'Nicolas'), ('E-mail', 'ni.poirot@laposte.net'), ('DateAnnivCotisation', '12/09/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POIROT&Prenom=Nicolas&numero=19253157164')]), OrderedDict([('Genre', 'M.'), ('NOM', 'POLLET'), ('Prenom', 'Thomas'), ('E-mail', 'ehpollet@gmail.com'), ('DateAnnivCotisation', '17/04/2018'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POLLET&Prenom=Thomas&numero=19253157164')]), OrderedDict([('Genre', 'Mme'), ('NOM', 'POUILLART'), ('Prenom', 'Brigitte'), ('E-mail', 'bpouillart@gmail.com'), ('DateAnnivCotisation', '05/12/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POUILLART&Prenom=Brigitte&numero=19253157164')])]
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:45] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:45] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:50] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:07:55] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:00] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:05] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:10] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:15] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:20] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:25] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:30] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:35] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:40] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:45] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:50] "GET /stream HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'po'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Resultat de la recherche: [OrderedDict([('Genre', 'M.'), ('NOM', 'POIROT'), ('Prenom', 'Nicolas'), ('E-mail', 'ni.poirot@laposte.net'), ('DateAnnivCotisation', '12/09/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POIROT&Prenom=Nicolas&numero=19253157164')]), OrderedDict([('Genre', 'M.'), ('NOM', 'POLLET'), ('Prenom', 'Thomas'), ('E-mail', 'ehpollet@gmail.com'), ('DateAnnivCotisation', '17/04/2018'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POLLET&Prenom=Thomas&numero=19253157164')]), OrderedDict([('Genre', 'Mme'), ('NOM', 'POUILLART'), ('Prenom', 'Brigitte'), ('E-mail', 'bpouillart@gmail.com'), ('DateAnnivCotisation', '05/12/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POUILLART&Prenom=Brigitte&numero=19253157164')])]
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:53] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:54] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:08:59] "GET /stream HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'po'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Resultat de la recherche: [OrderedDict([('Genre', 'M.'), ('NOM', 'POIROT'), ('Prenom', 'Nicolas'), ('E-mail', 'ni.poirot@laposte.net'), ('DateAnnivCotisation', '12/09/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POIROT&Prenom=Nicolas&numero=19253157164')]), OrderedDict([('Genre', 'M.'), ('NOM', 'POLLET'), ('Prenom', 'Thomas'), ('E-mail', 'ehpollet@gmail.com'), ('DateAnnivCotisation', '17/04/2018'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POLLET&Prenom=Thomas&numero=19253157164')]), OrderedDict([('Genre', 'Mme'), ('NOM', 'POUILLART'), ('Prenom', 'Brigitte'), ('E-mail', 'bpouillart@gmail.com'), ('DateAnnivCotisation', '05/12/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POUILLART&Prenom=Brigitte&numero=19253157164')])]
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:02] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:02] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:07] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:12] "GET /stream HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'po'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Resultat de la recherche: [OrderedDict([('Genre', 'M.'), ('NOM', 'POIROT'), ('Prenom', 'Nicolas'), ('E-mail', 'ni.poirot@laposte.net'), ('DateAnnivCotisation', '12/09/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POIROT&Prenom=Nicolas&numero=19253157164')]), OrderedDict([('Genre', 'M.'), ('NOM', 'POLLET'), ('Prenom', 'Thomas'), ('E-mail', 'ehpollet@gmail.com'), ('DateAnnivCotisation', '17/04/2018'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POLLET&Prenom=Thomas&numero=19253157164')]), OrderedDict([('Genre', 'Mme'), ('NOM', 'POUILLART'), ('Prenom', 'Brigitte'), ('E-mail', 'bpouillart@gmail.com'), ('DateAnnivCotisation', '05/12/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POUILLART&Prenom=Brigitte&numero=19253157164')])]
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:16] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:16] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:21] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:26] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:31] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:36] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:41] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:46] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:51] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:09:56] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:01] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:06] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:11] "GET /stream HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'po'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Resultat de la recherche: [OrderedDict([('Genre', 'M.'), ('NOM', 'POIROT'), ('Prenom', 'Nicolas'), ('E-mail', 'ni.poirot@laposte.net'), ('DateAnnivCotisation', '12/09/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POIROT&Prenom=Nicolas&numero=19253157164')]), OrderedDict([('Genre', 'M.'), ('NOM', 'POLLET'), ('Prenom', 'Thomas'), ('E-mail', 'ehpollet@gmail.com'), ('DateAnnivCotisation', '17/04/2018'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POLLET&Prenom=Thomas&numero=19253157164')]), OrderedDict([('Genre', 'Mme'), ('NOM', 'POUILLART'), ('Prenom', 'Brigitte'), ('E-mail', 'bpouillart@gmail.com'), ('DateAnnivCotisation', '05/12/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POUILLART&Prenom=Brigitte&numero=19253157164')])]
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:13] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:13] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:18] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:23] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:28] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:33] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:38] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:43] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:48] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:53] "GET /stream HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'po'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Resultat de la recherche: [OrderedDict([('Genre', 'M.'), ('NOM', 'POIROT'), ('Prenom', 'Nicolas'), ('E-mail', 'ni.poirot@laposte.net'), ('DateAnnivCotisation', '12/09/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POIROT&Prenom=Nicolas&numero=19253157164')]), OrderedDict([('Genre', 'M.'), ('NOM', 'POLLET'), ('Prenom', 'Thomas'), ('E-mail', 'ehpollet@gmail.com'), ('DateAnnivCotisation', '17/04/2018'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POLLET&Prenom=Thomas&numero=19253157164')]), OrderedDict([('Genre', 'Mme'), ('NOM', 'POUILLART'), ('Prenom', 'Brigitte'), ('E-mail', 'bpouillart@gmail.com'), ('DateAnnivCotisation', '05/12/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POUILLART&Prenom=Brigitte&numero=19253157164')])]
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:54] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:10:55] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:00] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:05] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:10] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:15] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:20] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:25] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:30] "GET /stream HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'po'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Resultat de la recherche: [OrderedDict([('Genre', 'M.'), ('NOM', 'POIROT'), ('Prenom', 'Nicolas'), ('E-mail', 'ni.poirot@laposte.net'), ('DateAnnivCotisation', '12/09/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POIROT&Prenom=Nicolas&numero=19253157164')]), OrderedDict([('Genre', 'M.'), ('NOM', 'POLLET'), ('Prenom', 'Thomas'), ('E-mail', 'ehpollet@gmail.com'), ('DateAnnivCotisation', '17/04/2018'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POLLET&Prenom=Thomas&numero=19253157164')]), OrderedDict([('Genre', 'Mme'), ('NOM', 'POUILLART'), ('Prenom', 'Brigitte'), ('E-mail', 'bpouillart@gmail.com'), ('DateAnnivCotisation', '05/12/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POUILLART&Prenom=Brigitte&numero=19253157164')])]
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:31] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:31] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:36] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:41] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:46] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:51] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:11:56] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:01] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:06] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:11] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:16] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:21] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:26] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:31] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:37] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:42] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:47] "GET /stream HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'po'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Resultat de la recherche: [OrderedDict([('Genre', 'M.'), ('NOM', 'POIROT'), ('Prenom', 'Nicolas'), ('E-mail', 'ni.poirot@laposte.net'), ('DateAnnivCotisation', '12/09/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POIROT&Prenom=Nicolas&numero=19253157164')]), OrderedDict([('Genre', 'M.'), ('NOM', 'POLLET'), ('Prenom', 'Thomas'), ('E-mail', 'ehpollet@gmail.com'), ('DateAnnivCotisation', '17/04/2018'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POLLET&Prenom=Thomas&numero=19253157164')]), OrderedDict([('Genre', 'Mme'), ('NOM', 'POUILLART'), ('Prenom', 'Brigitte'), ('E-mail', 'bpouillart@gmail.com'), ('DateAnnivCotisation', '05/12/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POUILLART&Prenom=Brigitte&numero=19253157164')])]
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:47] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:48] "GET /stream HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'po'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Resultat de la recherche: [OrderedDict([('Genre', 'M.'), ('NOM', 'POIROT'), ('Prenom', 'Nicolas'), ('E-mail', 'ni.poirot@laposte.net'), ('DateAnnivCotisation', '12/09/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POIROT&Prenom=Nicolas&numero=19253157164')]), OrderedDict([('Genre', 'M.'), ('NOM', 'POLLET'), ('Prenom', 'Thomas'), ('E-mail', 'ehpollet@gmail.com'), ('DateAnnivCotisation', '17/04/2018'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POLLET&Prenom=Thomas&numero=19253157164')]), OrderedDict([('Genre', 'Mme'), ('NOM', 'POUILLART'), ('Prenom', 'Brigitte'), ('E-mail', 'bpouillart@gmail.com'), ('DateAnnivCotisation', '05/12/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POUILLART&Prenom=Brigitte&numero=19253157164')])]
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:51] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:51] "GET /stream HTTP/1.1" 200 -
 INFO:root:Page de accueil
 INFO:root:Requête reçue:
 Form: ImmutableMultiDict([])
 Args: ImmutableMultiDict([])
-INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:21:27] "GET /accueil HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:21:27] "GET /stream HTTP/1.1" 500 -
-ERROR:werkzeug:Error on request:
-Traceback (most recent call last):
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/serving.py", line 270, in run_wsgi
-    execute(self.server.app)
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/serving.py", line 260, in execute
-    for data in application_iter:
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/wsgi.py", line 870, in __next__
-    return self._next()
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/wrappers.py", line 82, in _iter_encoded
-    for item in iterable:
-  File "/home/etienne/projects/fablab/Projet-RFID/Web_app.py", line 137, in event_stream
-    pubsub.subscribe(APP_STREAM)
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2482, in subscribe
-    ret_val = self.execute_command('SUBSCRIBE', *iterkeys(new_channels))
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2404, in execute_command
-    self._execute(connection, connection.send_command, *args)
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2415, in _execute
-    connection.connect()
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/connection.py", line 489, in connect
-    raise ConnectionError(self._error_message(e))
-redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:53] "GET /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:53] "GET /stream HTTP/1.1" 200 -
 INFO:root:Page de accueil
 INFO:root:Requête reçue:
-Form: ImmutableMultiDict([('NOM', 'POUGET'), ('bouton', 'rechercher')])
+Form: ImmutableMultiDict([('NOM', 'po'), ('bouton', 'rechercher')])
 Args: ImmutableMultiDict([])
-INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:21:31] "POST /accueil HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:21:32] "GET /stream HTTP/1.1" 500 -
-ERROR:werkzeug:Error on request:
-Traceback (most recent call last):
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/serving.py", line 270, in run_wsgi
-    execute(self.server.app)
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/serving.py", line 260, in execute
-    for data in application_iter:
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/wsgi.py", line 870, in __next__
-    return self._next()
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/wrappers.py", line 82, in _iter_encoded
-    for item in iterable:
-  File "/home/etienne/projects/fablab/Projet-RFID/Web_app.py", line 137, in event_stream
-    pubsub.subscribe(APP_STREAM)
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2482, in subscribe
-    ret_val = self.execute_command('SUBSCRIBE', *iterkeys(new_channels))
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2404, in execute_command
-    self._execute(connection, connection.send_command, *args)
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2415, in _execute
-    connection.connect()
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/connection.py", line 489, in connect
-    raise ConnectionError(self._error_message(e))
-redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
-INFO:root:Page de accueil
+INFO:root:Resultat de la recherche: [OrderedDict([('Genre', 'M.'), ('NOM', 'POIROT'), ('Prenom', 'Nicolas'), ('E-mail', 'ni.poirot@laposte.net'), ('DateAnnivCotisation', '12/09/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POIROT&Prenom=Nicolas&numero=19253157164')]), OrderedDict([('Genre', 'M.'), ('NOM', 'POLLET'), ('Prenom', 'Thomas'), ('E-mail', 'ehpollet@gmail.com'), ('DateAnnivCotisation', '17/04/2018'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POLLET&Prenom=Thomas&numero=19253157164')]), OrderedDict([('Genre', 'Mme'), ('NOM', 'POUILLART'), ('Prenom', 'Brigitte'), ('E-mail', 'bpouillart@gmail.com'), ('DateAnnivCotisation', '05/12/2017'), ('ETAT', ''), ('Oui', None), ('RFID', None), ('uri', '/simuler?NOM=POUILLART&Prenom=Brigitte&numero=19253157164')])]
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:57] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:57] "GET /stream HTTP/1.1" 200 -
+INFO:root:Page de simuler
 INFO:root:Requête reçue:
-Form: ImmutableMultiDict([('NOM', 'POUGET'), ('bouton', 'rechercher')])
-Args: ImmutableMultiDict([])
-INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:22:03] "POST /accueil HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [29/Sep/2018 23:22:03] "GET /stream HTTP/1.1" 500 -
-ERROR:werkzeug:Error on request:
-Traceback (most recent call last):
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/serving.py", line 270, in run_wsgi
-    execute(self.server.app)
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/serving.py", line 260, in execute
-    for data in application_iter:
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/wsgi.py", line 870, in __next__
-    return self._next()
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/werkzeug/wrappers.py", line 82, in _iter_encoded
-    for item in iterable:
-  File "/home/etienne/projects/fablab/Projet-RFID/Web_app.py", line 137, in event_stream
-    pubsub.subscribe(APP_STREAM)
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2482, in subscribe
-    ret_val = self.execute_command('SUBSCRIBE', *iterkeys(new_channels))
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2404, in execute_command
-    self._execute(connection, connection.send_command, *args)
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/client.py", line 2415, in _execute
-    connection.connect()
-  File "/home/etienne/projects/fablab/Projet-RFID/venv/lib/python3.6/site-packages/redis/connection.py", line 489, in connect
-    raise ConnectionError(self._error_message(e))
-redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([('NOM', 'POUILLART'), ('Prenom', 'Brigitte'), ('numero', '19253157164')])
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:59] "GET /simuler?NOM=POUILLART&Prenom=Brigitte&numero=19253157164 HTTP/1.1" 500 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:59] "GET /simuler?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:59] "GET /simuler?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:59] "GET /simuler?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:59] "GET /simuler?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Oct/2018 22:12:59] "GET /simuler?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
