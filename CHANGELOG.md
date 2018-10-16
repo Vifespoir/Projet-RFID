@@ -4,12 +4,12 @@
 #### EN COURS DE RESOLUTION
 <hr>
 
-* Utiliser werkzeug pour augmenter la securité
 * API
 * Graphiques
 * Convertir csv en base de donnée
 * Heure de fermeture - bouton shutdown
 * Adhérent en cours de traitement
+* Le chargement d'un nouveau fichier adhérent efface les numéro de badge
 
 #### IMPOSSIBLE A RESOUDRE
 <hr>
@@ -25,6 +25,11 @@ Non nécessaire:
 
 #### RESOLU
 <hr>
+Date 17 octobre 2018
+
+* Corriger bug visiteur, problème de lecture des champs html
+* Corriger bug upload de nouveau fichier adhérent
+* Corriger bug recherche admin
 
 Date 29 septembre 2018
 

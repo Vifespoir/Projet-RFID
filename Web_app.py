@@ -235,31 +235,43 @@ def retourner_accueil():
     if request.method:
         logging.info("Requête reçue:\nForm: {}\nArgs: {}".format(str(request.form), str(request.args)))
     dernier = lire_dernier()
+    logging.info("Lecture du dernier badge")
+
     kwargs = {WEB_ACTIVE: WEB_VISITEUR, WEB_DERNIER: dernier}
+
     if request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_VISITEUR:
-        ligneCsv = {CSV_PRENOM: request.form[CSV_PRENOM], CSV_NOM: request.form[CSV_NOM],
-                    CSV_EMAIL: request.form[CSV_EMAIL], CSV_ORGANISME: request.form[CSV_ORGANISME]}
+        logging.info("Visiteur!")
+        try:
+            # FIXME string instead of constants
+            # NB can be fixed in templates
+            logging.info(str([CSV_PRENOM, CSV_NOM, CSV_EMAIL, CSV_ORGANISME]))
+            ligneCsv = {CSV_PRENOM: request.form["prenom"], CSV_NOM: request.form["NOM"],
+                        CSV_EMAIL: request.form["email"], CSV_ORGANISME: request.form["organisme"]}
+        except Exception as e:
+    	    logging.critical("Fatal error: {}".format(e))
         logging.info("Visiteur: {}".format(ligneCsv))
         if ligneCsv[CSV_EMAIL]:
             ajouter_email(ligneCsv[CSV_NOM], ligneCsv[CSV_PRENOM], ligneCsv[CSV_EMAIL])
-
+    
         if not detecter_deja_scanne(ligneCsv[CSV_NOM], ligneCsv[CSV_PRENOM]):
             ajouter_entree(ligneCsv[CSV_NOM], ligneCsv[CSV_PRENOM], WEB_VISITEUR)
             flash("Bonjour, {}! Bons projets!".format(ligneCsv[CSV_PRENOM]))
         else:
             flash("Bien tenté {} mais tu t'es déjà inscrit!".format(ligneCsv[CSV_PRENOM]))
-
         return redirect(url_for("retourner_accueil"))
-
-    if request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_RECHERCHER:
+    
+    elif request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_RECHERCHER:
         kwargs[CSV_NOM] = request.form[CSV_NOM]
         uri = "/simuler?{CSV_NOM}={nom}&{CSV_PRENOM}={prenom}&{WEB_NUMERO}={numero}"
         kwargs[WEB_TEXTE], kwargs[WEB_CONTENU] = rechercher_adherent(kwargs[CSV_NOM], uri)
         for ligne in kwargs[WEB_CONTENU]:
             ligne[WEB_URI] = uri.format(CSV_NOM=CSV_NOM, CSV_PRENOM=CSV_PRENOM, WEB_NUMERO=WEB_NUMERO,
                                         nom=ligne[CSV_NOM], prenom=ligne[CSV_PRENOM], numero=dernier)
-
+    
         logging.info("Resultat de la recherche: {}".format(kwargs[WEB_CONTENU]))
+    
+    else:
+        logging.warning("Wrong request:\n{}\n{}".format(request.method, request.form))
 
     kwargs.update(APP_PATHS)
 
@@ -396,7 +408,7 @@ def mise_a_jour_adherents(fichier):
                 flash(text)
 
 
-@app.route(APP_PATHS[APP_ADMIN], methods=[WEB_POST])
+@app.route(APP_PATHS[APP_ADMIN], methods=[WEB_POST, WEB_GET])
 @login_required
 def retourner_admin():
     logging.info("Page de {}".format(APP_ADMIN))
@@ -414,10 +426,10 @@ def retourner_admin():
     elif request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_RECHERCHER:
         nom = request.form[CSV_NOM]
         # FIXME ajouter for associer? what to do with associer endpoint
-        uri = "/{WEB_AJOUTER}?{CSV_NOM}={nom}&{CSV_PRENOM}={prenom}&{WEB_NUMERO}={numero}"
+        uri = "/{}?{}={}&{}={}&{}={}"  # url, NOM=nom, PRENOM=prenom, NUMERO=RFID
         texte, lignes = rechercher_adherent(nom, uri)
         for ligne in lignes:
-            ligne[WEB_URI] = uri.format(ligne[CSV_NOM], ligne[CSV_PRENOM], dernier)
+            ligne[WEB_URI] = uri.format(WEB_AJOUTER, CSV_NOM, ligne[CSV_NOM], CSV_PRENOM, ligne[CSV_PRENOM], WEB_NUMERO, dernier)
         newKwargs = {WEB_TEXTE: texte, CSV_NOM: nom, WEB_CONTENU: lignes}
     elif request.method == WEB_POST and request.form[WEB_BOUTON] == WEB_ENTREE:
         nom = request.form[CSV_NOM]
@@ -499,4 +511,4 @@ def allowed_file(filename):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=1)
+    app.run(host="0.0.0.0", debug=0)
