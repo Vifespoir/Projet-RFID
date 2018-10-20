@@ -19294,3 +19294,426 @@ INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:26:10] "GET /static/js/popper.min.js
 INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:26:10] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
 INFO:root:Nouvelle entrée: {'type': 'subscribe', 'data': 1, 'channel': b'stream', 'pattern': None}
 
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:29:11] "GET /logout HTTP/1.1" 302 -
+INFO:root:Redirection à la racine: '/'
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:29:11] "GET / HTTP/1.1" 302 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:29:11] "GET /accueil HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'type': 'subscribe', 'data': 1, 'channel': b'stream', 'pattern': None}
+
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:32:12] "GET /logout HTTP/1.1" 302 -
+INFO:root:Redirection à la racine: '/'
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:32:12] "GET / HTTP/1.1" 302 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:32:12] "GET /accueil HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'type': 'subscribe', 'data': 1, 'channel': b'stream', 'pattern': None}
+
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:35:13] "GET /logout HTTP/1.1" 302 -
+INFO:root:Redirection à la racine: '/'
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:35:13] "GET / HTTP/1.1" 302 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:35:13] "GET /accueil HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'type': 'subscribe', 'data': 1, 'channel': b'stream', 'pattern': None}
+
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:13] "GET /accueil HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'type': 'subscribe', 'data': 1, 'channel': b'stream', 'pattern': None}
+
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:36] "GET /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:37] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:37] "GET /static/js/popper.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:37] "GET /static/js/jquery-3.3.1.slim.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:37] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:37] "GET /static/js/popper.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:38] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
+INFO:root:Nouvelle entrée: {'type': 'subscribe', 'data': 1, 'channel': b'stream', 'pattern': None}
+
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:41] "GET /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:42] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:42] "GET /static/js/popper.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:42] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:42] "GET /static/js/jquery-3.3.1.slim.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:43] "GET /static/js/popper.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:43] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
+INFO:root:Nouvelle entrée: {'type': 'subscribe', 'data': 1, 'channel': b'stream', 'pattern': None}
+
+INFO:root:Page de historique
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:50] "GET /historique HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:37:51] "GET /accueil HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'type': 'subscribe', 'data': 1, 'channel': b'stream', 'pattern': None}
+
+INFO:root:Nouvelle entrée: {'type': 'subscribe', 'data': 1, 'channel': b'stream', 'pattern': None}
+
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:38:19] "GET /static/css/bootstrap.min.css.map HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:38:20] "GET /accueil HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'type': 'subscribe', 'data': 1, 'channel': b'stream', 'pattern': None}
+
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:38:35] "GET /static/css/bootstrap.min.css.map HTTP/1.1" 200 -
+DEBUG:passlib.registry:registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+DEBUG:passlib.registry:registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+DEBUG:passlib.registry:registered 'des_crypt' handler: <class 'passlib.handlers.des_crypt.des_crypt'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha256' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha256'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha512' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha512'>
+DEBUG:passlib.registry:registered 'sha256_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha256_crypt'>
+DEBUG:passlib.registry:registered 'des_crypt' handler: <class 'passlib.handlers.des_crypt.des_crypt'>
+DEBUG:passlib.registry:registered 'sha512_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha512_crypt'>
+DEBUG:passlib.registry:registered 'plaintext' handler: <class 'passlib.handlers.misc.plaintext'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha256' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha256'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha512' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha512'>
+DEBUG:passlib.registry:registered 'sha256_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha256_crypt'>
+DEBUG:passlib.registry:registered 'hex_md5' handler: <class 'passlib.handlers.digests.hex_md5'>
+DEBUG:passlib.registry:registered 'sha512_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha512_crypt'>
+DEBUG:passlib.registry:registered 'plaintext' handler: <class 'passlib.handlers.misc.plaintext'>
+DEBUG:passlib.registry:registered 'hex_md5' handler: <class 'passlib.handlers.digests.hex_md5'>
+INFO:werkzeug: * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:33] "GET /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:35] "GET /static/js/popper.min.js.map HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:35] "GET /static/js/bootstrap.min.js.map HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:47] "GET /static/css/bootstrap.min.css.map HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'jolan'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+INFO:root:Resultat de la recherche: [{'Oui': '', 'Genre': 'M.', 'E-mail': 'jljlt.jolan@gmail.com', 'Prenom': 'Jolan', 'ETAT': 'payée', 'RFID': '', 'NOM': 'MOREAU', 'DateAnnivCotisation': '25/08/18', 'uri': '/simuler?NOM=MOREAU&Prenom=Jolan&numero=237204150187'}]
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:51] "POST /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:54] "GET /static/js/popper.min.js.map HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:54] "GET /static/js/bootstrap.min.js.map HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+INFO:root:Page de simuler
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([('NOM', 'MOREAU'), ('Prenom', 'Jolan'), ('numero', '237204150187')])
+INFO:root:Redirection vers laccueil
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:56] "GET /simuler?NOM=MOREAU&Prenom=Jolan&numero=237204150187 HTTP/1.1" 302 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:56] "GET /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:57] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:57] "GET /static/js/popper.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:57] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:57] "GET /static/js/jquery-3.3.1.slim.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:59] "GET /static/js/popper.min.js.map HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:40:59] "GET /static/js/bootstrap.min.js.map HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:10] "GET /static/css/bootstrap.min.css.map HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'klopp'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+INFO:root:Resultat de la recherche: [{'Oui': '', 'Genre': 'Mme', 'E-mail': 'allisonklopp@gmail.com', 'Prenom': 'Allison', 'ETAT': 'À\xa0PAYER', 'RFID': '134171173187', 'NOM': 'KLOPP', 'DateAnnivCotisation': '04/10/18', 'uri': '/simuler?NOM=KLOPP&Prenom=Allison&numero=237204150187'}]
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:14] "POST /accueil HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+INFO:root:Page de simuler
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([('NOM', 'KLOPP'), ('Prenom', 'Allison'), ('numero', '237204150187')])
+INFO:root:Redirection vers laccueil
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:18] "GET /simuler?NOM=KLOPP&Prenom=Allison&numero=237204150187 HTTP/1.1" 302 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:18] "GET /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:19] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:19] "GET /static/js/jquery-3.3.1.slim.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:19] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:19] "GET /static/js/popper.min.js HTTP/1.1" 304 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'POUGET'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+INFO:root:Resultat de la recherche: [{'Oui': '', 'Genre': 'M.', 'E-mail': 'etienne.pouget@outlook.com', 'Prenom': 'Etienne', 'ETAT': 'À\xa0PAYER', 'RFID': '80172180164', 'NOM': 'POUGET', 'DateAnnivCotisation': '18/07/18', 'uri': '/simuler?NOM=POUGET&Prenom=Etienne&numero=237204150187'}]
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:26] "POST /accueil HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+INFO:root:Page de simuler
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([('NOM', 'POUGET'), ('Prenom', 'Etienne'), ('numero', '237204150187')])
+INFO:root:Redirection vers laccueil
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:30] "GET /simuler?NOM=POUGET&Prenom=Etienne&numero=237204150187 HTTP/1.1" 302 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:30] "GET /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:31] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:31] "GET /static/js/jquery-3.3.1.slim.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:31] "GET /static/js/popper.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:31] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'brigitte'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+INFO:root:Resultat de la recherche: [{'Oui': '', 'Genre': 'Mme', 'E-mail': 'briluypaert@free.fr', 'Prenom': 'Brigitte', 'ETAT': 'À\xa0PAYER', 'RFID': '', 'NOM': 'LUYPAERT', 'DateAnnivCotisation': '17/10/18', 'uri': '/simuler?NOM=LUYPAERT&Prenom=Brigitte&numero=237204150187'}, {'Oui': '', 'Genre': 'Mme', 'E-mail': 'bpouillart@gmail.com', 'Prenom': 'Brigitte', 'ETAT': 'payée', 'RFID': '', 'NOM': 'POUILLART', 'DateAnnivCotisation': '07/01/18', 'uri': '/simuler?NOM=POUILLART&Prenom=Brigitte&numero=237204150187'}]
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:38] "POST /accueil HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+INFO:root:Page de simuler
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([('NOM', 'LUYPAERT'), ('Prenom', 'Brigitte'), ('numero', '237204150187')])
+INFO:root:Redirection vers laccueil
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:41] "GET /simuler?NOM=LUYPAERT&Prenom=Brigitte&numero=237204150187 HTTP/1.1" 302 -
+INFO:root:Page de simuler
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([('NOM', 'LUYPAERT'), ('Prenom', 'Brigitte'), ('numero', '237204150187')])
+INFO:root:Redirection vers laccueil
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:41] "GET /simuler?NOM=LUYPAERT&Prenom=Brigitte&numero=237204150187 HTTP/1.1" 302 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:42] "GET /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:42] "GET /static/js/jquery-3.3.1.slim.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:42] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:43] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:43] "GET /static/js/popper.min.js HTTP/1.1" 304 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'arnaud'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+INFO:root:Resultat de la recherche: [{'Oui': '', 'Genre': 'M.', 'E-mail': 'a.betard@free.fr', 'Prenom': 'Arnaud', 'ETAT': 'payée', 'RFID': '', 'NOM': 'BETARD', 'DateAnnivCotisation': '11/09/18', 'uri': '/simuler?NOM=BETARD&Prenom=Arnaud&numero=237204150187'}, {'Oui': '', 'Genre': 'M.', 'E-mail': 'arnaud.chevaliert@gmail.com', 'Prenom': 'Arnaud', 'ETAT': 'À\xa0PAYER', 'RFID': '', 'NOM': 'CHEVALIER', 'DateAnnivCotisation': '24/10/18', 'uri': '/simuler?NOM=CHEVALIER&Prenom=Arnaud&numero=237204150187'}, {'Oui': '', 'Genre': 'M.', 'E-mail': 'arnaud.christel@gmail.com', 'Prenom': 'Arnaud', 'ETAT': 'payée', 'RFID': '', 'NOM': 'CHRISTEL', 'DateAnnivCotisation': '26/05/18', 'uri': '/simuler?NOM=CHRISTEL&Prenom=Arnaud&numero=237204150187'}, {'Oui': '', 'Genre': 'M.', 'E-mail': 'Arnaud.ruizsin@gmail.com', 'Prenom': 'Arnaud', 'ETAT': 'payée', 'RFID': '', 'NOM': 'RUIZ', 'DateAnnivCotisation': '10/02/18', 'uri': '/simuler?NOM=RUIZ&Prenom=Arnaud&numero=237204150187'}, {'Oui': '', 'Genre': 'M.', 'E-mail': 'arnaud.sqylab@gmail.com', 'Prenom': 'Arnaud', 'ETAT': 'payée', 'RFID': '', 'NOM': 'SAUZEAT', 'DateAnnivCotisation': '01/01/18', 'uri': '/simuler?NOM=SAUZEAT&Prenom=Arnaud&numero=237204150187'}]
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:53] "POST /accueil HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+INFO:root:Page de simuler
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([('NOM', 'SAUZEAT'), ('Prenom', 'Arnaud'), ('numero', '237204150187')])
+INFO:root:Redirection vers laccueil
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:56] "GET /simuler?NOM=SAUZEAT&Prenom=Arnaud&numero=237204150187 HTTP/1.1" 302 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:56] "GET /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:57] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:57] "GET /static/js/jquery-3.3.1.slim.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:57] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:41:57] "GET /static/js/popper.min.js HTTP/1.1" 304 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([('NOM', 'klopp'), ('bouton', 'rechercher')])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+INFO:root:Resultat de la recherche: [{'Oui': '', 'Genre': 'Mme', 'E-mail': 'allisonklopp@gmail.com', 'Prenom': 'Allison', 'ETAT': 'À\xa0PAYER', 'RFID': '134171173187', 'NOM': 'KLOPP', 'DateAnnivCotisation': '04/10/18', 'uri': '/simuler?NOM=KLOPP&Prenom=Allison&numero=237204150187'}]
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:05] "POST /accueil HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+INFO:root:Page de simuler
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([('NOM', 'KLOPP'), ('Prenom', 'Allison'), ('numero', '237204150187')])
+INFO:root:Redirection vers laccueil
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:08] "GET /simuler?NOM=KLOPP&Prenom=Allison&numero=237204150187 HTTP/1.1" 302 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:08] "GET /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:09] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:09] "GET /static/js/jquery-3.3.1.slim.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:09] "GET /static/js/popper.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:09] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
+DEBUG:passlib.registry:registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+DEBUG:passlib.registry:registered 'des_crypt' handler: <class 'passlib.handlers.des_crypt.des_crypt'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha256' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha256'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha512' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha512'>
+DEBUG:passlib.registry:registered 'sha256_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha256_crypt'>
+DEBUG:passlib.registry:registered 'sha512_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha512_crypt'>
+DEBUG:passlib.registry:registered 'plaintext' handler: <class 'passlib.handlers.misc.plaintext'>
+DEBUG:passlib.registry:registered 'hex_md5' handler: <class 'passlib.handlers.digests.hex_md5'>
+DEBUG:passlib.registry:registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+DEBUG:passlib.registry:registered 'des_crypt' handler: <class 'passlib.handlers.des_crypt.des_crypt'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha256' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha256'>
+DEBUG:passlib.registry:registered 'pbkdf2_sha512' handler: <class 'passlib.handlers.pbkdf2.pbkdf2_sha512'>
+DEBUG:passlib.registry:registered 'sha256_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha256_crypt'>
+DEBUG:passlib.registry:registered 'sha512_crypt' handler: <class 'passlib.handlers.sha2_crypt.sha512_crypt'>
+DEBUG:passlib.registry:registered 'plaintext' handler: <class 'passlib.handlers.misc.plaintext'>
+DEBUG:passlib.registry:registered 'hex_md5' handler: <class 'passlib.handlers.digests.hex_md5'>
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:root:Nouvelle entrée: {'data': b'<success>Badgeuse initialis\xc3\xa9, pr\xc3\xaate \xc3\xa0 scanner.', 'pattern': None, 'channel': b'stream', 'type': 'message'}
+
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:root:Output message: <div class="temp alert lead alert-success .alert-dismissible" role="alert">Badgeuse initialisé, prête à scanner.</div>
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:37] "GET /stream HTTP/1.1" 200 -
+INFO:root:Page de accueil
+INFO:root:Requête reçue:
+Form: ImmutableMultiDict([])
+Args: ImmutableMultiDict([])
+INFO:root:Lecture du dernier badge
+WARNING:root:Wrong request:
+GET
+ImmutableMultiDict([])
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:47] "GET /accueil HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:48] "GET /static/js/jquery-3.3.1.slim.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:48] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:48] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [20/Oct/2018 20:42:48] "GET /static/js/popper.min.js HTTP/1.1" 304 -
+INFO:root:Nouvelle entrée: {'data': 1, 'pattern': None, 'channel': b'stream', 'type': 'subscribe'}
+
