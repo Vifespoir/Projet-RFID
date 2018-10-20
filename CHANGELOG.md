@@ -25,6 +25,10 @@ Non nécessaire:
 
 #### RESOLU
 <hr>
+Date 20 octobre 2018
+
+* Corriger source des fichiers static. Les fichiers sont maintenant disponible en local.
+
 Date 17 octobre 2018
 
 * Corriger bug visiteur, problème de lecture des champs html
