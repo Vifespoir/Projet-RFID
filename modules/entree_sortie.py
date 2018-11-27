@@ -25,7 +25,7 @@ CHEMIN_CSV_BUGS = join(CHEMIN_DONNEES, CSV_BUGS)
 TEST_MME_MR = re_compile(r"([M.|Mme])")
 TEST_NOM = re_compile(r"(\S+)")
 TEST_EMAIL = re_compile(r"(\S+)(@)(\S+)")
-TEST_DATE = re_compile(r"\d{2}\/\d{2}\/\d{2,4}")
+TEST_DATE = re_compile(r"(\d{2}\/\d{2}\/\d{2,4}|\d{2,4}\/\d{2}\/\d{2})")
 TEST_RFID = re_compile(r"\d+")
 # Paramètre de lecture pour obtenir les résultats sous forme de dictionnaire
 CSV_DATE = "Date"
@@ -112,7 +112,10 @@ def formatter_ligne_csv(nom, prenom, dateAdhesion):
     nouvelleLigne = {CSV_NOM: nom, CSV_PRENOM: prenom, CSV_DATE: date, CSV_HEURE: heure}
     if dateAdhesion and "visiteur" not in dateAdhesion.lower():
         # FIXME try catch with %Y
-        date = datetime.strptime(dateAdhesion, '%d/%m/%y')
+        try:
+	        date = datetime.strptime(dateAdhesion, '%d/%m/%y')
+        except Exception():
+            date = datetime.strptime(dateAdhesion, '%Y/%m/%d')
         difference = datetime.today() - date
         if difference.days < 365:
             nouvelleLigne[CSV_STATUS] = 'Oui'
