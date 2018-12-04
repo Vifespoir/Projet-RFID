@@ -114,7 +114,7 @@ def formatter_ligne_csv(nom, prenom, dateAdhesion):
         # FIXME try catch with %Y
         try:
 	        date = datetime.strptime(dateAdhesion, '%d/%m/%y')
-        except Exception():
+        except Exception:
             date = datetime.strptime(dateAdhesion, '%Y/%m/%d')
         difference = datetime.today() - date
         if difference.days < 365:

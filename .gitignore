@@ -11,3 +11,5 @@ data/
 app_secrets.py
 pid
 orangepi_PC_gpio_pyH3/
+*.log
+pid
